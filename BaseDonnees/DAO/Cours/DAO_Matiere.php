@@ -22,15 +22,20 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO matiere
-                    VALUES (:id, :nom)';
+            $sql = 'INSERT INTO matiere (nom)
+                    VALUES (:nom)';
 
             $res = $this->connexion->insert($sql, array(
-                ':id' => $obj->getId(),
                 ':nom' => $obj->getNom()
             ));
 
-            return $res != 1 ? $obj : false;
+            // Insertion ok ?
+            if ($res) {
+                return new Matiere($res, $obj->getNom());
+            }
+
+            // else
+            return false;
         }
 
         /**
