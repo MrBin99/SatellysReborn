@@ -1,8 +1,11 @@
 <?php
     namespace WS_SatellysReborn\BaseDonnees\DAO;
 
+    use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Matiere;
+    use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Salle;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Pays;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
+    use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Promotion;
 
     /**
      * Fabrique de DAO.
@@ -22,9 +25,31 @@
         }
 
         /**
-         * @return DAO_Departement un nouveau DAO pour départements de l'IUT.
+         * @return DAO_Departement un nouveau DAO pour les départements de
+         *     l'IUT.
          */
         public static function getDAO_Departement() {
             return new DAO_Departement();
+        }
+
+        /**
+         * @return DAO_Matiere un nouveau DAO pour les matières.
+         */
+        public static function getDAO_Matiere() {
+            return new DAO_Matiere();
+        }
+
+        /**
+         * @return DAO_Salle un nouveau DAO pour les salles de l'IUT.
+         */
+        public static function getDAO_Salle() {
+            return new DAO_Salle();
+        }
+
+        /**
+         * @return DAO_Promotion un nouveau DAO pour les promotions de l'IUT.
+         */
+        public static function getDAO_Promotion() {
+            return new DAO_Promotion();
         }
     }
