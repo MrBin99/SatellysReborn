@@ -1,11 +1,13 @@
 <?php
     namespace WS_SatellysReborn\Modeles\Population\Groupe;
 
+    use WS_SatellysReborn\Modeles\Modele;
+
     /**
      * Représente la promotion d'un étudiant.
      * @package WS_SatellysReborn\Modeles\Population\Groupe
      */
-    class Promotion {
+    class Promotion extends Modele {
 
         /** @var string l'identifiant de la promotion. */
         private $id;
