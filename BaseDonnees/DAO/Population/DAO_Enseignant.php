@@ -110,7 +110,7 @@
          * Sélectionne l'élèment dont la clé primaire est passée en argument
          * s'il existe.
          * @param $cle string la clé primaire de l'objet à sélectionner.
-         * @return object
+         * @return Enseignant
          * <ul>
          *     <li>L'objet retounée par la selection.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>

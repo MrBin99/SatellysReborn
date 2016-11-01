@@ -1,6 +1,7 @@
 <?php
     namespace WS_SatellysReborn\BaseDonnees\DAO;
 
+    use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Cours;
     use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Matiere;
     use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Salle;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Adresse;
@@ -63,6 +64,13 @@
          */
         public static function getDAO_Salle() {
             return new DAO_Salle();
+        }
+
+        /**
+         * @return DAO_Cours un nouveau DAO pour les cours.
+         */
+        public static function getDAO_Cours() {
+            return new DAO_Cours();
         }
 
         /**

@@ -47,12 +47,8 @@
             array_push($this->etudiants, $etudiant);
 
             // Sauvegarde.
-            $res = DAO_Factory::getDAO_Groupe()->ajouterEtudiant($this->getId(),
-                                                                 $etudiant->getId());
-
-            if (!$res) {
-                throw new BD_Exception("Impossible d'affecter cet étudiant à ce groupe.");
-            }
+            DAO_Factory::getDAO_Groupe()->ajouterEtudiant($this->getId(),
+                                                          $etudiant->getId());
         }
 
         /**
