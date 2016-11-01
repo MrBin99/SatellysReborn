@@ -2,6 +2,7 @@
     namespace WS_SatellysReborn\BaseDonnees\DAO;
 
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Pays;
+    use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
 
     /**
      * Fabrique de DAO.
@@ -18,5 +19,12 @@
          */
         public static function getDAO_Pays() {
             return new DAO_Pays();
+        }
+
+        /**
+         * @return DAO_Departement un nouveau DAO pour départements de l'IUT.
+         */
+        public static function getDAO_Departement() {
+            return new DAO_Departement();
         }
     }

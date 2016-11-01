@@ -38,7 +38,8 @@
                 // Créé la connexion.
                 $this->connexion = new \PDO($configs['sgbd'] . ':host=' .
                                             $configs['host'] . ';dbname=' .
-                                            $configs['nom_bd'],
+                                            $configs['nom_bd'] .
+                                            ';charset=utf8',
                                             $configs['login'], $configs['mdp'],
                                             self::$OPTIONS_DB);
             } catch (\PDOException $e) {
