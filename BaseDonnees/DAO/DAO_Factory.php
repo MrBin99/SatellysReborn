@@ -8,6 +8,7 @@
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Ville;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\DAO_Etudiant;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
+    use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Groupe;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Promotion;
 
     /**
@@ -68,6 +69,13 @@
          */
         public static function getDAO_Promotion() {
             return new DAO_Promotion();
+        }
+
+        /**
+         * @return DAO_Groupe un nouveau DAO pour les groupes d'étudiants.
+         */
+        public static function getDAO_Groupe() {
+            return new DAO_Groupe();
         }
 
         /**
