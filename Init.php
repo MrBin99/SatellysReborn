@@ -12,7 +12,7 @@
     define('SITE_NAME', 'WS_SatellysReborn');
 
     /* Chemin vers le dossier de configuration de la base de données. */
-    define('CONFIG_BD', 'configs/bd_conf.ini');
+    define('CONFIG_BD', 'conf/bd_conf.ini');
 
     // Chemin vers les contrôleurs.
     define('URL_CTRL', 'Controleurs\\');
