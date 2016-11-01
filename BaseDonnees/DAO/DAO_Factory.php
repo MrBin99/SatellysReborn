@@ -6,6 +6,7 @@
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Adresse;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Pays;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Ville;
+    use WS_SatellysReborn\BaseDonnees\DAO\Population\DAO_Etudiant;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Promotion;
 
@@ -67,5 +68,12 @@
          */
         public static function getDAO_Promotion() {
             return new DAO_Promotion();
+        }
+
+        /**
+         * @return DAO_Etudiant un nouveau DAO pour les étudiants de l'IUT.
+         */
+        public static function getDAO_Etudiant() {
+            return new DAO_Etudiant();
         }
     }
