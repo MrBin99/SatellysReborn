@@ -1,20 +1,20 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe;
+    namespace WS_SatellysReborn\BaseDonnees\DAO\Cours;
 
     use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\Modeles\Population\Groupe\Departement;
+    use WS_SatellysReborn\Modeles\Cours\Matiere;
 
     /**
-     * DAO permettant de gérer département de l'IUT en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe
+     * DAO permettant de gérer les matières en base de données.
+     * @package WS_SatellysReborn\BaseDonnees\DAO\Cours
      */
-    class DAO_Departement extends DAO {
+    class DAO_Matiere extends DAO {
 
         /**
          * Insère l'objet passé en argument dans la base de données s'il
          * n'existe pas.
-         * @param Departement $obj l'objet à insérer dans la base de données.
-         * @return Departement|bool
+         * @param Matiere $obj l'objet à insérer dans la base de données.
+         * @return Matiere|bool
          * <ul>
          *     <li>L'objet inséré, si l'insertion a eu lieu.</li>
          *     <li>False sinon.</li>
@@ -22,7 +22,7 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO departement
+            $sql = 'INSERT INTO matiere
                     VALUES (:id, :nom)';
 
             $res = $this->connexion->insert($sql, array(
@@ -36,7 +36,7 @@
         /**
          * Modifie l'objet passé en argument dans la base de données s'il
          * existe.
-         * @param Departement $obj l'objet à modifier dans la base de données.
+         * @param Matiere $obj l'objet à modifier dans la base de données.
          * @return bool
          * <ul>
          *     <li>True si la modification a eu lieu.</li>
@@ -51,7 +51,7 @@
             // else
 
             // SQL.
-            $sql = 'UPDATE departement SET
+            $sql = 'UPDATE matiere SET
                         nom = :nom
                     WHERE id = :id';
 
@@ -64,7 +64,7 @@
         /**
          * Supprime l'objet passé en argument dans la base de données s'il
          * existe.
-         * @param Departement $obj l'objet à supprimer dans la base de données.
+         * @param Matiere $obj l'objet à supprimer dans la base de données.
          * @return bool
          * <ul>
          *     <li>True si la suppression a eu lieu.</li>
@@ -78,7 +78,7 @@
             }
 
             // SQL.
-            $sql = 'DELETE FROM departement
+            $sql = 'DELETE FROM matiere
                     WHERE id = :id';
 
             return $this->connexion->delete($sql, array(
@@ -90,7 +90,7 @@
          * Sélectionne l'élèment dont la clé primaire est passée en argument
          * s'il existe.
          * @param $cle string la clé primaire de l'objet à sélectionner.
-         * @return Departement
+         * @return Matiere
          * <ul>
          *     <li>L'objet retounée par la selection.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
@@ -99,7 +99,7 @@
         public function find($cle) {
             // SQL.
             $sql = 'SELECT nom
-                    FROM departement
+                    FROM matiere
                     WHERE id = :id';
 
             $resBD = $this->connexion->select($sql, array(
@@ -112,7 +112,7 @@
             }
 
             // else
-            return new Departement($cle, $resBD[0]->nom);
+            return new Matiere($cle, $resBD[0]->nom);
         }
 
         /**
@@ -126,7 +126,7 @@
         public function findAll() {
             // SQL.
             $sql = 'SELECT id, nom
-                    FROM departement';
+                    FROM matiere';
 
             $resBD = $this->connexion->select($sql, array());
 
@@ -136,12 +136,12 @@
             }
             // else
 
-            // Convertit en objet Departement.
+            // Convertit en objet Pays.
             $res = array();
 
             // Pour toutes les lignes.
             foreach ($resBD as $obj) {
-                array_push($res, new Departement(
+                array_push($res, new Matiere(
                     $obj->id, $obj->nom
                 ));
             }
@@ -150,31 +150,87 @@
         }
 
         /**
-         * Sélectionne le pays dont le nom est passée en argument
-         * s'il existe.
-         * @param $nom string le nom du pays.
-         * @return Departement
+         * Liste les matières d'un département.
+         * @param $depID string l'identifiant du département.
+         * @return array
          * <ul>
-         *     <li>L'objet retounée par la selection.</li>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
          * </ul>
          */
-        public function findName($nom) {
-            // SQL.
-            $sql = 'SELECT id, nom
-                    FROM departement
-                    WHERE lower(nom) LIKE lower(:nom)';
+        public function findDepartement($depID) {
+            /// SQL.
+            $sql = 'SELECT m.id AS id, m.nom AS nom
+                    FROM matiere m
+                    JOIN cours c ON m.id = c.id_matiere
+                    JOIN assiste a ON c.id = a.id_cours
+                    JOIN groupe g ON a.id_groupe = g.id
+                    JOIN promotion p ON g.id_promotion = p.id
+                    JOIN departement d ON p.id_departement = d.id
+                    WHERE d.id = :dep';
 
             $resBD = $this->connexion->select($sql, array(
-                ':nom' => '%' . $nom . '%'
+                ':dep' => $depID
             ));
 
-            // Pas de résultats ?
+            // Vide ?
             if (empty($resBD)) {
                 return null;
             }
-
             // else
-            return new Departement($resBD[0]->id, $resBD[0]->nom);
+
+            // Convertit en objet Matiere.
+            $res = array();
+
+            // Pour toutes les lignes.
+            foreach ($resBD as $obj) {
+                array_push($res, new Matiere(
+                    $obj->id, $obj->nom
+                ));
+            }
+
+            return $res;
+        }
+
+        /**
+         * Liste les matières d'une promotion.
+         * @param $promoID string l'identifiant de la promotion.
+         * @return array
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findPromotion($promoID) {
+            /// SQL.
+            $sql = 'SELECT m.id AS id, m.nom AS nom
+                    FROM matiere m
+                    JOIN cours c ON m.id = c.id_matiere
+                    JOIN assiste a ON c.id = a.id_cours
+                    JOIN groupe g ON a.id_groupe = g.id
+                    JOIN promotion p ON g.id_promotion = p.id
+                    WHERE p.id = :promo';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':promo' => $promoID
+            ));
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Matiere.
+            $res = array();
+
+            // Pour toutes les lignes.
+            foreach ($resBD as $obj) {
+                array_push($res, new Matiere(
+                    $obj->id, $obj->nom
+                ));
+            }
+
+            return $res;
         }
     }
