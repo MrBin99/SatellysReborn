@@ -1,6 +1,7 @@
 <?php
     namespace WS_SatellysReborn\BaseDonnees\DAO;
 
+    use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Absence;
     use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Cours;
     use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Matiere;
     use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Salle;
@@ -71,6 +72,13 @@
          */
         public static function getDAO_Cours() {
             return new DAO_Cours();
+        }
+
+        /**
+         * @return DAO_Absence un nouveau DAO pour les absences.
+         */
+        public static function getDAO_Absence() {
+            return new DAO_Absence();
         }
 
         /**
