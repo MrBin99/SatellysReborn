@@ -3,6 +3,7 @@
 
     use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Matiere;
     use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Salle;
+    use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Adresse;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Pays;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Ville;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
@@ -38,6 +39,13 @@
          */
         public static function getDAO_Ville() {
             return new DAO_Ville();
+        }
+
+        /**
+         * @return DAO_Adresse un nouveau DAO pour les adresses.
+         */
+        public static function getDAO_Adresse() {
+            return new DAO_Adresse();
         }
 
         /**

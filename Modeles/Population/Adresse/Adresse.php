@@ -49,13 +49,6 @@
         }
 
         /**
-         * @param string $id l'identifiant de l'adresse.
-         */
-        public function setId($id) {
-            $this->id = $id;
-        }
-
-        /**
          * @return string la 1ere partie de l'adresse.
          */
         public function getAdresse1() {
