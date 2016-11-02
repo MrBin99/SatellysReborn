@@ -204,8 +204,8 @@
                     VALUES (:etudiant, :groupe)';
 
             return $this->connexion->insert($sql, array(
-                ':etudiant' => $groupeID,
-                ':groupe' => $etudiantID
+                ':etudiant' => $etudiantID,
+                ':groupe' => $groupeID
             )) != '' ? true : false;
         }
     }

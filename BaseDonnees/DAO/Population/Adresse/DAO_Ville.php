@@ -153,4 +153,41 @@
 
             return $res;
         }
+
+        /**
+         * Sélectionne la ville dont le code postal et le nom est passé en
+         * argument.
+         * @param $cp string le code postal de la ville.
+         * @param $nom string le nom de la ville.
+         * @return Ville
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findCpNom($cp, $nom) {
+            // SQL.
+            $sql = 'SELECT numinsee, code_postal, nom, id_pays
+                    FROM ville
+                    WHERE lower(nom) LIKE lower(:nom)
+                    AND code_postal = :cp';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':nom' => '%' . $nom . '%',
+                ':cp' => $cp,
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+            $pays = DAO_Factory::getDAO_Pays()
+                               ->find($resBD[0]->id_pays);
+
+            return new Ville($resBD[0]->numinsee, $resBD[0]->code_postal,
+                             $resBD[0]->nom,
+                             $pays);
+        }
     }
