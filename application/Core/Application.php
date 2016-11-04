@@ -58,7 +58,7 @@
                 require_once CONTROLEURS . $controleur . '.php';
 
                 // Ajout du namespace
-                $controleur = 'WS_SatellysReborn\Controleurs\\' . $controleur;
+                $controleur = ROOT_DIR . '\Controleurs\\' . $controleur;
 
                 // Créé le contrôleur
                 $this->controleur = new $controleur();

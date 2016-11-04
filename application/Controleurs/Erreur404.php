@@ -12,7 +12,6 @@
          * le contrôleur est indiqué dans l'URL.
          */
         public function index() {
-            echo '<h1>Erreur 404</h1>';
-            echo '<p>Page non trouvée.</p>';
+            include_once VUES . 'Erreurs/Erreur404.phtml';
         }
     }

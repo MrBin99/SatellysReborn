@@ -13,6 +13,8 @@
 
     // Les différents modules du site.
     define('CONTROLEURS', '../application/Controleurs/');
+    define('VUES', '../application/Vues/');
+    define('COMMON', '../application/Vues/_Common/');
 
     /* Le nom du dossier parent du site. */
     define('ROOT_DIR', 'WS_SatellysReborn');
@@ -22,6 +24,12 @@
 
     /* Chemin vers le dossier de configuration de la base de données. */
     define('CONFIG_BD', 'conf/bd_conf.ini');
+
+    // Les fichiers CSS.
+    define('CSS', URL . 'css/');
+
+    // Les fichiers JS.
+    define('JS', URL . 'js/');
 
     /**
      * Fonction d'auto-chargment des classes requises.<br>
