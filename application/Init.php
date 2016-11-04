@@ -3,7 +3,16 @@
 
     /* ########## Constantes de l'application ########## */
 
-    // Configuration de la connexion à la base de données.
+    // Définitions des constantes pour l'ensemble des pages.
+    define('URL_PUBLIC_FOLDER', 'public');
+    define('URL_PROTOCOL', 'http://');
+    define('URL_DOMAIN', $_SERVER['HTTP_HOST']);
+    define('URL_SUB_FOLDER',
+           str_replace(URL_PUBLIC_FOLDER, '', dirname($_SERVER['SCRIPT_NAME'])));
+    define('URL', URL_PROTOCOL . URL_DOMAIN . URL_SUB_FOLDER . '/');
+
+    // Les différents modules du site.
+    define('CONTROLEURS', '../application/Controleurs/');
 
     /* Le nom du dossier parent du site. */
     define('ROOT_DIR', 'WS_SatellysReborn');
@@ -13,9 +22,6 @@
 
     /* Chemin vers le dossier de configuration de la base de données. */
     define('CONFIG_BD', 'conf/bd_conf.ini');
-
-    // Chemin vers les contrôleurs.
-    define('URL_CTRL', 'Controleurs\\');
 
     /**
      * Fonction d'auto-chargment des classes requises.<br>

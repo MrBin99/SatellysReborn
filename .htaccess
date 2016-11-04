@@ -1,17 +1,7 @@
 # Si le module Apache de redirection est bien activé ?
 <IfModule mod_rewrite.c>
 
-    # Redirige toutes les requêtes vers le fichier "Init.php".
-
-    RewriteEngine On
-
-	RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-s
-	RewriteRule ^(.*)$ Init.php?url=$1 [QSA,NC,L]
-
-	RewriteCond %{REQUEST_FILENAME} -d
-	RewriteRule ^(.*)$ Init.php [QSA,NC,L]
-
-	RewriteCond %{REQUEST_FILENAME} -s
-	RewriteRule ^(.*)$ Init.php [QSA,NC,L]
+    # Redirige tout vers le dossier public/
+    RewriteEngine on
+    RewriteRule ^(.*) public/$1 [L]
 </IfModule>
