@@ -12,6 +12,7 @@
          * le contrôleur est indiqué dans l'URL.
          */
         public function index() {
+            $this->setTitre('Erreur 404');
             include_once VUES . 'Erreurs/Erreur404.phtml';
         }
     }

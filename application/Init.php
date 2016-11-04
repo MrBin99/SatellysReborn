@@ -20,7 +20,7 @@
     define('ROOT_DIR', 'WS_SatellysReborn');
 
     /* Le nom du site. */
-    define('SITE_NAME', 'WS_SatellysReborn');
+    define('SITE_NAME', 'SatellysReborn');
 
     /* Chemin vers le dossier de configuration de la base de données. */
     define('CONFIG_BD', 'conf/bd_conf.ini');

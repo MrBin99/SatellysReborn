@@ -21,7 +21,7 @@
          * @param string $titre le nouveau titre de la page.
          */
         public function setTitre($titre) {
-            $this->titre = SITE_NAME . ' - ' . $titre;
+            $this->titre = $titre . ' - ' . SITE_NAME;
         }
 
         /**

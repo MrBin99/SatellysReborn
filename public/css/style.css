@@ -1,0 +1,15 @@
+/* Les styles an plus de Bootstrap. */
+
+body {
+    padding-top: 70px;
+}
+
+/* Formulaires. */
+.dropdown-connexion .dropdown-menu {
+    padding: 10px;
+}
+
+.dropdown-connexion .dropdown-menu input,
+.dropdown-connexion .dropdown-menu a {
+    width: 200px;
+}
