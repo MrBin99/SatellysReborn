@@ -8,6 +8,7 @@
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Adresse;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Pays;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Ville;
+    use WS_SatellysReborn\BaseDonnees\DAO\Population\DAO_Administratif;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\DAO_Enseignant;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\DAO_Etudiant;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
@@ -107,5 +108,13 @@
          */
         public static function getDAO_Enseignant() {
             return new DAO_Enseignant();
+        }
+
+        /**
+         * @return DAO_Administratif un nouveau DAO pour les administratifs de
+         *     l'IUT.
+         */
+        public static function getDAO_Administratif() {
+            return new DAO_Administratif();
         }
     }
