@@ -50,7 +50,7 @@
         public function update($obj) {
             // Pré-condition.
             if (is_null($obj->getLogin()) ||
-                is_null($this->find($obj->getLogin()))
+                !is_null($this->find($obj->getLogin()))
             ) {
                 return false;
             }
@@ -64,7 +64,8 @@
 
             return $this->connexion->update($sql, array(
                 ':mdp' => $obj->getMdp(),
-                ':email' => $obj->getEmail()
+                ':email' => $obj->getEmail(),
+                ':login' => $obj->getLogin()
             ));
         }
 
@@ -116,7 +117,7 @@
          */
         public function findLoginMdp($login, $mdp) {
             // SQL.
-            $sql = 'SELECT login, mdp, id_administratif, id_enseignant, id_etudiant
+            $sql = 'SELECT login, mdp, email, id_administratif, id_enseignant, id_etudiant
                     FROM utilisateur
                     WHERE login = :login
                     AND mdp = :mdp';

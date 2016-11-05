@@ -58,14 +58,14 @@
                 require_once CONTROLEURS . $controleur . '.php';
 
                 // Ajout du namespace
-                $controleur = ROOT_DIR . '\Controleurs\\' . $controleur;
+                $controleur = NAMESPACE_ROOT . '\Controleurs\\' . $controleur;
 
                 // Créé le contrôleur
                 $this->controleur = new $controleur();
 
                 // Vérifie que le contrôleur a appeler est bien un contrôleur.
                 if (!($this->controleur instanceof Controleur)) {
-                    header('Location: /WS_SatellysReborn/erreur404/');
+                    header('Location: ' . URL_SUB_FOLDER . 'erreur/erreur404/');
 
                     return;
                 }
@@ -91,7 +91,7 @@
 
                 // Vérifie que la méthode est appelable.
                 if (!$methode->isPublic()) {
-                    header('Location: /WS_SatellysReborn/erreur404/');
+                    header('Location: ' . URL_SUB_FOLDER . 'erreur/erreur404/');
 
                     return;
                 }
@@ -107,7 +107,7 @@
                     ], $this->params);
             } else {
                 // Si la page n'est pas connue
-                header('Location: /WS_SatellysReborn/erreur404/');
+                header('Location: ' . URL_SUB_FOLDER . 'erreur/erreur404/');
             }
         }
 

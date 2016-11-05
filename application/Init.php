@@ -19,11 +19,14 @@
     /* Le nom du dossier parent du site. */
     define('ROOT_DIR', 'WS_SatellysReborn');
 
+    /* Le "root" namespace. */
+    define('NAMESPACE_ROOT', 'WS_SatellysReborn');
+
     /* Le nom du site. */
     define('SITE_NAME', 'SatellysReborn');
 
     /* Chemin vers le dossier de configuration de la base de données. */
-    define('CONFIG_BD', 'conf/bd_conf.ini');
+    define('CONFIG_BD', '../application/conf/bd_conf.ini');
 
     // Les fichiers CSS.
     define('CSS', URL . 'css/');

@@ -1,14 +1,20 @@
 <?php
     namespace WS_SatellysReborn\Controleurs;
 
+    use WS_SatellysReborn\Vues\Vue;
+
     /**
      * Représente le contrôleur d'une page Web.
      * @package WS_SatellysReborn\Controleurs
      */
     abstract class Controleur {
 
-        /** @var string le titre de la page. */
-        private $titre = SITE_NAME;
+        /** @var Vue la vue de la page courante. */
+        protected $vue;
+
+        public function __construct() {
+            session_start();
+        }
 
         /**
          * Méthode appelée par défaut quand uniquement
@@ -17,17 +23,11 @@
         public abstract function index();
 
         /**
-         * Modifie le titre de la page.
-         * @param string $titre le nouveau titre de la page.
+         * Redirige vers la page passé en argument.
+         * @param $page string la page vers laquelle l'internaute doit être
+         *     redirigé.
          */
-        public function setTitre($titre) {
-            $this->titre = $titre . ' - ' . SITE_NAME;
-        }
-
-        /**
-         * @return string le titre de la page.
-         */
-        public function getTitre() {
-            return $this->titre;
+        public static function redirect($page) {
+            header('Location: ' . URL_SUB_FOLDER . $page);
         }
     }

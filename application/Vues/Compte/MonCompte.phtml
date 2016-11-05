@@ -1,0 +1,39 @@
+<?php
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+
+    use WS_SatellysReborn\Modeles\Population\Login\Utilisateur;
+
+    $util = Utilisateur::getUtilisateur();
+?>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Mon Compte
+        </div>
+        <div class="panel-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7 col-md-offset-2">
+                        <form action="compte/modifier" method="post">
+                            <div class="form-group">
+                                <label for="login">Login :</label>
+                                <input type="text" id="login" name="login" class="form-control" value="<?= $util->getLogin() ?>" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="mdp">Nouveau mot de passe :</label>
+                                <input type="password" id="mdp" name="mdp" class="form-control" placeholder="Nouveau mot de passe" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email :</label>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Email" value="<?= $util->getEmail() ?>" required>
+                            </div>
+                            <input type="submit" class="btn btn-success center-block" value="Modifier">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

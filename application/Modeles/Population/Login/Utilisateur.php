@@ -46,7 +46,7 @@
                                     Administratif $administratif = null,
                                     Etudiant $etudiant = null) {
             $this->login = $login;
-            $this->mdp = $mdp;
+            $this->mdp = self::crypterMdp($mdp);
             $this->email = $email;
             $this->enseignant = $enseignant;
             $this->administratif = $administratif;
@@ -60,6 +60,35 @@
          */
         public static function crypterMdp($mdp) {
             return hash('md5', $mdp);
+        }
+
+        /**
+         * Détermine si un utilisateur est connecté à l'application.
+         * @return bool
+         * <ul>
+         *     <li>True si l'utilisateur est connecté.</li>
+         *     <li>False sinon.</li>
+         * </ul>
+         */
+        public static function estConnecte() {
+            return isset($_SESSION['utilisateur']);
+        }
+
+        /**
+         * Retourne l'utilisateur courant de l'application s'il est connecté.
+         * @return Utilisateur l'utilisateur courant de l'application s'il est
+         *     connecté, retourne null sinon.
+         */
+        public static function getUtilisateur() {
+            return self::estConnecte() ? $_SESSION['utilisateur'] : null;
+        }
+
+        /**
+         * Met à jour l'utilisateur courant de l'application.
+         * @param Utilisateur $util l'utilisateur courant de l'application.
+         */
+        public static function setUtilisateur(Utilisateur $util) {
+            $_SESSION['utilisateur'] = $util;
         }
 
         /**
@@ -104,5 +133,51 @@
          */
         public function getEtudiant() {
             return $this->etudiant;
+        }
+
+        /**
+         * @return bool
+         * <ul>
+         *     <li>True si l'utilisateur est un étudiant.</li>
+         *     <li>False sinon.</li>
+         * </ul>
+         */
+        public function estEtudiant() {
+            return $this->etudiant != null;
+        }
+
+        /**
+         * @return bool
+         * <ul>
+         *     <li>True si l'utilisateur est un administratif.</li>
+         *     <li>False sinon.</li>
+         * </ul>
+         */
+        public function estAdministratif() {
+            return $this->administratif != null;
+        }
+
+        /**
+         * @return bool
+         * <ul>
+         *     <li>True si l'utilisateur est un enseignant.</li>
+         *     <li>False sinon.</li>
+         * </ul>
+         */
+        public function estEnseignant() {
+            return $this->enseignant != null;
+        }
+
+        /**
+         * @return bool
+         * <ul>
+         *     <li>True si l'utilisateur est un administrateur</li>
+         *     <li>False sinon.</li>
+         * </ul>
+         */
+        public function estAdmin() {
+            return $this->etudiant == null
+                && $this->enseignant == null
+                && $this->administratif == null;
         }
     }

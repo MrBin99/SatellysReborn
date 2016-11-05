@@ -14,6 +14,7 @@
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Groupe;
     use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Promotion;
+    use WS_SatellysReborn\BaseDonnees\DAO\Population\Login\DAO_Utilisateur;
 
     /**
      * Fabrique de DAO.
@@ -116,5 +117,13 @@
          */
         public static function getDAO_Administratif() {
             return new DAO_Administratif();
+        }
+
+        /**
+         * @return DAO_Utilisateur un nouveau DAO pour les utilisateurs de
+         *     l'application.
+         */
+        public static function getDAO_Utilisateur() {
+            return new DAO_Utilisateur();
         }
     }
