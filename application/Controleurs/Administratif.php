@@ -43,4 +43,14 @@
             }
             $this->vue->render();
         }
+
+        public function ajout(){
+            /**
+             * TODO : Ajouter un administratif
+             * Créer un objet adresse avec les champs, vérifier son existence (l'ajouter au besoin) et récupéré son id
+             * Créer un objet administratif avec les champs et l'id d'adresse et l'ajouter avec la fonction insert de
+             * DAO_Administratif
+             * Test de doublons d'administratif à faire, à moins qu'il se fasse tout seul dans le insert
+             */
+        }
     }
