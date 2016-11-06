@@ -44,6 +44,9 @@
             $this->vue->render();
         }
 
+        /**
+         *
+         */
         public function ajout(){
             /**
              * TODO : Ajouter un administratif
@@ -52,5 +55,19 @@
              * DAO_Administratif
              * Test de doublons d'administratif à faire, à moins qu'il se fasse tout seul dans le insert
              */
+
+            $adr = DAO_Factory::getDAO_Adresse()->find(3);
+            $exist = false;
+            $administratif = DAO_Factory::getDAO_Administratif()->findAll();
+            foreach ($administratif as $obj){
+                if($obj->getNom() == $_POST['nom'] and $obj->getPrenom() == $_POST['prenom']){
+                    $exist = true;
+                }
+            }
+            if(!$exist) {
+                $new = new \WS_SatellysReborn\Modeles\Population\Administratif(1000000100000, $_POST['nom'], $_POST['prenom'],
+                    $_POST['tel'], $_POST['email'], $_POST['poste'], $adr);
+                $res = DAO_Factory::getDAO_Administratif()->insert($new);
+            }
         }
     }
