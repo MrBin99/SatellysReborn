@@ -80,8 +80,7 @@
                                            $_POST['mdp'],
                                            $_POST['email'],
                                            $utilCourant->getEnseignant(),
-                                           $utilCourant->getAdministratif(),
-                                           $utilCourant->getEtudiant());
+                                           $utilCourant->getAdministratif());
 
                 // Met à jour les données.
                 $res = DAO_Factory::getDAO_Utilisateur()->update($newUtil);

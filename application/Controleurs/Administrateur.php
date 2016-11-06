@@ -81,7 +81,7 @@ class Administrateur extends Controleur
      */
     private function ajoutUtilisateur($id, $nom, $prenom, $mail)
     {
-        $log = strtolower($nom) + "." + strtolower($prenom);
+        $log = strtolower($nom) . "." . strtolower($prenom);
         $mdp = $id;
         $util = new Utilisateur($log, $mdp, $mail, null, $id, null);
         $res = DAO_Factory::getDAO_Utilisateur()->insert($util);

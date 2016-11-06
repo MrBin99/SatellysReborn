@@ -36,17 +36,10 @@
             $url = $this->decouperURL();
 
             // Le nom du contrôleur.
-            $controleur = isset($url) ? $url[0] : 'Accueil';
+            $controleur = isset($url) ? ucfirst($url[0]) : 'Accueil';
 
             // Vérifie si le contrôleur existe
             if (file_exists(CONTROLEURS . $controleur . '.php')) {
-
-                /*
-                 * Si oui on passe la 1ere lettre du contrôleur de l'URL en
-                 * majuscule pour correspondre au nom du contrôleur dans
-                 * l'application.
-                 */
-                $url[0] = ucfirst($controleur);
 
                 // Affectation du nom du contrôleur
                 $this->controleur = $controleur;

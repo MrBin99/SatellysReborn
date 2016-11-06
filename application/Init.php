@@ -46,7 +46,7 @@
         $classe[0] = "";
 
         // Importe la classe une seule fois.
-        include_once implode('\\', $classe) . '.php';
+        include_once substr(implode('/', $classe) . '.php', 1);
     }
 
     // Lance le processus de routage.

@@ -24,13 +24,12 @@
         public function insert($obj) {
             // SQL.
             $sql = 'INSERT INTO utilisateur
-                    VALUES (:login, :mdp, :email, :enseignant, :etudiant, :admin)';
+                    VALUES (:login, :mdp, :email, :enseignant, :admin)';
 
             $res = $this->connexion->insert($sql, array(
                 ':login' => $obj->getLogin(),
                 ':mdp' => $obj->getEmail(),
                 ':enseignant' => $obj->getEnseignant()->getId(),
-                ':etudiant' => $obj->getEtudiant()->getId(),
                 ':admin' => $obj->getAdministratif()->getId()
             ));
 
@@ -117,7 +116,7 @@
          */
         public function findLoginMdp($login, $mdp) {
             // SQL.
-            $sql = 'SELECT login, mdp, email, id_administratif, id_enseignant, id_etudiant
+            $sql = 'SELECT login, mdp, email, id_administratif, id_enseignant
                     FROM utilisateur
                     WHERE login = :login
                     AND mdp = :mdp';
@@ -136,7 +135,6 @@
 
             $admin = null;
             $ensei = null;
-            $etud = null;
 
             // Remplissage du champs de la personne correspondante.
             if ($resBD[0]->id_administratif != null) {
@@ -145,13 +143,10 @@
             } elseif ($resBD[0]->id_enseignant != null) {
                 $ensei = DAO_Factory::getDAO_Enseignant()
                                     ->find($resBD[0]->id_enseignant);
-            } elseif ($resBD[0]->id_etudiant != null) {
-                $etud = DAO_Factory::getDAO_Etudiant()
-                                   ->find($resBD[0]->id_etudiant);
             }
 
             return new Utilisateur($resBD[0]->login, $resBD[0]->mdp,
-                                   $resBD[0]->email, $ensei, $admin, $etud);
+                                   $resBD[0]->email, $ensei, $admin);
         }
 
         /**
@@ -164,7 +159,7 @@
          */
         public function findAll() {
             // SQL.
-            $sql = 'SELECT login, mdp, id_administratif, id_enseignant, id_etudiant
+            $sql = 'SELECT login, mdp, id_administratif, id_enseignant
                     FROM utilisateur';
 
             $resBD = $this->connexion->select($sql, array());
@@ -181,7 +176,6 @@
             foreach ($resBD as $obj) {
                 $admin = null;
                 $ensei = null;
-                $etud = null;
 
                 // Remplissage du champs de la personne correspondante.
                 if ($obj->id_administratif != null) {
@@ -190,15 +184,11 @@
                 } elseif ($obj->id_enseignant != null) {
                     $ensei = DAO_Factory::getDAO_Enseignant()
                                         ->find($obj->id_enseignant);
-                } elseif ($obj->id_etudiant != null) {
-                    $etud = DAO_Factory::getDAO_Etudiant()
-                                       ->find($obj->id_etudiant);
                 }
 
                 array_push($res,
                            new Utilisateur($obj->login, $obj->mdp,
-                                           $obj->email, $ensei, $admin,
-                                           $etud)
+                                           $obj->email, $ensei, $admin)
                 );
             }
 

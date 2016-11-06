@@ -4,7 +4,6 @@
     use WS_SatellysReborn\Modeles\Modele;
     use WS_SatellysReborn\Modeles\Population\Administratif;
     use WS_SatellysReborn\Modeles\Population\Enseignant;
-    use WS_SatellysReborn\Modeles\Population\Etudiant;
 
     /**
      * Représente un utilisateur utilisant l'application.
@@ -27,9 +26,6 @@
         /** @var Administratif l'administratif représenté par cet utilisateur. */
         private $administratif;
 
-        /** @var Etudiant l'étudiant représenté par cet utilisateur. */
-        private $etudiant;
-
         /**
          * Créé un nouvel utilisateur.
          * @param string $login le login de l'utilisateur.
@@ -39,18 +35,15 @@
          *     utilisateur.
          * @param Administratif $administratif l'administratif représenté par
          *     cet utilisateur.
-         * @param Etudiant $etudiant l'étudiant représenté par cet utilisateur.
          */
         public function __construct($login, $mdp, $email,
                                     Enseignant $enseignant = null,
-                                    Administratif $administratif = null,
-                                    Etudiant $etudiant = null) {
+                                    Administratif $administratif = null) {
             $this->login = $login;
             $this->mdp = self::crypterMdp($mdp);
             $this->email = $email;
             $this->enseignant = $enseignant;
             $this->administratif = $administratif;
-            $this->etudiant = $etudiant;
         }
 
         /**
@@ -129,24 +122,6 @@
         }
 
         /**
-         * @return Etudiant l'étudiant représenté par cet utilisateur.
-         */
-        public function getEtudiant() {
-            return $this->etudiant;
-        }
-
-        /**
-         * @return bool
-         * <ul>
-         *     <li>True si l'utilisateur est un étudiant.</li>
-         *     <li>False sinon.</li>
-         * </ul>
-         */
-        public function estEtudiant() {
-            return $this->etudiant != null;
-        }
-
-        /**
          * @return bool
          * <ul>
          *     <li>True si l'utilisateur est un administratif.</li>
@@ -176,8 +151,7 @@
          * </ul>
          */
         public function estAdmin() {
-            return $this->etudiant == null
-                && $this->enseignant == null
+            return $this->enseignant == null
                 && $this->administratif == null;
         }
     }
