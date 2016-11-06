@@ -2,6 +2,8 @@
     namespace WS_SatellysReborn\Controleurs;
 
     use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use WS_SatellysReborn\Modeles\Population\Administratif as ModeleAdministratif;
+    use WS_SatellysReborn\Modeles\Population\Adresse\Adresse;
     use WS_SatellysReborn\Modeles\Population\Login\Utilisateur;
     use WS_SatellysReborn\Vues\Vue;
 
@@ -32,7 +34,8 @@
             }
         }
 
-        public function nouveau() {
+        public function nouveau()
+        {
             // Bien super-admin ?
             if (Utilisateur::estConnecte() &&
                 Utilisateur::getUtilisateur()->estAdmin()
@@ -42,32 +45,5 @@
                 $this->vue = new Vue($this, 'ErreurAdmin');
             }
             $this->vue->render();
-        }
-
-        /**
-         *
-         */
-        public function ajout(){
-            /**
-             * TODO : Ajouter un administratif
-             * Créer un objet adresse avec les champs, vérifier son existence (l'ajouter au besoin) et récupéré son id
-             * Créer un objet administratif avec les champs et l'id d'adresse et l'ajouter avec la fonction insert de
-             * DAO_Administratif
-             * Test de doublons d'administratif à faire, à moins qu'il se fasse tout seul dans le insert
-             */
-
-            $adr = DAO_Factory::getDAO_Adresse()->find(3);
-            $new = new \WS_SatellysReborn\Modeles\Population\Administratif(1000000100000, $_POST['nom'],
-                $_POST['prenom'], $_POST['tel'], $_POST['email'], $_POST['poste'], $adr);
-            $exist = false;
-            $administratif = DAO_Factory::getDAO_Administratif()->findAll();
-            foreach ($administratif as $obj){
-                if($obj->getId() == $new->getId()){
-                    $exist = true;
-                }
-            }
-            if(!$exist) {
-                $res = DAO_Factory::getDAO_Administratif()->insert($new);
-            }
         }
     }

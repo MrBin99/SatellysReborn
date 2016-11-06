@@ -1,10 +1,12 @@
 <?php
-    include_once COMMON . 'header.phtml';
+use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+
+include_once COMMON . 'header.phtml';
     include_once COMMON . 'Menu.phtml';
 ?>
 <div class="container">
     <h1>Ajout de personnel administratif : </h1>
-    <form action="ajout" method="post">
+    <form action="administrateur/ajout" method="post">
         <div class="form-group">
             <label for="nom">Nom:</label>
             <input type="text" class="form-control" name="nom" required>
@@ -12,6 +14,10 @@
         <div class="form-group">
             <label for="prenom">Prénom:</label>
             <input type="text" class="form-control" name="prenom" required>
+        </div>
+        <div class="form-group">
+            <label for="id">Identifiant:</label>
+            <input type="text" class="form-control" name="id" required>
         </div>
         <div class="form-group">
             <label for="tel">Téléphone:</label>
@@ -31,9 +37,16 @@
         </div>
         <div class="form-group">
             <label for="ville">Ville:</label>
-            <input type="text" class="form-control" name="ville" required>
-            <label for="cp">Code Postal:</label>
-            <input type="text" class="form-control" name="cp" required>
+            <select class="form-control" name="ville" required>
+                <?php
+                    $ville = DAO_Factory::getDAO_Ville()->findAll();
+                    foreach($ville as $obj){
+                ?>
+                        <option value="<?php echo $obj->getNumInsee(); ?>"> <?php echo $obj->getNom(); ?> </option>
+                <?php
+                    }
+                ?>
+            </select>
         </div>
         <button type="submit" class="btn btn-default">Créer</button>
     </form>
