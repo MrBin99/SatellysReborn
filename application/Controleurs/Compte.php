@@ -19,7 +19,7 @@
             if (Utilisateur::estConnecte()) {
                 $this->vue = new Vue($this, 'MonCompte');
             } else {
-                $this->vue = new Vue($this, 'ErreurNonConnecte');
+                self::redirect('compte/erreurnonconnecte');
             }
             $this->vue->render();
         }
@@ -60,8 +60,7 @@
                 session_destroy();
                 self::redirect('');
             } else {
-                $this->vue = new Vue($this, 'ErreurNonConnecte');
-                $this->vue->render();
+                self::redirect('compte/erreurnonconnecte');
             }
         }
 
@@ -96,8 +95,17 @@
                     $this->vue = new Vue($this, 'MiseAJourNOk');
                 }
             } else {
-                $this->vue = new Vue($this, 'ErreurNonConnecte');
+                self::redirect('compte/erreurnonconnecte');
             }
+            $this->vue->render();
+        }
+
+        /**
+         * Affiche la page d'erreur : utilisateur n'est pas connecté.
+         */
+        public function erreurNonConnecte() {
+            $this->vue = new Vue($this, 'ErreurNonConnecte',
+                                 'Erreur connexion requise');
             $this->vue->render();
         }
     }

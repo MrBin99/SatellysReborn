@@ -1,0 +1,123 @@
+<?php
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+?>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <?= $obj->getId() . ' - ' . $obj->getNom() . ' ' . $obj->getPrenom() ?>
+        </div>
+        <div class="panel-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Civilité
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="nom">Nom</label>
+                                    <input type="text" id="nom" class="form-control" value="<?= $obj->getNom() ?>" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prenom">Prénom</label>
+                                    <input type="text" id="prenom" class="form-control" value="<?= $obj->getPrenom() ?>" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Etudiant
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="id">Identifiant UT1</label>
+                                    <input type="text" id="id" class="form-control" value="<?= $obj->getId() ?>" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ine">INE</label>
+                                    <input type="text" id="ine" class="form-control" value="<?= $obj->getIne() ?>" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Coordonnées
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" value="<?= $obj->getEmail() ?>" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tel">Téléphone</label>
+                                    <input type="tel" class="form-control" id="tel" value="<?= $obj->getTel() ?>" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Actions
+                            </div>
+                            <div class="panel-body">
+                                <div class="text-center">
+                                    <a href="etudiant/absences/<?= $obj->getId() ?>" class="btn btn-primary">Voir les absences</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Adresse
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="adresse1">Adresse 1</label>
+                            <input type="text" id="adresse1" class="form-control" value="<?= $obj->getAdresse()->getAdresse1() ?>" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="adresse2">Adresse 2</label>
+                            <input type="text" id="adresse2" class="form-control" value="<?= $obj->getAdresse()->getAdresse2() ?>" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="adresse3">Adresse 3</label>
+                            <input type="text" id="adresse3" class="form-control" value="<?= $obj->getAdresse()->getAdresse3() ?>" readonly>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="cp">Code Postal</label>
+                                    <input type="text" id="cp" class="form-control" value="<?= $obj->getAdresse()->getVille()->getCodePostal() ?>" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="ville">Ville</label>
+                                    <input type="text" id="ville" class="form-control" value="<?= $obj->getAdresse()->getVille()->getNom() ?>" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="pays">Pays</label>
+                                    <input type="text" id="pays" class="form-control" value="<?= $obj->getAdresse()->getVille()->getPays()->getNom() ?>" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <a href="" class="btn btn-success">Modifier</a>
+        </div>
+    </div>
+</div>
