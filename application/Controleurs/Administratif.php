@@ -5,6 +5,8 @@
     use WS_SatellysReborn\Modeles\Population\Administratif as ModeleAdministratif;
     use WS_SatellysReborn\Modeles\Population\Adresse\Adresse;
     use WS_SatellysReborn\Modeles\Population\Enseignant;
+    use WS_SatellysReborn\Modeles\Population\Groupe\Departement;
+    use WS_SatellysReborn\Modeles\Population\Groupe\Promotion;
     use WS_SatellysReborn\Modeles\Population\Login\Utilisateur;
     use WS_SatellysReborn\Vues\Vue;
 
@@ -31,24 +33,24 @@
                 $this->vue->render();
             }
         }
-/*
-        public function nouveau()
-        {
-            // Bien super-admin ?
-            if (Utilisateur::estConnecte() &&
-                Utilisateur::getUtilisateur()->estAdmin()
-            ) {
-                $this->vue = new Vue($this, "Nouveau");
-            } else {
-                $this->vue = new Vue($this, 'ErreurAdmin');
-            }
-            $this->vue->render();
-        }
-*/
+        /*
+                public function nouveau()
+                {
+                    // Bien super-admin ?
+                    if (Utilisateur::estConnecte() &&
+                        Utilisateur::getUtilisateur()->estAdmin()
+                    ) {
+                        $this->vue = new Vue($this, "Nouveau");
+                    } else {
+                        $this->vue = new Vue($this, 'ErreurAdmin');
+                    }
+                    $this->vue->render();
+                }
+        */
         /**
          * Fonction d'ajout d'un nouvel enseignant
          */
-        public function ajoutProf(){
+        public function ajoutProf() {
             if (Utilisateur::estConnecte() &&
                 Utilisateur::getUtilisateur()->estAdmin()
             ) {
@@ -84,12 +86,13 @@
                         // si il n'existe pas déjà dans la BD
                         // Affichage de page d'erreur sinon
                         if (!$exist) {
-                            $res2 = DAO_Factory::getDAO_Enseignant()->insert($new);
+                            $res2 =
+                                DAO_Factory::getDAO_Enseignant()->insert($new);
                             $this->ajoutUtilisateur($_POST['id'], $_POST['nom'],
                                                     $_POST['prenom'],
                                                     $_POST['email']);
                             //redirection de la page après réussite
-                            $this->vue = new Vue($this, "AjoutOk");
+                            $this->vue = new Vue($this, "AjoutOkProf");
                         } else {
                             $this->vue = new Vue($this, "ErreurAjout");
                         }
@@ -97,7 +100,7 @@
                 } else {
                     $this->vue = new Vue($this, "ErreurChamp");
                 }
-            }else {
+            } else {
                 $this->vue = new Vue($this, 'ErreurAdmin');
             }
             $this->vue->render();
@@ -118,14 +121,52 @@
         /**
          * Fonction d'ajout d'un département
          */
-        public function ajoutDep(){
-
+        public function ajoutDep() {
+            if (Utilisateur::estConnecte() &&
+                Utilisateur::getUtilisateur()->estAdmin()
+            ) {
+                //vérification de l'existance de $_POST
+                if (isset($_POST)) {
+                    $dep = new Departement($_POST['idDep'], $_POST['nomDep']);
+                    if(DAO_Factory::getDAO_Departement()->find($_POST['idDep'])==null){
+                        $res = DAO_Factory::getDAO_Departement()->insert($dep);
+                        $this->vue = new Vue($this, 'AjoutOkDep');
+                    }else{
+                        $this->vue = new Vue($this, "ErreurAjout");
+                    }
+                } else {
+                    $this->vue = new Vue($this, "ErreurChamp");
+                }
+            } else {
+                $this->vue = new Vue($this, 'ErreurAdmin');
+            }
+            $this->vue->render();
         }
 
         /**
          * Fonction d'ajout d'une filière
          */
-        public function ajoutFiliere(){
+        public function ajoutPromo() {
+            if (Utilisateur::estConnecte() &&
+                Utilisateur::getUtilisateur()->estAdmin()
+            ) {
+                //vérification de l'existance de $_POST
+                if (isset($_POST)) {
+                    $dep = DAO_Factory::getDAO_Departement()->find($_POST['depPromo']);
+                    $promo = new Promotion(null,$_POST['nomPromo'], $_POST['anneePromo'], $dep);
 
+                    $res = DAO_Factory::getDAO_Promotion()->insert($promo);
+                    if(DAO_Factory::getDAO_Departement()->find($res->getId())==null){
+                        $this->vue = new Vue($this, 'AjoutOkPromo');
+                    }else{
+                        $this->vue = new Vue($this, "ErreurAjout");
+                    }
+                } else {
+                    $this->vue = new Vue($this, "ErreurChamp");
+                }
+            } else {
+                $this->vue = new Vue($this, 'ErreurAdmin');
+            }
+            $this->vue->render();
         }
     }

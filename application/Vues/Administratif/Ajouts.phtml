@@ -49,22 +49,44 @@
         </div>
         <button type="submit" class="btn btn-default">Créer</button>
     </form>
+
     <h1>Ajout de département : </h1>
     <!-- Formulaire de création de département -->
     <form action="administratif/ajoutDep" method="post">
+        <div class="form-group">
+            <label for="idDep">Identifiant du département:</label>
+            <input type="text" class="form-control" name="idDep" maxlength="10" required>
+        </div>
         <div class="form-group">
             <label for="nomDep">Nom du département:</label>
             <input type="text" class="form-control" name="nomDep" required>
         </div>
         <button type="submit" class="btn btn-default">Créer</button>
     </form>
-    <h1>Ajout de filière : </h1>
-    <!-- Formulaire de création de filière -->
-    <form action="administratif/ajoutFiliere" method="post">
+
+    <h1>Ajout de promotion : </h1>
+    <!-- Formulaire de création de promotion -->
+    <form action="administratif/ajoutPromo" method="post">
         <div class="form-group">
-            <label for="nomFiliere">Nom de la filière:</label>
-            <input type="text" class="form-control" name="nomFiliere" required>
+            <label for="nomPromo">Nom de la promotion:</label>
+            <input type="text" class="form-control" name="nomPromo" required>
         </div>
+        <div class="form-group">
+            <label for="anneePromo">Année de la promotion:</label>
+            <input type="text" class="form-control" name="anneePromo" required>
+        </div>
+        <label for="depPromo">Département de la promotion:</label>
+        <select class="form-control" name="depPromo" required>
+            <?php
+                $deps = DAO_Factory::getDAO_Departement()->findAll();
+                foreach ($deps as $obj) {
+                    ?>
+                    <option
+                        value="<?php echo $obj->getId(); ?>"> <?php echo $obj->getNom(); ?> </option>
+                    <?php
+                }
+            ?>
+        </select>
         <button type="submit" class="btn btn-default">Créer</button>
     </form>
 </div>
