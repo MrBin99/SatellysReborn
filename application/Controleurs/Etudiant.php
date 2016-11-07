@@ -49,6 +49,30 @@
         }
 
         /**
+         * Affiche les absences d'un étudiant.
+         * @param $id string l'identifiant de l'étudiant.
+         */
+        public function absences($id) {
+            // Connecté.
+            if (!Utilisateur::estConnecte()) {
+                self::redirect('compte/erreurnonconnecte');
+            }
+
+            if (isset($id)) {
+
+                // Récupère les absences.
+                $absences = DAO_Factory::getDAO_Absence()
+                                       ->getAbsencesEtudiant($id);
+
+                $this->vue = new Vue($this, 'Absences');
+                $this->vue->render($absences);
+
+            } else {
+                self::redirect('etudiant/erreurEtudiantInconnu');
+            }
+        }
+
+        /**
          * Affiche la page d'erreur quand on veut afficher les détails
          * d'un étudiant inconnu.
          */
