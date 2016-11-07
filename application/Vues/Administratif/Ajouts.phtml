@@ -1,0 +1,70 @@
+<?php
+    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+?>
+<div class="container">
+    <h1>Ajout d'enseignant : </h1>
+    <!-- Formulaire de création d'enseignant -->
+    <form action="administratif/ajoutProf" method="post">
+        <div class="form-group">
+            <label for="nom">Nom:</label>
+            <input type="text" class="form-control" name="nom" required>
+        </div>
+        <div class="form-group">
+            <label for="prenom">Prénom:</label>
+            <input type="text" class="form-control" name="prenom" required>
+        </div>
+        <div class="form-group">
+            <label for="id">Identifiant (13 caractères):</label>
+            <input type="text" class="form-control" name="id" maxlength="13"
+                   minlength="13" required>
+        </div>
+        <div class="form-group">
+            <label for="tel">Téléphone:</label>
+            <input type="tel" class="form-control" name="tel" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Adresse e-mail:</label>
+            <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="adresse">Adresse:</label>
+            <input type="text" class="form-control" name="adresse" required>
+        </div>
+        <div class="form-group">
+            <label for="ville">Ville:</label>
+            <select class="form-control" name="ville" required>
+                <?php
+                    $ville = DAO_Factory::getDAO_Ville()->findAll();
+                    foreach ($ville as $obj) {
+                        ?>
+                        <option
+                            value="<?php echo $obj->getNumInsee(); ?>"> <?php echo $obj->getNom(); ?> </option>
+                        <?php
+                    }
+                ?>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-default">Créer</button>
+    </form>
+    <h1>Ajout de département : </h1>
+    <!-- Formulaire de création de département -->
+    <form action="administratif/ajoutDep" method="post">
+        <div class="form-group">
+            <label for="nomDep">Nom du département:</label>
+            <input type="text" class="form-control" name="nomDep" required>
+        </div>
+        <button type="submit" class="btn btn-default">Créer</button>
+    </form>
+    <h1>Ajout de filière : </h1>
+    <!-- Formulaire de création de filière -->
+    <form action="administratif/ajoutFiliere" method="post">
+        <div class="form-group">
+            <label for="nomFiliere">Nom de la filière:</label>
+            <input type="text" class="form-control" name="nomFiliere" required>
+        </div>
+        <button type="submit" class="btn btn-default">Créer</button>
+    </form>
+</div>
