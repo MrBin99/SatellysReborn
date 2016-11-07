@@ -16,8 +16,9 @@
             <input type="text" class="form-control" name="prenom" required>
         </div>
         <div class="form-group">
-            <label for="id">Identifiant:</label>
-            <input type="text" class="form-control" name="id" required>
+            <label for="id">Identifiant (13 caractères):</label>
+            <input type="text" class="form-control" name="id" maxlength="13"
+                   minlength="13" required>
         </div>
         <div class="form-group">
             <label for="tel">Téléphone:</label>
@@ -40,10 +41,11 @@
             <select class="form-control" name="ville" required>
                 <?php
                     $ville = DAO_Factory::getDAO_Ville()->findAll();
-                    foreach($ville as $obj){
-                ?>
-                        <option value="<?php echo $obj->getNumInsee(); ?>"> <?php echo $obj->getNom(); ?> </option>
-                <?php
+                    foreach ($ville as $obj) {
+                        ?>
+                        <option
+                            value="<?php echo $obj->getNumInsee(); ?>"> <?php echo $obj->getNom(); ?> </option>
+                        <?php
                     }
                 ?>
             </select>

@@ -28,9 +28,12 @@
 
             $res = $this->connexion->insert($sql, array(
                 ':login' => $obj->getLogin(),
-                ':mdp' => $obj->getEmail(),
-                ':enseignant' => $obj->getEnseignant()->getId(),
-                ':admin' => $obj->getAdministratif()->getId()
+                ':mdp' => $obj->getMdp(),
+                ':email' => $obj->getEmail(),
+                ':enseignant' => $obj->getEnseignant() ?
+                    $obj->getEnseignant()->getId() : null,
+                ':admin' => $obj->getAdministratif() ?
+                    $obj->getAdministratif()->getId() : null
             ));
 
             return $res ? $obj : false;
