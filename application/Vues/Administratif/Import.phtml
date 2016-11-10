@@ -1,0 +1,32 @@
+<?php
+    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+?>
+<div class="container">
+    <h1>Ajout d'enseignant : </h1>
+    <!-- Formulaire de création d'enseignant -->
+    <form action="administratif/importEtudiant" method="post">
+        <label for="importEtudiant">Importer un fichier d'étudiant:</label>
+        <input type="file" class="form-control" name="importEtudiant">
+        <button type="submit" class="btn btn-default">Importer</button>
+    </form>
+    <form action="administratif/importPlanning" method="post">
+        <label for="importPlan">Importer un fichier de planning:</label>
+        <input type="file" class="form-control" name="importPlan">
+        <button type="submit" class="btn btn-default">Importer</button>
+    </form>
+    <form action="administratif/deletePlanning" method="post">
+        <label for="supprPlan">Suppression de planning:</label>
+        <select class="form-control" name="supprPlan" required>
+            <?php
+
+                    ?>
+                    <option value="<?php  ?>"> <?php  ?> </option>
+                    <?php
+
+            ?>
+        </select>
+    </form>
+</div>

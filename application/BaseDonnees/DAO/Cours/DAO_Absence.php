@@ -23,7 +23,7 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO absence
+            $sql = 'INSERT INTO absence (id_cours, id_etudiant, justifie, motif)
                     VALUES (:cours, :etudiant, :justifie, :motif)';
 
             $res = $this->connexion->insert($sql, array(

@@ -1,0 +1,22 @@
+<?php
+include_once COMMON . 'Header.phtml';
+include_once COMMON . 'Menu.phtml';
+?>
+
+<div class="container">
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            Erreur d'ajout
+        </div>
+        <div class="panel-body">
+            Les absences des élèves suivants n'ont pas été ajoutée : <br>
+            <?php
+                for($i = 0 ; $i < count($obj) ; $i++){
+                    echo $obj[$i]->getNom()." ".$obj[$i]->getPrenom()." / ";
+                }
+            ?>
+            <br>
+            Veuillez les ressaisir !
+        </div>
+    </div>
+</div>

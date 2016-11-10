@@ -23,7 +23,8 @@
         public function index() {
             // Bien super-admin ?
             if (Utilisateur::estConnecte() &&
-                Utilisateur::getUtilisateur()->estAdmin()
+                (Utilisateur::getUtilisateur()->estAdmin() ||
+                 Utilisateur::getUtilisateur()->estAdministratif())
             ) {
 
                 $this->vue = new Vue($this, "Ajouts");
@@ -33,26 +34,14 @@
                 $this->vue->render();
             }
         }
-        /*
-                public function nouveau()
-                {
-                    // Bien super-admin ?
-                    if (Utilisateur::estConnecte() &&
-                        Utilisateur::getUtilisateur()->estAdmin()
-                    ) {
-                        $this->vue = new Vue($this, "Nouveau");
-                    } else {
-                        $this->vue = new Vue($this, 'ErreurAdmin');
-                    }
-                    $this->vue->render();
-                }
-        */
+
         /**
          * Fonction d'ajout d'un nouvel enseignant
          */
         public function ajoutProf() {
             if (Utilisateur::estConnecte() &&
-                Utilisateur::getUtilisateur()->estAdmin()
+                (Utilisateur::getUtilisateur()->estAdmin() ||
+                 Utilisateur::getUtilisateur()->estAdministratif())
             ) {
                 //vérification de l'existance de $_POST
                 if (isset($_POST)) {
@@ -123,15 +112,18 @@
          */
         public function ajoutDep() {
             if (Utilisateur::estConnecte() &&
-                Utilisateur::getUtilisateur()->estAdmin()
+                (Utilisateur::getUtilisateur()->estAdmin() ||
+                 Utilisateur::getUtilisateur()->estAdministratif())
             ) {
                 //vérification de l'existance de $_POST
                 if (isset($_POST)) {
                     $dep = new Departement($_POST['idDep'], $_POST['nomDep']);
-                    if(DAO_Factory::getDAO_Departement()->find($_POST['idDep'])==null){
+                    if (DAO_Factory::getDAO_Departement()
+                                   ->find($_POST['idDep']) == null
+                    ) {
                         $res = DAO_Factory::getDAO_Departement()->insert($dep);
                         $this->vue = new Vue($this, 'AjoutOkDep');
-                    }else{
+                    } else {
                         $this->vue = new Vue($this, "ErreurAjout");
                     }
                 } else {
@@ -148,17 +140,22 @@
          */
         public function ajoutPromo() {
             if (Utilisateur::estConnecte() &&
-                Utilisateur::getUtilisateur()->estAdmin()
+                (Utilisateur::getUtilisateur()->estAdmin() ||
+                 Utilisateur::getUtilisateur()->estAdministratif())
             ) {
                 //vérification de l'existance de $_POST
                 if (isset($_POST)) {
-                    $dep = DAO_Factory::getDAO_Departement()->find($_POST['depPromo']);
-                    $promo = new Promotion(null,$_POST['nomPromo'], $_POST['anneePromo'], $dep);
+                    $dep = DAO_Factory::getDAO_Departement()
+                                      ->find($_POST['depPromo']);
+                    $promo = new Promotion(null, $_POST['nomPromo'],
+                                           $_POST['anneePromo'], $dep);
 
                     $res = DAO_Factory::getDAO_Promotion()->insert($promo);
-                    if(DAO_Factory::getDAO_Departement()->find($res->getId())==null){
+                    if (DAO_Factory::getDAO_Departement()
+                                   ->find($res->getId()) == null
+                    ) {
                         $this->vue = new Vue($this, 'AjoutOkPromo');
-                    }else{
+                    } else {
                         $this->vue = new Vue($this, "ErreurAjout");
                     }
                 } else {
