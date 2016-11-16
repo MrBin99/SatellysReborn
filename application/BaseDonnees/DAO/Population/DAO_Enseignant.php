@@ -38,7 +38,6 @@
                 ':nom' => $obj->getNom(),
                 ':prenom' => $obj->getPrenom(),
                 ':tel' => $obj->getTel(),
-                ':email' => $obj->getEmail(),
                 ':adresse' => $obj->getAdresse()->getId()
             ));
 
@@ -67,7 +66,6 @@
                         nom = :nom,
                         prenom = :prenom,
                         tel = :tel,
-                        email = :email,
                         id_adresse = :adresse
                     WHERE id = :id';
 
@@ -75,7 +73,6 @@
                 ':nom' => $obj->getNom(),
                 ':prenom' => $obj->getPrenom(),
                 ':tel' => $obj->getTel(),
-                ':email' => $obj->getEmail(),
                 ':adresse' => $obj->getAdresse()->getId(),
                 ':id' => $obj->getId(),
             ));
@@ -118,7 +115,7 @@
          */
         public function find($cle) {
             // SQL.
-            $sql = 'SELECT id, nom, prenom, tel, email, id_adresse
+            $sql = 'SELECT id, nom, prenom, tel, id_adresse
                     FROM enseignant
                     WHERE id = :id';
 
@@ -137,8 +134,7 @@
                 DAO_Factory::getDAO_Adresse()->find($resBD[0]->id_adresse);
 
             return new Enseignant($resBD[0]->id, $resBD[0]->nom,
-                                  $resBD[0]->prenom, $resBD[0]->tel,
-                                  $resBD[0]->email, $adresse);
+                                  $resBD[0]->prenom, $resBD[0]->tel, $adresse);
         }
 
         /**
@@ -154,7 +150,7 @@
          */
         public function findNomPrenom($nom, $prenom) {
             // SQL.
-            $sql = 'SELECT id, nom, prenom, tel, email, id_adresse
+            $sql = 'SELECT id, nom, prenom, tel, id_adresse
                     FROM enseignant
                     WHERE lower(nom) LIKE lower(:nom)
                     AND lower(prenom) LIKE lower(:prenom)';
@@ -175,8 +171,7 @@
                 DAO_Factory::getDAO_Adresse()->find($resBD[0]->id_adresse);
 
             return new Enseignant($resBD[0]->id, $resBD[0]->nom,
-                                  $resBD[0]->prenom, $resBD[0]->tel,
-                                  $resBD[0]->email, $adresse);
+                                  $resBD[0]->prenom, $resBD[0]->tel, $adresse);
         }
 
         /**
@@ -189,7 +184,7 @@
          */
         public function findAll() {
             // SQL.
-            $sql = 'SELECT id, nom, prenom, tel, email, id_adresse
+            $sql = 'SELECT id, nom, prenom, tel, id_adresse
                     FROM enseignant';
 
             $resBD = $this->connexion->select($sql, array());
@@ -210,7 +205,7 @@
                 array_push($res, new Enseignant($obj->id, $obj->nom,
                                                 $obj->prenom,
                                                 $obj->tel,
-                                                $obj->email, $adresse)
+                                                $adresse)
                 );
             }
 

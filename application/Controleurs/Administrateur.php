@@ -35,7 +35,17 @@
                 //vérification de l'existance de $_POST
                 if(isset($_POST)){
                     $ville = DAO_Factory::getDAO_Ville()->find($_POST['ville']);
-                    $adr = new Adresse(null, $_POST['adresse'], "", "", $ville);
+                    if(isset($_POST['adresse2'])){
+                        $adr2 = $_POST['adresse2'];
+                    }else{
+                        $adr2 = "";
+                    }
+                    if(isset($_POST['adresse3'])){
+                        $adr3 = $_POST['adresse3'];
+                    }else{
+                        $adr3 = "";
+                    }
+                    $adr = new Adresse(null, $_POST['adresse'], $adr2, $adr3, $ville);
                     $res = DAO_Factory::getDAO_Adresse()->insert($adr);
 
                     //vérification si l'insertion de l'adresse à fonctionné
@@ -64,7 +74,7 @@
                         // Affichage de page d'erreur sinon
 
                         if(!$exist){
-                            $res2 = DAO_Factory::getDAO_Administratif()->insert($new);
+                            DAO_Factory::getDAO_Administratif()->insert($new);
                             $this->ajoutUtilisateur($_POST['id'], $_POST['nom'],
                                                     $_POST['prenom'],
                                                     $_POST['email']);
@@ -87,13 +97,17 @@
         /**
          * Ajout d'un utilisateur
          * Fonction appelé uniquement dans la fonction ajout de Administrateur
+         * @param $id : identifiant de l'utilisateur qui sera utilisé pour créer le mot de passe
+         * @param $nom : nom de l'utilisateur utilisé pour le login, combiné avec le prénom
+         * @param $prenom : prenom de l'utilisateur utilisé pour le login, combiné avec le nom
+         * @param $mail : adresse mail de l'utilisateur
          */
         private function ajoutUtilisateur($id, $nom, $prenom, $mail) {
             $log = strtolower($nom) . "." . strtolower($prenom);
             $mdp = $id;
             $admin = DAO_Factory::getDAO_Administratif()->find($id);
             $util = new Utilisateur($log, $mdp, $mail, null, $admin);
-            $res3 = DAO_Factory::getDAO_Utilisateur()->insert($util);
+            DAO_Factory::getDAO_Utilisateur()->insert($util);
         }
 
         /**

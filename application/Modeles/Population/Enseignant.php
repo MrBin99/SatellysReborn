@@ -18,8 +18,8 @@
          * @param string $email l'email de l personne.
          * @param Adresse $adresse l'adresse de l'neseignant.
          */
-        public function __construct($id, $nom, $prenom, $tel, $email,
+        public function __construct($id, $nom, $prenom, $tel,
                                     $adresse) {
-            parent::__construct($id, $nom, $prenom, $tel, $email, $adresse);
+            parent::__construct($id, $nom, $prenom, $tel, $adresse);
         }
     }
