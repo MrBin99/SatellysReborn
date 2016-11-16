@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Population\Login;
+    namespace SatellysReborn\Modeles\Population\Login;
 
-    use WS_SatellysReborn\Modeles\Modele;
-    use WS_SatellysReborn\Modeles\Population\Administratif;
-    use WS_SatellysReborn\Modeles\Population\Enseignant;
+    use SatellysReborn\Modeles\Modele;
+    use SatellysReborn\Modeles\Population\Administratif;
+    use SatellysReborn\Modeles\Population\Enseignant;
 
     /**
      * Représente un utilisateur utilisant l'application.
-     * @package WS_SatellysReborn\Modeles\Population\Login
+     * @package SatellysReborn\Modeles\Population\Login
      */
     class Utilisateur extends Modele {
 

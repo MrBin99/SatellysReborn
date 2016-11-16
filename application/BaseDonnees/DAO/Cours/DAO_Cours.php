@@ -1,10 +1,14 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Cours;
+    namespace SatellysReborn\BaseDonnees\DAO\Cours;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Cours\Cours;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Cours\Cours;
 
+    /**
+     * DAO permettant de gérer les cours en base de données.
+     * @package SatellysReborn\BaseDonnees\DAO\Cours
+     */
     class DAO_Cours extends DAO {
 
         /**
@@ -19,14 +23,14 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO cours (id_matiere, id_enseignant, num_salle, 
+            $sql = 'INSERT INTO cours (id_matiere, id_enseignant, salle, 
                                        jour, debut, fin)
                     VALUES (:matiere, :enseignant, :salle, :jour, :debut, :fin)';
 
             $res = $this->connexion->insert($sql, array(
                 ':matiere' => $obj->getMatiere()->getId(),
                 ':enseignant' => $obj->getEnseignant()->getId(),
-                ':salle' => $obj->getSalle()->getNum(),
+                ':salle' => $obj->getSalle(),
                 ':jour' => $obj->getJour(),
                 ':debut' => $obj->getDebut(),
                 ':fin' => $obj->getFin()
@@ -69,7 +73,7 @@
             $sql = 'UPDATE cours SET
                         id_matiere = :matiere,
                         id_enseignant = :enseignant,
-                        num_salle = :salle,
+                        salle = :salle,
                         jour = :jour,
                         debut = :debut,
                         fin = :fin
@@ -78,7 +82,7 @@
             return $this->connexion->update($sql, array(
                 ':matiere' => $obj->getMatiere()->getId(),
                 ':enseignant' => $obj->getEnseignant()->getId(),
-                ':salle' => $obj->getSalle()->getNum(),
+                ':salle' => $obj->getSalle(),
                 ':jour' => $obj->getJour(),
                 ':debut' => $obj->getDebut(),
                 ':fin' => $obj->getFin(),
@@ -123,7 +127,7 @@
          */
         public function find($cle) {
             // SQL.
-            $sql = 'SELECT id_matiere, id_enseignant, num_salle, 
+            $sql = 'SELECT id_matiere, id_enseignant, salle, 
                            jour, debut, fin
                     FROM cours
                     WHERE id = :id';
@@ -142,13 +146,73 @@
                 DAO_Factory::getDAO_Matiere()->find($resBD[0]->id_matiere);
             $enseignant = DAO_Factory::getDAO_Enseignant()
                                      ->find($resBD[0]->id_enseignant);
-            $salle = DAO_Factory::getDAO_Salle()->find($resBD[0]->num_salle);
-            $cours = new Cours($cle, $matiere, $enseignant, $salle,
+            $cours = new Cours($cle, $matiere, $enseignant, $resBD[0]->salle,
                                $resBD[0]->jour, $resBD[0]->debut,
                                $resBD[0]->fin);
 
             // Ajout des groupes.
             $groupes = $this->getGroupes($cle);
+
+            if ($groupes != null) {
+                foreach ($groupes as $groupe) {
+                    $cours->ajouterGroupe($groupe);
+                }
+            }
+
+            return $cours;
+        }
+
+        /**
+         * Retourne le cours dont le nom, la date et les heures de début
+         * et de fin sont passées en argument.
+         * @param $nom string le nom de la matière du cours.
+         * @param $date string la date du cours.
+         * @param $debut string l'heure de début du cours.
+         * @param $fin string l'heure de fin du cours.
+         * @return Cours
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNameDateHeure($nom, $date, $debut, $fin) {
+            // Reverse la date.
+            $date = explode('-', $date);
+            $date = implode('-', array_reverse($date));
+
+            // SQL.
+            $sql = 'SELECT c.id AS id, id_matiere, id_enseignant, salle, 
+                           jour, debut, fin
+                    FROM cours c
+                    JOIN matiere m ON c.id_matiere = m.id
+                    WHERE lower(nom) = lower(:nom)
+                    AND jour = :jour
+                    AND c.debut = :debut
+                    AND fin = :fin';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':nom' => $nom,
+                ':jour' => $date,
+                ':debut' => $debut,
+                ':fin' => $fin,
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+            $matiere =
+                DAO_Factory::getDAO_Matiere()->find($resBD[0]->id_matiere);
+            $enseignant = DAO_Factory::getDAO_Enseignant()
+                                     ->find($resBD[0]->id_enseignant);
+            $cours = new Cours($resBD[0]->id, $matiere, $enseignant,
+                               $resBD[0]->salle, $resBD[0]->jour,
+                               $resBD[0]->debut, $resBD[0]->fin);
+
+            // Ajout des groupes.
+            $groupes = $this->getGroupes($resBD[0]->id);
 
             if ($groupes != null) {
                 foreach ($groupes as $groupe) {
@@ -169,7 +233,7 @@
          */
         public function findAll() {
             // SQL.
-            $sql = 'SELECT id, id_matiere, id_enseignant, num_salle,
+            $sql = 'SELECT id, id_matiere, id_enseignant, salle,
                            jour, debut, fin
                     FROM cours';
 
@@ -189,12 +253,11 @@
                     DAO_Factory::getDAO_Matiere()->find($resBD[0]->id_matiere);
                 $enseignant = DAO_Factory::getDAO_Enseignant()
                                          ->find($resBD[0]->id_enseignant);
-                $salle =
-                    DAO_Factory::getDAO_Salle()->find($resBD[0]->num_salle);
 
                 array_push($res,
-                           new Cours($obj->id, $matiere, $enseignant, $salle,
-                                     $obj->jour, $obj->debut, $obj->fin));
+                           new Cours($obj->id, $matiere, $enseignant,
+                                     $obj->salle, $obj->jour, $obj->debut,
+                                     $obj->fin));
             }
 
             return $res;

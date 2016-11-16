@@ -1,14 +1,14 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO;
+    namespace SatellysReborn\BaseDonnees\DAO;
 
-    use WS_SatellysReborn\BaseDonnees\BD_Connexion;
-    use WS_SatellysReborn\Modeles\Modele;
+    use SatellysReborn\BaseDonnees\BD_Connexion;
+    use SatellysReborn\Modeles\Modele;
 
     /**
      * Représente une entité de la base de données (table) pour y effectuer
      * des modifications ou sélection qui se répercuteront directement sur la
      * base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO
+     * @package SatellysReborn\BaseDonnees\DAO
      */
     abstract class DAO {
 

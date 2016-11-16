@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse;
+    namespace SatellysReborn\BaseDonnees\DAO\Population\Adresse;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Population\Adresse\Adresse;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Population\Adresse\Adresse;
 
     /**
      * DAO permettant de gérer des adresses en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse
+     * @package SatellysReborn\BaseDonnees\DAO\Population\Adresse
      */
     class DAO_Adresse extends DAO {
 

@@ -1,7 +1,7 @@
 <?php
-    namespace WS_SatellysReborn\Vues;
+    namespace SatellysReborn\Vues;
 
-    use WS_SatellysReborn\Controleurs\Controleur;
+    use SatellysReborn\Controleurs\Controleur;
 
     /**
      * Représente une vue de l'application.
@@ -22,6 +22,7 @@
          * Créé une nouvelle vue.
          * @param Controleur $controleur le du contrôleur de la vue.
          * @param string $vue le fichier de la vue.
+         * @param string $titre le titre de la page.
          */
         public function __construct(Controleur $controleur, $vue, $titre = '') {
             $this->controleur = $controleur;

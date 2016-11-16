@@ -1,12 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe;
+    namespace SatellysReborn\BaseDonnees\DAO\Population\Groupe;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\Modeles\Population\Groupe\Departement;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\Controleurs\Promotion;
+    use SatellysReborn\Modeles\Population\Groupe\Departement;
 
     /**
      * DAO permettant de gérer département de l'IUT en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe
+     * @package SatellysReborn\BaseDonnees\DAO\Population\Groupe
      */
     class DAO_Departement extends DAO {
 
@@ -22,15 +23,20 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO departement
-                    VALUES (:id, :nom)';
+            $sql = 'INSERT INTO departement (nom)
+                    VALUES (:nom)';
 
             $res = $this->connexion->insert($sql, array(
-                ':id' => $obj->getId(),
                 ':nom' => $obj->getNom()
             ));
 
-            return $res != 1 ? $obj : false;
+            // Insertion ok ?
+            if ($res) {
+                return new Departement($res, $obj->getNom());
+            }
+            // else
+
+            return false;
         }
 
         /**

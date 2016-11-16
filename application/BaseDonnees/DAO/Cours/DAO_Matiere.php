@@ -1,12 +1,12 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Cours;
+    namespace SatellysReborn\BaseDonnees\DAO\Cours;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\Modeles\Cours\Matiere;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\Modeles\Cours\Matiere;
 
     /**
      * DAO permettant de gérer les matières en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Cours
+     * @package SatellysReborn\BaseDonnees\DAO\Cours
      */
     class DAO_Matiere extends DAO {
 
@@ -118,6 +118,34 @@
 
             // else
             return new Matiere($cle, $resBD[0]->nom);
+        }
+
+        /**
+         * Sélectionne la matière dont le nom est passée en argument.
+         * @param $nom string le nom de la matière.
+         * @return Matiere
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNom($nom) {
+            // SQL.
+            $sql = 'SELECT id, nom
+                    FROM matiere
+                    WHERE lower(nom) = lower(:nom)';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':nom' => $nom
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+            return new Matiere($resBD[0]->id, $resBD[0]->nom);
         }
 
         /**

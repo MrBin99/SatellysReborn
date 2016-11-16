@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Cours;
+    namespace SatellysReborn\BaseDonnees\DAO\Cours;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Cours\Absence;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Cours\Absence;
 
     /**
      * DAO permettant de gérer les absences en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Cours
+     * @package SatellysReborn\BaseDonnees\DAO\Cours
      */
     class DAO_Absence extends DAO {
 
@@ -23,7 +23,7 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO absence (id_cours, id_etudiant, justifie, motif)
+            $sql = 'INSERT INTO absence
                     VALUES (:cours, :etudiant, :justifie, :motif)';
 
             $res = $this->connexion->insert($sql, array(
@@ -33,7 +33,7 @@
                 ':motif' => $obj->getMotif()
             ));
 
-            return $res ? $obj : false;
+            return !$res ? false : $obj;
         }
 
         /**

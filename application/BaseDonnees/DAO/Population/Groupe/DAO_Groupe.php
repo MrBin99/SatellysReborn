@@ -1,15 +1,15 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe;
+    namespace SatellysReborn\BaseDonnees\DAO\Population\Groupe;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Modele;
-    use WS_SatellysReborn\Modeles\Population\Etudiant;
-    use WS_SatellysReborn\Modeles\Population\Groupe\Groupe;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Modele;
+    use SatellysReborn\Modeles\Population\Etudiant;
+    use SatellysReborn\Modeles\Population\Groupe\Groupe;
 
     /**
      * DAO permettant de gérer les groupes d'étudiants en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe
+     * @package SatellysReborn\BaseDonnees\DAO\Population\Groupe
      */
     class DAO_Groupe extends DAO {
 
@@ -129,6 +129,47 @@
             // Ajout des étudiants.
             $groupe = new Groupe($cle, $resBD[0]->nom, $promo);
             $etudiants = $this->getEtudiants($cle);
+
+            if ($etudiants != null) {
+                foreach ($etudiants as $etudiant) {
+                    $groupe->ajouterEtudiant($etudiant);
+                }
+            }
+
+            return $groupe;
+        }
+
+        /**
+         * Retourne le groupe dont le nom est passé en argument.
+         * @param $nom string le nom du groupe.
+         * @return Groupe
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNom($nom) {
+            // SQL.
+            $sql = 'SELECT id, nom, id_promotion
+                    FROM groupe
+                    WHERE lower(nom) = lower(:nom)';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':nom' => $nom
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+            $promo = DAO_Factory::getDAO_Promotion()
+                                ->find($resBD[0]->id_promotion);
+
+            // Ajout des étudiants.
+            $groupe = new Groupe($resBD[0]->id, $resBD[0]->nom, $promo);
+            $etudiants = $this->getEtudiants($resBD[0]->id);
 
             if ($etudiants != null) {
                 foreach ($etudiants as $etudiant) {

@@ -1,11 +1,11 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Cours;
+    namespace SatellysReborn\Modeles\Cours;
 
-    use WS_SatellysReborn\Modeles\Modele;
+    use SatellysReborn\Modeles\Modele;
 
     /**
      * Représente une matière enseigné par un professeur.
-     * @package WS_SatellysReborn\Modeles\Cours
+     * @package SatellysReborn\Modeles\Cours
      */
     class Matiere extends Modele {
 

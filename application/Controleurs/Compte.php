@@ -1,52 +1,54 @@
 <?php
-    namespace WS_SatellysReborn\Controleurs;
-
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Population\Login\Utilisateur;
-    use WS_SatellysReborn\Vues\Vue;
+    namespace SatellysReborn\Controleurs;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+    use SatellysReborn\Vues\Vue;
 
     /**
-     * Contrôleur pour la gestion du compte et la connexion d'un utilisateur.
-     * @package WS_SatellysReborn\Controleurs
+     * Contrôleur des pages relatives au compte d'un utilisateur.
+     * @package SatellysReborn\Controleurs
      */
     class Compte extends Controleur {
 
         /**
-         * Affiche la page de modification du compte.
+         * Affiche les informations d'un utilisateur.
          */
         public function index() {
-            // Est bien connecté.
+            // Est connecté ?
             if (Utilisateur::estConnecte()) {
-                $this->vue = new Vue($this, 'MonCompte');
+                $this->vue = new Vue($this, 'MonCompte', 'Mon Compte');
+                $this->vue->render();
             } else {
-                self::redirect('compte/erreurnonconnecte');
+                self::redirect('/SatellysReborn/compte/errNonConnecte/');
             }
-            $this->vue->render();
         }
 
         /**
-         * Connecte un utilisateur à l'application si possible.
+         * Effectue une connexion à l'application
+         * si les identifiants renseignés existent.
          */
         public function connexion() {
-            // N'est pas déjà connecté.
-            if (!Utilisateur::estConnecte() && isset($_POST['login'])) {
-                $util = DAO_Factory::getDAO_Utilisateur()
-                                   ->findLoginMdp($_POST['login'],
-                                                  Utilisateur::crypterMdp($_POST['mdp']));
+            // Non connecté.
+            if (Utilisateur::estConnecte() && isset($_POST)) {
+                self::redirect('/SatellysReborn/compte/errDejaConnecte/');
+            }
 
-                // Utilisateur existe ?
-                if (isset($util)) {
+            // Récupère les données.
+            $util = DAO_Factory::getDAO_Utilisateur()
+                               ->findLoginMdp($_POST['login'],
+                                              Utilisateur::crypterMdp(
+                                                  $_POST['mdp']));
 
-                    // Met à jour l'utilisateur courant.
-                    Utilisateur::setUtilisateur($util);
+            // Utilisateur existe ?
+            if (isset($util)) {
 
-                    // Retour à la page d'accueil mais connecté.
-                    self::redirect('');
-                } else {
-                    $this->vue = new Vue($this, 'IdentifiantsInvalides');
-                }
+                // Sauvegarde l'utilisateur en session.
+                Utilisateur::setUtilisateur($util);
+
+                // Vers la page d'accueil mais connecté.
+                self::redirect('/SatellysReborn/');
             } else {
-                $this->vue = new Vue($this, 'ErreurDejaConnecte');
+                self::redirect('/SatellysReborn/compte/errIdInvalides');
             }
             $this->vue->render();
         }
@@ -58,18 +60,18 @@
             // Est connecté ?
             if (Utilisateur::estConnecte()) {
                 session_destroy();
-                self::redirect('');
+                self::redirect('/SatellysReborn/');
             } else {
-                self::redirect('compte/erreurnonconnecte');
+                self::redirect('/SatellysReborn/compte/errNonConnecte');
             }
         }
 
         /**
-         * Modifie les informations d'un utilisateur.
+         * Modifie les informations du compte d'un utilisateur.
          */
         public function modifier() {
             // Est connecté ?
-            if (Utilisateur::estConnecte() && isset($_POST['login'])) {
+            if (Utilisateur::estConnecte() && isset($_POST)) {
 
                 // Récupère l'utilisateur courant.
                 $utilCourant = Utilisateur::getUtilisateur();
@@ -89,23 +91,42 @@
 
                     // Modifie l'utilisateur.
                     Utilisateur::setUtilisateur($newUtil);
-                    $this->vue = new Vue($this, 'MiseAJourOk');
+                    $this->vue = new Vue($this, 'ModifierOK');
 
                 } else {
-                    $this->vue = new Vue($this, 'MiseAJourNOk');
+                    $this->vue = new Vue($this, 'ModifierNOK');
                 }
             } else {
-                self::redirect('compte/erreurnonconnecte');
+                self::redirect('compte/errNonConnecte');
             }
             $this->vue->render();
         }
 
         /**
-         * Affiche la page d'erreur : utilisateur n'est pas connecté.
+         * Affiche la page d'erreur quand un utilisateur essaie d'accéder à
+         * une page sans être connecté.
          */
-        public function erreurNonConnecte() {
-            $this->vue = new Vue($this, 'ErreurNonConnecte',
-                                 'Erreur connexion requise');
+        public function errNonConnecte() {
+            $this->vue = new Vue($this, 'ErrNonConnecte', 'Connexion Requise');
+            $this->vue->render();
+        }
+
+        /**
+         * Affiche la page d'erreur quand un utilisateur essaie de se connecter
+         * alors qu'il est déjà connecté.
+         */
+        public function errDejaConnecte() {
+            $this->vue = new Vue($this, 'ErrDejaConnecte', 'Déjà connecté');
+            $this->vue->render();
+        }
+
+        /**
+         * Affiche la page d'erreur quand un utilisateur essaie de connecter
+         * mais que ses identifiants sont invalides.
+         */
+        public function errIdInvalides() {
+            $this->vue = new Vue($this, 'ErrIdInvalides',
+                                 'Identifiants Invalides');
             $this->vue->render();
         }
     }

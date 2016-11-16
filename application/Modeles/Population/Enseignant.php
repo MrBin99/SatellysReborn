@@ -1,11 +1,11 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Population;
+    namespace SatellysReborn\Modeles\Population;
 
-    use WS_SatellysReborn\Modeles\Population\Adresse\Adresse;
+    use SatellysReborn\Modeles\Population\Adresse\Adresse;
 
     /**
      * Représente un enseignant.
-     * @package WS_SatellysReborn\Modeles\Population
+     * @package SatellysReborn\Modeles\Population
      */
     class Enseignant extends Personne {
 

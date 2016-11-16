@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Population;
+    namespace SatellysReborn\Modeles\Population;
 
-    use WS_SatellysReborn\Modeles\Exceptions\DonneesIncorrecteException;
-    use WS_SatellysReborn\Modeles\Modele;
-    use WS_SatellysReborn\Modeles\Population\Adresse\Adresse;
+    use SatellysReborn\Modeles\Exceptions\DonneesIncorrecteException;
+    use SatellysReborn\Modeles\Modele;
+    use SatellysReborn\Modeles\Population\Adresse\Adresse;
 
     /**
      * Représente une personne utilisant l'application.
-     * @package WS_SatellysReborn\Modeles\Population
+     * @package SatellysReborn\Modeles\Population
      */
     abstract class Personne extends Modele {
 

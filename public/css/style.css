@@ -1,15 +1,92 @@
-/* Les styles an plus de Bootstrap. */
+/* Les styles en plus de Bootstrap. */
 
 body {
     padding-top: 70px;
 }
 
-/* Formulaires. */
-.dropdown-connexion .dropdown-menu {
+/* Menu */
+.my-navbar {
+    background-color: #23527C;
+}
+
+.my-navbar a {
+    color: #FFF;
+}
+
+.icon-bar {
+    background-color: #FFF;
+}
+
+.my-navbar li a:hover,
+.my-navbar li a:active,
+.my-navbar li a:focus,
+.my-navbar .open > a,
+.my-navbar .open > a:focus,
+.my-navbar .open > a:hover {
+    background-color: #122B40!important;
+}
+
+/* Nav */
+.my-nav {
+    border: 1px solid #EEE;
+    border-radius: 5px;
+}
+
+.my-nav .active a {
+    background-color: #23527C!important;
+}
+
+.my-nav a {
+    color: #23527C;
+}
+
+/* Connexion. */
+#dropdown-connexion .dropdown-menu {
     padding: 10px;
 }
 
-.dropdown-connexion .dropdown-menu input,
-.dropdown-connexion .dropdown-menu a {
+#dropdown-connexion input,
+#dropdown-connexion li a {
     width: 200px;
+}
+
+/* Panels */
+.my-panel {
+    border: 1px solid #23527C;
+}
+
+.panel .panel-heading {
+    text-align: center;
+    color: #FFF;
+    font-size: 20px;
+}
+
+.my-panel .panel-heading {
+    background-color: #23527C;
+}
+
+.panel-danger .panel-heading {
+    background-color: #A94442;
+}
+
+.panel-danger {
+    border: 1px solid #A94442;
+}
+
+.panel-success .panel-heading {
+    background-color: #3C763D;
+}
+
+.panel-success {
+    border: 1px solid #3C763D;
+}
+
+/* Boutons */
+.btn-primary {
+    background-color: #23527C;
+}
+
+/* Logs */
+.logs span {
+    font-weight: bold;
 }

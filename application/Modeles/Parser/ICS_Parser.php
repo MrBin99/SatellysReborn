@@ -1,5 +1,8 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Parser;
+    namespace SatellysReborn\Modeles\Parser;
+
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Cours\Cours;
 
     /**
      * Représente l'analyseur de fichier '.ics' pour importer les plannings.
@@ -36,41 +39,85 @@
          */
         private $contenu;
 
+        /** @var int la ligne courannte parcouru. */
+        private $ligneCourante;
+
+        /** @var array les évènnements chargés du fichier. */
+        private $events;
+        
+        /** @var bool si une erreur est présente dans le fichier ICS. */
+        private $erreur;
+
+        /** @var array les logs après l'analyse du fichier ICS. */
+        private $logs;
+
         /**
          * Créé un nouveau analyseur de fichier ICS.
          * @param $contenu array le contenu du fichier ICS ligne par ligne.
          */
         public function __construct($contenu) {
             $this->contenu = $contenu;
+            $this->events = array();
+            $this->logs = array();
+            $this->erreur = false;
         }
 
         /**
-         * Démarre l'analyse du fichier ICS et insère ses données dans la base
-         * de données.
+         * Analyse le fichier ICS :
+         * <ul>
+         *     <li>Créé les objets ICS_Event correspondant au évènnement.</li>
+         *     <li>Enregistre les logs de l'analyse.</li>
+         * </ul>
          */
         public function parse() {
             // Parcours le fichier.
-            for ($i = 0; $i < count($this->contenu); $i++) {
-                $ligne = $this->contenu[$i];
+            $this->ligneCourante = 0;
+
+            for (; $this->ligneCourante < count($this->contenu);
+                   $this->ligneCourante++) {
+                $ligne = $this->contenu[$this->ligneCourante];
 
                 // Si nouvel évènnement.
                 if ($ligne == 'BEGIN:VEVENT') {
 
-                    // On récupère les lignes de l'évènnement.
-                    $event =
-                        array_slice($this->contenu, $i, self::$NB_LIGNES_EVENT);
-                    $this->analyserEvent($event);
+                    // L'évènnement.
+                    $event = array();
 
-                    // Au saute au prochain.
-                    $i += self::$NB_LIGNES_EVENT;
+                    // On ajoute pas à l'èvennement 'BEGIN:VEVENT'.
+                    $this->ligneCourante++;
+
+                    // Pour toutes les lignes de l'évènnement.
+                    do {
+                        // Sauvegarde la ligne.
+                        $ligne = $this->contenu[$this->ligneCourante];
+
+                        // Créé l'évènnement.
+                        array_push($event, $ligne);
+
+                        // Passe à l'autre ligne.
+                        $this->ligneCourante++;
+                    } while ($ligne != 'END:VEVENT');
+
+                    // Analyse l'évennement.
+                    $eventObj= $this->analyserEvent($event);
+
+                    // Enregistre l'évènnement.
+                    array_push($this->events, $eventObj);
+
+                    // Enregistre les logs.
+                    array_push($this->logs, $this->preLoad($eventObj));
                 }
             }
+            
+            // Libère le contenu.
+            unset($this->contenu);
         }
 
         /**
-         * Analyse un évènnement sous la forme d'un tableau de lignes du
-         * fichier ICS.
-         * @param $event array l'évènnement à analyser.
+         * Analyse le tableau contenant un évènnement au format ICS
+         * et retourne l'objet ICS_Event correspondant.
+         * @param $event array le tableau des ligne de l'évènnement ICS.
+         * @return ICS_Event l'évènnement ICS résultat.
          */
         private function analyserEvent($event) {
             // La commande ainsi que son descriptif.
@@ -91,7 +138,7 @@
             }
 
             // Créé l'objet ICS_Event.
-            $eventObj = $this->creerEvent($cmd);
+            return $this->creerEvent($cmd);
         }
 
         /**
@@ -110,10 +157,27 @@
             // On récupère la description.
             $desc = explode('\n', $cmd['DESCRIPTION']);
 
+            // Si enseignant indéterminé
+            if (count($desc) != 3) {
+                array_splice($desc, 0, 1);
+                array_splice($desc, count($desc) - 1, 1);
+
+                // Extrait l'enseignant.
+                $prof = array_splice($desc, count($desc) - 1, 1)[0];
+            } else {
+                $prof = "non déterminé";
+            }
+
+            // Si salle indéterminé
+            if (isset($cmd['LOCATION'])) {
+                $salle = $cmd['LOCATION'];
+            } else {
+                $salle = "ND";
+            }
+
             // Retourne l'objet ICS.
             return new ICS_Event($heureDebut, $heureFin, $date,
-                                 $cmd['SUMMARY'], $desc[1],
-                                 $cmd['SUMMARY'], $desc[2]);
+                                 $cmd['SUMMARY'], $desc, $salle, $prof);
         }
 
         /**
@@ -135,5 +199,113 @@
             $dateTime->setTime($time[4], $time[5], $time[6]);
 
             return $dateTime;
+        }
+
+        /**
+         * Effectue un préchargement des évènnements pour vérifier
+         * s'ils ne comportent pas d'erreurs et que les lignes pré-requises
+         * sont bien présente dans la base de données.
+         * @param ICS_Event $eventObj
+         * @return string les logs du préchargement.
+         */
+        private function preLoad(ICS_Event $eventObj) {
+            // Les logs.
+            $logs = array();
+
+            // Sépare le nom et prénom du prof.
+            $prof = explode(' ', $eventObj->getProf());
+
+            // L'enseignant.
+            if (DAO_Factory::getDAO_Enseignant()
+                           ->findNomPrenom($prof[0], $prof[1]) == null) {
+                $this->erreur = true;
+                array_push($logs, "<span>Ligne " . $this->ligneCourante .
+                                  " : </span>L'enseignant '" . $eventObj->getProf()
+                                  . "' n'existe pas veuillez le créer.");
+            }
+
+            // Les groupes.
+            foreach ($eventObj->getGroupes() as $groupe) {
+                if (DAO_Factory::getDAO_Groupe()
+                               ->findNom($groupe) == null) {
+                    $this->erreur = true;
+                    array_push($logs, "<span>Ligne " . $this->ligneCourante
+                                      . " : </span>Le groupe '" . $groupe
+                                      . "' n'existe pas, "
+                                      . "veuillez le créer avant.");
+                }
+            }
+
+            // Le cours.
+            if (DAO_Factory::getDAO_Cours()
+                           ->findNameDateHeure($eventObj->getNom(),
+                                               $eventObj->getDate(),
+                                               $eventObj->getHeureDebut(),
+                                               $eventObj->getHeureFin()) != null) {
+                $this->erreur = true;
+                array_push($logs, "<span>Ligne " . $this->ligneCourante
+                                  . " : </span>Ce cours existe déjà.");
+            }
+
+            return $logs;
+        }
+
+        /**
+         * Insère les évènnements chargés dans la base de données.
+         */
+        public function insererBD() {
+            // Si pas d'erreurs.
+            if (!$this->erreur) {
+                
+                foreach ($this->events as $event) {
+                    // Sépare le nom et prénom du prof.
+                    $prof = explode(' ', $event->getProf());
+                    
+                    // L'enseignant du cours.
+                    $enseignant = DAO_Factory::getDAO_Enseignant()
+                                             ->findNomPrenom($prof[0], $prof[1]);
+                    
+                    // Créé le cours.
+                    $cours = new Cours(
+                        null, $event->getNom(), $enseignant,
+                        $event->getSalle(), $event->getDate(),
+                        $event->getHeureDebut(), $event->getHeureFin()
+                    );
+                    
+                    // Ajoute les groupes.
+                    foreach ($event->getGroupes() as $groupe) {
+                        $g = DAO_Factory::getDAO_Groupe()->findNom($groupe);
+                        
+                        if (isset($g)) {
+                            $cours->ajouterGroupe($g);
+                        }
+                    }
+                    
+                    // Insère le cours.
+                    return !DAO_Factory::getDAO_Cours()->insert($cours);
+                }
+            }
+            return false;
+        }
+
+        /**
+         * @return array les évènnements chargées du fichier.
+         */
+        public function getEvents() {
+            return $this->events;
+        }
+
+        /**
+         * @return array les logs de l'analyse du fichier ICS.
+         */
+        public function getLogs() {
+            return $this->logs;
+        }
+
+        /**
+         * @return bool si une erreur est contenu dans le fichier ICS.
+         */
+        public function hasErreur() {
+            return $this->erreur;
         }
     }

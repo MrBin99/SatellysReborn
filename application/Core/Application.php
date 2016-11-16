@@ -1,7 +1,7 @@
 <?php
-    namespace WS_SatellysReborn\Core;
+    namespace SatellysReborn\Core;
 
-    use WS_SatellysReborn\Controleurs\Controleur;
+    use SatellysReborn\Controleurs\Controleur;
 
     /**
      * Classe permettant d'effectuer le routage vers le contrôleur de la page

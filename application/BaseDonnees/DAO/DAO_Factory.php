@@ -1,24 +1,24 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO;
+    namespace SatellysReborn\BaseDonnees\DAO;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Absence;
-    use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Cours;
-    use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Matiere;
-    use WS_SatellysReborn\BaseDonnees\DAO\Cours\DAO_Salle;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Adresse;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Pays;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Ville;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\DAO_Administratif;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\DAO_Enseignant;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\DAO_Etudiant;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Groupe;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Promotion;
-    use WS_SatellysReborn\BaseDonnees\DAO\Population\Login\DAO_Utilisateur;
+    use SatellysReborn\BaseDonnees\DAO\Cours\DAO_Absence;
+    use SatellysReborn\BaseDonnees\DAO\Cours\DAO_Cours;
+    use SatellysReborn\BaseDonnees\DAO\Cours\DAO_Matiere;
+    use SatellysReborn\BaseDonnees\DAO\Cours\DAO_Salle;
+    use SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Adresse;
+    use SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Pays;
+    use SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Ville;
+    use SatellysReborn\BaseDonnees\DAO\Population\DAO_Administratif;
+    use SatellysReborn\BaseDonnees\DAO\Population\DAO_Enseignant;
+    use SatellysReborn\BaseDonnees\DAO\Population\DAO_Etudiant;
+    use SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Departement;
+    use SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Groupe;
+    use SatellysReborn\BaseDonnees\DAO\Population\Groupe\DAO_Promotion;
+    use SatellysReborn\BaseDonnees\DAO\Population\Login\DAO_Utilisateur;
 
     /**
      * Fabrique de DAO.
-     * @package WS_SatellysReborn\BaseDonnees\DAO
+     * @package SatellysReborn\BaseDonnees\DAO
      */
     final class DAO_Factory {
 
@@ -60,13 +60,6 @@
          */
         public static function getDAO_Matiere() {
             return new DAO_Matiere();
-        }
-
-        /**
-         * @return DAO_Salle un nouveau DAO pour les salles de l'IUT.
-         */
-        public static function getDAO_Salle() {
-            return new DAO_Salle();
         }
 
         /**

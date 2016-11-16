@@ -1,12 +1,12 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse;
+    namespace SatellysReborn\BaseDonnees\DAO\Population\Adresse;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\Modeles\Population\Adresse\Pays;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\Modeles\Population\Adresse\Pays;
 
     /**
      * DAO permettant de gérer les pays des adresses en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population\Adresse
+     * @package SatellysReborn\BaseDonnees\DAO\Population\Adresse
      */
     class DAO_Pays extends DAO {
 

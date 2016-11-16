@@ -1,11 +1,11 @@
 <?php
-    namespace WS_SatellysReborn\Controleurs;
+    namespace SatellysReborn\Controleurs;
 
-    use WS_SatellysReborn\Vues\Vue;
+    use SatellysReborn\Vues\Vue;
 
     /**
      * Représente le contrôleur d'une page Web.
-     * @package WS_SatellysReborn\Controleurs
+     * @package SatellysReborn\Controleurs
      */
     abstract class Controleur {
 
@@ -28,6 +28,6 @@
          *     redirigé.
          */
         public static function redirect($page) {
-            header('Location: ' . URL_SUB_FOLDER . $page);
+            header('Location: ' . $page);
         }
     }

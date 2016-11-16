@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population;
+    namespace SatellysReborn\BaseDonnees\DAO\Population;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Population\Administratif;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Population\Administratif;
 
     /**
      * DAO permettant de gérer les administratif en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population
+     * @package SatellysReborn\BaseDonnees\DAO\Population
      */
     class DAO_Administratif extends DAO {
 
@@ -31,7 +31,7 @@
 
             // SQL.
             $sql = 'INSERT INTO administratif
-                    VALUES (:id, :nom, :prenom, :tel, :email, :poste, :adresse)';
+                    VALUES (:id, :nom, :prenom, :tel, :poste, :adresse)';
 
             $res = $this->connexion->insert($sql, array(
                 ':id' => $obj->getId(),
@@ -43,7 +43,7 @@
                 ':adresse' => $obj->getAdresse()->getId()
             ));
 
-            return $res ? $obj : false;
+            return !$res ? false : $obj;
         }
 
         /**

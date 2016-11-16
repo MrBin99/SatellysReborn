@@ -1,11 +1,11 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Cours;
+    namespace SatellysReborn\Modeles\Cours;
 
-    use WS_SatellysReborn\Modeles\Population\Etudiant;
+    use SatellysReborn\Modeles\Population\Etudiant;
 
     /**
      * Représente une absence à un cours.
-     * @package WS_SatellysReborn\Modeles\Cours
+     * @package SatellysReborn\Modeles\Cours
      */
     class Absence {
 

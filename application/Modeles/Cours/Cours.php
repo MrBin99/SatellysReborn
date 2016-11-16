@@ -1,10 +1,14 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Cours;
+    namespace SatellysReborn\Modeles\Cours;
 
-    use WS_SatellysReborn\Modeles\Modele;
-    use WS_SatellysReborn\Modeles\Population\Enseignant;
-    use WS_SatellysReborn\Modeles\Population\Groupe\Groupe;
+    use SatellysReborn\Modeles\Modele;
+    use SatellysReborn\Modeles\Population\Enseignant;
+    use SatellysReborn\Modeles\Population\Groupe\Groupe;
 
+    /**
+     * Représente un cours.
+     * @package SatellysReborn\Modeles\Cours
+     */
     class Cours extends Modele {
 
         /** @var string l'identifiant du cours. */
@@ -19,7 +23,7 @@
         /** @var array les groupes d'étudiant suivant ce cours. */
         private $groupes;
 
-        /** @var Salle la salle où se produit ce cours. */
+        /** @var string la salle où se produit ce cours. */
         private $salle;
 
         /** @var string le jour où se déroule le cours. */
@@ -36,13 +40,13 @@
          * @param string $id l'identifiant du cours.
          * @param Matiere $matiere la matière enseignée dans ce cours.
          * @param Enseignant $enseignant l'enseigant qui donne ce cours.
-         * @param Salle $salle la salle où se produit ce cours.
+         * @param string $salle la salle où se produit ce cours.
          * @param $jour string le jour où se déroule le cours.
          * @param $debut string l'heure de début du cours.
          * @param $fin string l'heure de fin du cours.
          */
         public function __construct($id = null, Matiere $matiere,
-                                    Enseignant $enseignant, Salle $salle,
+                                    Enseignant $enseignant, $salle,
                                     $jour, $debut, $fin) {
             $this->id = $id;
             $this->matiere = $matiere;
@@ -84,7 +88,7 @@
         }
 
         /**
-         * @return Salle la salle où se produit ce cours.
+         * @return string la salle où se produit ce cours.
          */
         public function getSalle() {
             return $this->salle;

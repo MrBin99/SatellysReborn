@@ -1,12 +1,12 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Population\Adresse;
+    namespace SatellysReborn\Modeles\Population\Adresse;
 
-    use WS_SatellysReborn\Modeles\Exceptions\DonneesIncorrecteException;
-    use WS_SatellysReborn\Modeles\Modele;
+    use SatellysReborn\Modeles\Exceptions\DonneesIncorrecteException;
+    use SatellysReborn\Modeles\Modele;
 
     /**
      * Représente une ville contenu dans une adresse.
-     * @package WS_SatellysReborn\Modeles\Population\Adresse
+     * @package SatellysReborn\Modeles\Population\Adresse
      */
     class Ville extends Modele {
 

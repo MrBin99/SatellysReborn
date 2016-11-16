@@ -1,5 +1,5 @@
 <?php
-    use WS_SatellysReborn\Core\Application;
+    use SatellysReborn\Core\Application;
 
     /* ########## Constantes de l'application ########## */
 
@@ -17,16 +17,16 @@
     define('COMMON', '../application/Vues/_Common/');
 
     /* Le nom du dossier parent du site. */
-    define('ROOT_DIR', 'WS_SatellysReborn');
+    define('ROOT_DIR', 'SatellysReborn');
 
     /* Le "root" namespace. */
-    define('NAMESPACE_ROOT', 'WS_SatellysReborn');
+    define('NAMESPACE_ROOT', 'SatellysReborn');
 
     /* Le nom du site. */
     define('SITE_NAME', 'SatellysReborn');
 
     /* Chemin vers le dossier de configuration de la base de données. */
-    define('CONFIG_BD', '../application/conf/bd_conf.ini');
+    define('CONFIG_BD', '../application/Configs/bd_conf.ini');
 
     // Les fichiers CSS.
     define('CSS', URL . 'css/');

@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population;
+    namespace SatellysReborn\BaseDonnees\DAO\Population;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Population\Etudiant;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Population\Etudiant;
 
     /**
      * DAO permettant de gérer les étudiants en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population
+     * @package SatellysReborn\BaseDonnees\DAO\Population
      */
     class DAO_Etudiant extends DAO {
 
@@ -43,7 +43,7 @@
                 ':adresse' => $obj->getAdresse()->getId()
             ));
 
-            return $res ? $obj : false;
+            return !$res ? false : $obj;
         }
 
         /**

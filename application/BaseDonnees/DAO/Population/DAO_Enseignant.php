@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population;
+    namespace SatellysReborn\BaseDonnees\DAO\Population;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Population\Enseignant;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Population\Enseignant;
 
     /**
      * DAO permettant de gérer les enseignants en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population
+     * @package SatellysReborn\BaseDonnees\DAO\Population
      */
     class DAO_Enseignant extends DAO {
 
@@ -31,7 +31,7 @@
 
             // SQL.
             $sql = 'INSERT INTO enseignant
-                    VALUES (:id, :nom, :prenom, :tel, :email, :adresse)';
+                    VALUES (:id, :nom, :prenom, :tel, :adresse)';
 
             $res = $this->connexion->insert($sql, array(
                 ':id' => $obj->getId(),
@@ -42,7 +42,7 @@
                 ':adresse' => $obj->getAdresse()->getId()
             ));
 
-            return $res ? $obj : false;
+            return !$res ? false : $obj;
         }
 
         /**
@@ -124,6 +124,44 @@
 
             $resBD = $this->connexion->select($sql, array(
                 ':id' => $cle
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+
+            $adresse =
+                DAO_Factory::getDAO_Adresse()->find($resBD[0]->id_adresse);
+
+            return new Enseignant($resBD[0]->id, $resBD[0]->nom,
+                                  $resBD[0]->prenom, $resBD[0]->tel,
+                                  $resBD[0]->email, $adresse);
+        }
+
+        /**
+         * Sélectionne l'enseignant dont le nom et le prénom
+         * est passé en argument.
+         * @param $nom string le nom de l'enseignant.
+         * @param $prenom string le prénom de l'enseignant.
+         * @return Enseignant
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNomPrenom($nom, $prenom) {
+            // SQL.
+            $sql = 'SELECT id, nom, prenom, tel, email, id_adresse
+                    FROM enseignant
+                    WHERE lower(nom) LIKE lower(:nom)
+                    AND lower(prenom) LIKE lower(:prenom)';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':nom' => $nom,
+                ':prenom' => $prenom
             ));
 
             // Pas de résultats ?

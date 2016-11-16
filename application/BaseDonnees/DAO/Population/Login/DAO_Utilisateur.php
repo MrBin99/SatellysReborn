@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population\Login;
+    namespace SatellysReborn\BaseDonnees\DAO\Population\Login;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Population\Login\Utilisateur;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
 
     /**
      * DAO permettant de gérer les utilisateurs en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population\Login
+     * @package SatellysReborn\BaseDonnees\DAO\Population\Login
      */
     class DAO_Utilisateur extends DAO {
 
@@ -36,7 +36,7 @@
                     $obj->getAdministratif()->getId() : null
             ));
 
-            return $res ? $obj : false;
+            return !$res ? false: $obj;
         }
 
         /**
@@ -192,6 +192,78 @@
                 array_push($res,
                            new Utilisateur($obj->login, $obj->mdp,
                                            $obj->email, $ensei, $admin)
+                );
+            }
+
+            return $res;
+        }
+
+        /**
+         * Récupère la liste de tous les administrateurs.
+         * @return array
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findAllAdministrateurs() {
+            // SQL.
+            $sql = 'SELECT login, mdp, email
+                    FROM utilisateur
+                    WHERE id_administratif IS NULL
+                    AND id_enseignant IS NULL';
+
+            $resBD = $this->connexion->select($sql, array());
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Utilisateur.
+            $res = array();
+
+            foreach ($resBD as $obj) {
+                array_push($res,
+                           new Utilisateur($obj->login, $obj->mdp,
+                                           $obj->email, null, null)
+                );
+            }
+
+            return $res;
+        }
+
+        /**
+         * Récupère la liste de tous les administratifs.
+         * @return array
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findAllAdministratifs() {
+            // SQL.
+            $sql = 'SELECT login, mdp, email
+                    FROM utilisateur
+                    WHERE id_administratif IS NOT NULL
+                    AND id_enseignant IS NULL';
+
+            $resBD = $this->connexion->select($sql, array());
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Utilisateur.
+            $res = array();
+
+            foreach ($resBD as $obj) {
+                array_push($res,
+                           new Utilisateur($obj->login, $obj->mdp,
+                                           $obj->email, null, null)
                 );
             }
 

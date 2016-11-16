@@ -1,13 +1,13 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe;
+    namespace SatellysReborn\BaseDonnees\DAO\Population\Groupe;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO;
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Population\Groupe\Promotion;
+    use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Population\Groupe\Promotion;
 
     /**
      * DAO permettant de gérer les promotions en base de données.
-     * @package WS_SatellysReborn\BaseDonnees\DAO\Population\Groupe
+     * @package SatellysReborn\BaseDonnees\DAO\Population\Groupe
      */
     class DAO_Promotion extends DAO {
 

@@ -1,10 +1,10 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Parser;
+    namespace SatellysReborn\Modeles\Parser;
 
-    use WS_SatellysReborn\BaseDonnees\DAO\DAO_Factory;
-    use WS_SatellysReborn\Modeles\Population\Adresse\Adresse;
-    use WS_SatellysReborn\Modeles\Population\Etudiant;
-    use WS_SatellysReborn\Modeles\Population\Groupe\Groupe;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Population\Adresse\Adresse;
+    use SatellysReborn\Modeles\Population\Etudiant;
+    use SatellysReborn\Modeles\Population\Groupe\Groupe;
 
     /**
      * Représente l'analyseur de fichier '.csv' pour importer une liste

@@ -1,9 +1,9 @@
 <?php
-    namespace WS_SatellysReborn\BaseDonnees;
+    namespace SatellysReborn\BaseDonnees;
 
     /**
      * Classe représentant la connexion à la base de données.
-     * @package GestionAbs\BaseDonnees
+     * @package SatellysReborn\BaseDonnees
      */
     final class BD_Connexion {
 

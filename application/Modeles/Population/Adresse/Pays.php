@@ -1,11 +1,11 @@
 <?php
-    namespace WS_SatellysReborn\Modeles\Population\Adresse;
+    namespace SatellysReborn\Modeles\Population\Adresse;
 
-    use WS_SatellysReborn\Modeles\Modele;
+    use SatellysReborn\Modeles\Modele;
 
     /**
      * Représente un pays contenu dans une adresse.
-     * @package WS_SatellysReborn\Modeles\Population\Adresse
+     * @package SatellysReborn\Modeles\Population\Adresse
      */
     class Pays extends Modele {
 
