@@ -1,0 +1,36 @@
+<?php
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+?>
+
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Pré-chargement du fichier ICS
+        </div>
+        <div class="panel-body">
+            <?php if (!$obj->hasErreur()): ?>
+                <a href="/SatellysReborn/import/insererICS/" class="btn btn-success">Valider</a>
+            <?php endif; ?>
+            <table class="table table-striped logs" data-toggle="table" data-height="400" data-search="true" data-pagination="true">
+                <thead>
+                    <tr>
+                        <th data-field="ligne">Ligne</th>
+                        <th data-field="log">Erreur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($obj->getLogs() as $logs): ?>
+                        <?php foreach ($logs as $log):
+                            $leLog = explode(':', $log); ?>
+                            <tr>
+                                <td><?= trim($leLog[0]) ?></td>
+                                <td><?= trim($leLog[1]) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
