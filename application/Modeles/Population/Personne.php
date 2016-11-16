@@ -26,9 +26,6 @@
         /** @var string le téléphone de la personne. */
         protected $tel;
 
-        /** @var string l'email de la personne. */
-        protected $email;
-
         /** @var Adresse l'adresse de la personne. */
         protected $adresse;
 
@@ -38,12 +35,11 @@
          * @param string $nom le nom de la personne
          * @param string $prenom le prénom de la personne.
          * @param string $tel le téléphone de la personne.
-         * @param string $email l'email de l personne.
          * @param Adresse $adresse l'adresse de la personne.
          * @throws DonneesIncorrecteException si les données pour un créer une
          *     une personne sont incorrectes.
          */
-        public function __construct($id, $nom, $prenom, $tel, $email,
+        public function __construct($id, $nom, $prenom, $tel,
                                     $adresse) {
             // Vérifie l'ID
             if (strlen($id) != 13) {
@@ -57,17 +53,10 @@
                     doit être composé de 10 chiffres.");
             }
 
-            // Vérifie l'email.
-            if (preg_match(self::$REGEX_EMAIL, $email) != 1) {
-                throw new DonneesIncorrecteException("L'email donné n'est pas
-                    un email valide.");
-            }
-
             $this->id = $id;
             $this->nom = $nom;
             $this->prenom = $prenom;
             $this->tel = $tel;
-            $this->email = $email;
             $this->adresse = $adresse;
         }
 
@@ -97,13 +86,6 @@
          */
         public function getTel() {
             return $this->tel;
-        }
-
-        /**
-         * @return string l'email de la personne.
-         */
-        public function getEmail() {
-            return $this->email;
         }
 
         /**

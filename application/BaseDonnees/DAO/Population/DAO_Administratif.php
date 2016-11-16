@@ -38,7 +38,6 @@
                 ':nom' => $obj->getNom(),
                 ':prenom' => $obj->getPrenom(),
                 ':tel' => $obj->getTel(),
-                ':email' => $obj->getEmail(),
                 ':poste' => $obj->getPoste(),
                 ':adresse' => $obj->getAdresse()->getId()
             ));
@@ -68,7 +67,6 @@
                         nom = :nom,
                         prenom = :prenom,
                         tel = :tel,
-                        email = :email,
                         poste = :poste,
                         id_adresse = :adresse
                     WHERE id = :id';
@@ -77,7 +75,6 @@
                 ':nom' => $obj->getNom(),
                 ':prenom' => $obj->getPrenom(),
                 ':tel' => $obj->getTel(),
-                ':email' => $obj->getEmail(),
                 ':poste' => $obj->getPoste(),
                 ':adresse' => $obj->getAdresse()->getId(),
                 ':id' => $obj->getId(),
@@ -122,7 +119,7 @@
          */
         public function find($cle) {
             // SQL.
-            $sql = 'SELECT nom, prenom, tel, email, poste, id_adresse
+            $sql = 'SELECT nom, prenom, tel, poste, id_adresse
                     FROM administratif
                     WHERE id = :id';
 
@@ -142,7 +139,7 @@
 
             return new Administratif($cle, $resBD[0]->nom,
                                      $resBD[0]->prenom, $resBD[0]->tel,
-                                     $resBD[0]->email, $resBD[0]->poste,
+                                     $resBD[0]->poste,
                                      $adresse);
         }
 
@@ -156,7 +153,7 @@
          */
         public function findAll() {
             // SQL.
-            $sql = 'SELECT id, nom, prenom, tel, email, poste, id_adresse
+            $sql = 'SELECT id, nom, prenom, tel, poste, id_adresse
                     FROM administratif';
 
             $resBD = $this->connexion->select($sql, array());
@@ -177,7 +174,7 @@
                 array_push($res, new Administratif($obj->id, $obj->nom,
                                                    $obj->prenom,
                                                    $obj->tel,
-                                                   $obj->email, $obj->poste,
+                                                   $obj->poste,
                                                    $adresse)
                 );
             }
