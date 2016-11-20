@@ -41,17 +41,18 @@
                 //vérification de l'existance de $_POST
                 if (isset($_POST)) {
                     $ville = DAO_Factory::getDAO_Ville()->find($_POST['ville']);
-                    if(isset($_POST['adresse2'])){
+                    if (isset($_POST['adresse2'])) {
                         $adr2 = $_POST['adresse2'];
-                    }else{
+                    } else {
                         $adr2 = "";
                     }
-                    if(isset($_POST['adresse3'])){
+                    if (isset($_POST['adresse3'])) {
                         $adr3 = $_POST['adresse3'];
-                    }else{
+                    } else {
                         $adr3 = "";
                     }
-                    $adr = new Adresse(null, $_POST['adresse'], $adr2, $adr3, $ville);
+                    $adr = new Adresse(null, $_POST['adresse'], $adr2, $adr3,
+                                       $ville);
 
                     $res = DAO_Factory::getDAO_Adresse()->insert($adr);
 
@@ -101,9 +102,12 @@
         /**
          * Ajout d'un utilisateur
          * Fonction appelé uniquement dans la fonction ajout de Enseignant
-         * @param $id : identifiant de l'utilisateur qui sera utilisé pour créer le mot de passe
-         * @param $nom : nom de l'utilisateur utilisé pour le login, combiné avec le prénom
-         * @param $prenom : prenom de l'utilisateur utilisé pour le login, combiné avec le nom
+         * @param $id : identifiant de l'utilisateur qui sera utilisé pour
+         *     créer le mot de passe
+         * @param $nom : nom de l'utilisateur utilisé pour le login, combiné
+         *     avec le prénom
+         * @param $prenom : prenom de l'utilisateur utilisé pour le login,
+         *     combiné avec le nom
          * @param $mail : adresse mail de l'utilisateur
          */
         private function ajoutUtilisateur($id, $nom, $prenom, $mail) {

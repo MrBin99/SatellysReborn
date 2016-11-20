@@ -56,9 +56,7 @@
                 $ics->parse();
 
                 // On le stocke pour la page d'insertion.
-                if (!$ics->hasErreur()) {
-                    $_SESSION['ics'] = $ics;
-                }
+                $_SESSION['ics'] = $ics;
 
                 // Affiche les logs.
                 $this->vue = new Vue($this, 'LogsICS', 'Pré-chargement ICS');
@@ -78,15 +76,10 @@
                     || Utilisateur::getUtilisateur()->estAdministratif())) {
 
                 // Insertion !
-                if (!$_SESSION['ics']->hasErreur() && $_SESSION['ics']->insererBD()) {
-                    $this->vue = new Vue($this, 'InsertionICSOk', 'Insertion Succès');
-                    $this->vue->render();
-                    unset($_SESSION['ics']);
-                } else {
-                    $this->vue = new Vue($this, 'InsertionICSNOk', 'Erreur insertion ICS');
-                    $this->vue->render();
-                    unset($_SESSION['ics']);
-                }
+                $insertions = $_SESSION['ics']->insererBD();
+                $this->vue = new Vue($this, 'ResImportICS', 'Résultats');
+                $this->vue->render($insertions);
+                unset($_SESSION['ics']);
 
             } else {
                 self::redirect('/SatellysReborn/import/icsInconnu/');

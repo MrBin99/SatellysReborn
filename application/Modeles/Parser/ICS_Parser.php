@@ -3,6 +3,7 @@
 
     use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
     use SatellysReborn\Modeles\Cours\Cours;
+    use SatellysReborn\Modeles\Cours\Matiere;
 
     /**
      * Représente l'analyseur de fichier '.ics' pour importer les plannings.
@@ -254,38 +255,48 @@
          * Insère les évènnements chargés dans la base de données.
          */
         public function insererBD() {
-            // Si pas d'erreurs.
-            if (!$this->erreur) {
-                
-                foreach ($this->events as $event) {
-                    // Sépare le nom et prénom du prof.
-                    $prof = explode(' ', $event->getProf());
-                    
-                    // L'enseignant du cours.
-                    $enseignant = DAO_Factory::getDAO_Enseignant()
-                                             ->findNomPrenom($prof[0], $prof[1]);
-                    
-                    // Créé le cours.
-                    $cours = new Cours(
-                        null, $event->getNom(), $enseignant,
-                        $event->getSalle(), $event->getDate(),
-                        $event->getHeureDebut(), $event->getHeureFin()
-                    );
-                    
-                    // Ajoute les groupes.
-                    foreach ($event->getGroupes() as $groupe) {
-                        $g = DAO_Factory::getDAO_Groupe()->findNom($groupe);
-                        
-                        if (isset($g)) {
-                            $cours->ajouterGroupe($g);
-                        }
-                    }
-                    
-                    // Insère le cours.
-                    return !DAO_Factory::getDAO_Cours()->insert($cours);
+            $insertions = array(
+                "ok" => 0,
+                "nok" => 0
+            );
+            foreach ($this->events as $event) {
+                // Sépare le nom et prénom du prof.
+                $prof = explode(' ', $event->getProf());
+
+                // L'enseignant du cours.
+                $enseignant = DAO_Factory::getDAO_Enseignant()
+                                         ->findNomPrenom($prof[0], $prof[1]);
+                if ($enseignant == null) {
+                    $insertions["nok"]++;
+                    continue;
                 }
+
+                $matiere = DAO_Factory::getDAO_Matiere()->findNom($event->getNom());
+                if ($matiere == null) {
+                    $matiere = DAO_Factory::getDAO_Matiere()->insert(new Matiere(null, $event->getNom()));
+                }
+
+                // Créé le cours.
+                $cours = new Cours(
+                    null, $matiere, $enseignant,
+                    $event->getSalle(), $event->getDate(),
+                    $event->getHeureDebut(), $event->getHeureFin()
+                );
+
+                // Ajoute les groupes.
+                foreach ($event->getGroupes() as $groupe) {
+                    $g = DAO_Factory::getDAO_Groupe()->findNom($groupe);
+
+                    if (isset($g)) {
+                        $cours->ajouterGroupe($g);
+                    }
+                }
+
+                // Insère le cours.
+                DAO_Factory::getDAO_Cours()->insert($cours);
+                $insertions["ok"]++;
             }
-            return false;
+            return $insertions;
         }
 
         /**

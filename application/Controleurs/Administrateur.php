@@ -5,6 +5,7 @@
     use SatellysReborn\Modeles\Population\Administratif;
     use SatellysReborn\Modeles\Population\Adresse\Adresse;
     use SatellysReborn\Modeles\Population\Login\Utilisateur;
+    use SatellysReborn\Modeles\Utils\Utils;
     use SatellysReborn\Vues\Vue;
 
     class Administrateur extends Controleur {
@@ -18,7 +19,8 @@
                 Utilisateur::getUtilisateur()->estAdmin()
             ) {
                 $ville = DAO_Factory::getDAO_Ville()->findAll();
-                $this->vue = new Vue($this, "Nouveau", "Ajout d'un administratif");
+                $this->vue =
+                    new Vue($this, "Nouveau", "Ajout d'un administratif");
                 $this->vue->render($ville);
             } else {
                 self::redirect("/SatellysReborn/administrateur/errNonAdmin");
@@ -32,35 +34,37 @@
             if (Utilisateur::estConnecte() &&
                 Utilisateur::getUtilisateur()->estAdmin()
             ) {
-                //vérification de l'existance de $_POST
-                if(isset($_POST)){
+                // Vérification de l'existance de $_POST
+                if (isset($_POST)) {
                     $ville = DAO_Factory::getDAO_Ville()->find($_POST['ville']);
-                    if(isset($_POST['adresse2'])){
+                    if (isset($_POST['adresse2'])) {
                         $adr2 = $_POST['adresse2'];
-                    }else{
+                    } else {
                         $adr2 = "";
                     }
-                    if(isset($_POST['adresse3'])){
+                    if (isset($_POST['adresse3'])) {
                         $adr3 = $_POST['adresse3'];
-                    }else{
+                    } else {
                         $adr3 = "";
                     }
-                    $adr = new Adresse(null, $_POST['adresse'], $adr2, $adr3, $ville);
+                    $adr = new Adresse(null, $_POST['adresse'], $adr2, $adr3,
+                                       $ville);
                     $res = DAO_Factory::getDAO_Adresse()->insert($adr);
 
-                    //vérification si l'insertion de l'adresse à fonctionné
-                    if(!$res){
+                    // Vérification si l'insertion de l'adresse à fonctionné
+                    if (!$res) {
                         self::redirect("/SatellysReborn/administrateur/errAdresse");
-                    }else{
-                        $new = new Administratif($_POST['id'], $_POST['nom'],
-                                                 $_POST['prenom'],
+                    } else {
+                        $new = new Administratif($_POST['id'], strtoupper($_POST['nom']),
+                                                 ucfirst(strtolower($_POST['prenom'])),
                                                  $_POST['tel'],
                                                  $_POST['poste'],
                                                  $res);
                         $exist = false;
-                        $administratif = DAO_Factory::getDAO_Administratif()->findAll();
-                        var_dump($administratif);
-                        //On vérifie qu'il n'existe pas déjà un administrateur
+                        $administratif =
+                            DAO_Factory::getDAO_Administratif()->findAll();
+
+                        // On vérifie qu'il n'existe pas déjà un administrateur
                         // avec cet identifiant
                         if ($administratif) {
                             foreach ($administratif as $obj) {
@@ -73,7 +77,7 @@
                         // si il n'existe pas déjà dans la BD
                         // Affichage de page d'erreur sinon
 
-                        if(!$exist){
+                        if (!$exist) {
                             DAO_Factory::getDAO_Administratif()->insert($new);
                             $this->ajoutUtilisateur($_POST['id'], $_POST['nom'],
                                                     $_POST['prenom'],
@@ -81,14 +85,14 @@
                             //redirection de la page après réussite
                             $this->vue = new Vue($this, "AjoutOk");
                             $this->vue->render();
-                        }else{
+                        } else {
                             self::redirect("/SatellysReborn/administrateur/errAjout");
                         }
                     }
-                }else {
+                } else {
                     self::redirect("/SatellysReborn/administrateur/errChamps");
                 }
-            }else {
+            } else {
                 self::redirect("/SatellysReborn/administrateur/errNonAdmin");
             }
 
@@ -97,16 +101,20 @@
         /**
          * Ajout d'un utilisateur
          * Fonction appelé uniquement dans la fonction ajout de Administrateur
-         * @param $id : identifiant de l'utilisateur qui sera utilisé pour créer le mot de passe
-         * @param $nom : nom de l'utilisateur utilisé pour le login, combiné avec le prénom
-         * @param $prenom : prenom de l'utilisateur utilisé pour le login, combiné avec le nom
-         * @param $mail : adresse mail de l'utilisateur
+         * @param $id string identifiant de l'utilisateur qui sera utilisé pour
+         *     créer le mot de passe
+         * @param $nom string nom de l'utilisateur utilisé pour le login, combiné
+         *     avec le prénom
+         * @param $prenom string prenom de l'utilisateur utilisé pour le login,
+         *     combiné avec le nom
+         * @param $mail string adresse mail de l'utilisateur
          */
         private function ajoutUtilisateur($id, $nom, $prenom, $mail) {
-            $log = strtolower($nom) . "." . strtolower($prenom);
-            $mdp = $id;
+            $log = Utils::enleverAccents(strtolower($prenom) . "." .
+                                         strtolower($nom));
+
             $admin = DAO_Factory::getDAO_Administratif()->find($id);
-            $util = new Utilisateur($log, $mdp, $mail, null, $admin);
+            $util = new Utilisateur($log, $log, $mail, null, $admin);
             DAO_Factory::getDAO_Utilisateur()->insert($util);
         }
 
@@ -128,7 +136,8 @@
         }
 
         /**
-         * Affiche la page d'erreur quand il y a un problème lors d'un ajout en BD
+         * Affiche la page d'erreur quand il y a un problème lors d'un ajout en
+         * BD
          */
         public function errAjout() {
             $this->vue = new Vue($this, 'ErrAjout', "Problème d'insertion");

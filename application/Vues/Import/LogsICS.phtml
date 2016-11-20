@@ -3,16 +3,34 @@
     include_once COMMON . 'Menu.phtml';
 ?>
 
+<div class="modal fade" id="modalConfirmICS" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Voulez-vous vraiment importer le ICS ?</h4>
+            </div>
+            <?php if ($obj->hasErreur()): ?>
+                <div class="modal-body">
+                    Le fichier ICS contient des erreurs, voulez-vous vraiment l'importer.<br/>
+                    <strong class="text-danger">Attention, il se pourrait que certains cours ne soit pas importés !</strong>
+                </div>
+            <?php endif; ?>
+            <div class="modal-footer">
+                <a href="/SatellysReborn/import/insererICS/" class="btn btn-success">Importer</a>
+                <a href="#" class="btn btn-danger" data-dismiss="modal">Fermer</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="panel my-panel">
         <div class="panel-heading">
             Pré-chargement du fichier ICS
         </div>
         <div class="panel-body">
-            <?php if (!$obj->hasErreur()): ?>
-                <a href="/SatellysReborn/import/insererICS/" class="btn btn-success">Valider</a>
-            <?php endif; ?>
-            <table class="table table-striped logs" data-toggle="table" data-height="400" data-search="true" data-pagination="true">
+            <a href="#" id="btnImportICS" class="btn btn-success btn-lg">Importer le fichier</a>
+            <table class="logs" data-toggle="table" data-height="800" data-search="true" data-pagination="true">
                 <thead>
                     <tr>
                         <th data-field="ligne">Ligne</th>

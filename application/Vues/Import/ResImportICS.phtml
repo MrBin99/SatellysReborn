@@ -1,0 +1,31 @@
+<?php
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+?>
+
+<div class="container">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            Fichier ICS importé.
+        </div>
+        <div class="panel-body">
+            Le fichier ICS a été importé avec succès.<br /><br />
+            <table data-toggle="table" data-height="100">
+                <thead>
+                    <tr>
+                        <th>Total de cours à importer</th>
+                        <th>Total de cours importé avec succès</th>
+                        <th>Total de cours non importé</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?= $obj["ok"] + $obj["nok"] ?></td>
+                        <td><?= $obj["ok"] ?></td>
+                        <td><?= $obj["nok"] ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
