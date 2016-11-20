@@ -4,6 +4,7 @@
     use SatellysReborn\BaseDonnees\DAO\DAO;
     use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
     use SatellysReborn\Modeles\Population\Enseignant;
+    use SatellysReborn\Modeles\Utils\Utils;
 
     /**
      * DAO permettant de gérer les enseignants en base de données.
@@ -153,11 +154,11 @@
             $sql = 'SELECT id, nom, prenom, tel, id_adresse
                     FROM enseignant
                     WHERE lower(nom) LIKE lower(:nom)
-                    AND lower(prenom) LIKE lower(:prenom)';
+                    AND escapeAccents(lower(prenom)) LIKE lower(:prenom)';
 
             $resBD = $this->connexion->select($sql, array(
-                ':nom' => $nom,
-                ':prenom' => $prenom
+                ':nom' => '%' . Utils::enleverAccents($nom) . '%',
+                ':prenom' => '%' . Utils::enleverAccents($prenom) . '%'
             ));
 
             // Pas de résultats ?

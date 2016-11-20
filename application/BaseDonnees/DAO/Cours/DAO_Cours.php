@@ -26,7 +26,6 @@
             $sql = 'INSERT INTO cours (id_matiere, id_enseignant, salle, 
                                        jour, debut, fin)
                     VALUES (:matiere, :enseignant, :salle, :jour, :debut, :fin)';
-
             $res = $this->connexion->insert($sql, array(
                 ':matiere' => $obj->getMatiere()->getId(),
                 ':enseignant' => $obj->getEnseignant()->getId(),
@@ -50,6 +49,24 @@
             // else
 
             return false;
+        }
+
+        /**
+         * Ajoute un groupe qui assiste à un cours.
+         * @param $coursId string l'identifiant du cours.
+         * @param $groupeId string l'identifiant du groupe.
+         * @return bool si l'ajout a été effectué.
+         */
+        public function ajouterCours($coursId, $groupeId) {
+            // SQL.
+            $sql = 'INSERT INTO assiste
+                    VALUES (:cours, :groupe)';
+            $res = $this->connexion->insert($sql, array(
+                ':cours' => $coursId,
+                ':groupe' => $groupeId
+            ));
+
+            return $res != false;
         }
 
         /**
@@ -296,6 +313,58 @@
             // Pour toutes les lignes.
             foreach ($resBD as $obj) {
                 array_push($res, DAO_Factory::getDAO_Groupe()->find($obj->id));
+            }
+
+            return $res;
+        }
+
+        /**
+         * Récupère tous les cours d'un enseignant.
+         * @param $enseignant string l'identifiant de l'ensaignant.
+         * @return array
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findCoursEnseignant($enseignant) {
+            // SQL.
+            $sql = 'SELECT c.id AS id, debut, fin, jour, salle, id_matiere, id_enseignant
+                    FROM cours c
+                    JOIN enseignant e ON c.id_enseignant = e.id
+                    WHERE e.id = :id';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':id' => $enseignant
+            ));
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Groupes.
+            $res = array();
+
+            // Pour toutes les lignes.
+            foreach ($resBD as $obj) {
+                $matiere =
+                    DAO_Factory::getDAO_Matiere()->find($obj->id_matiere);
+                $enseignant = DAO_Factory::getDAO_Enseignant()
+                                         ->find($obj->id_enseignant);
+                $groupes = $this->getGroupes($obj->id);
+                $cours = new Cours($obj->id, $matiere, $enseignant,
+                                   $obj->salle, $obj->jour, $obj->debut,
+                                   $obj->fin);
+
+                if (isset($groupes)) {
+                    foreach ($groupes as $groupe) {
+                        $cours->ajouterGroupe($groupe);
+                    }
+                }
+
+                array_push($res, $cours);
             }
 
             return $res;

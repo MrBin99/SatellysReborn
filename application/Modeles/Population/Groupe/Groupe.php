@@ -10,7 +10,7 @@
      * Représente un groupe d'étudiant faisant partie d'une promotion.
      * @package SatellysReborn\Modeles\Population\Groupe
      */
-    class Groupe extends Modele {
+    class Groupe extends Modele implements \JsonSerializable {
 
         /** @var string l'identifiant du groupe. */
         private $id;
@@ -77,5 +77,22 @@
          */
         public function getEtudiants() {
             return $this->etudiants;
+        }
+
+        /**
+         * Specify data which should be serialized to JSON
+         * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+         * @return mixed data which can be serialized by <b>json_encode</b>,
+         * which is a value of any type other than a resource.
+         * @since 5.4.0
+         */
+        public function jsonSerialize() {
+            $var = get_object_vars($this);
+            foreach ($var as &$value) {
+                if (is_object($value) && method_exists($value,'jsonSerialize')) {
+                    $value = $value->jsonSerialize();
+                }
+            }
+            return $var;
         }
     }

@@ -153,7 +153,7 @@
             $heureFin = $this->toDateTime($cmd['DTEND'])->format('H:i');
 
             // On récupère la date du cours.
-            $date = $this->toDateTime($cmd['DTEND'])->format('d-m-Y');
+            $date = $this->toDateTime($cmd['DTEND'])->format('Y-m-d');
 
             // On récupère la description.
             $desc = explode('\n', $cmd['DESCRIPTION']);
@@ -283,6 +283,13 @@
                     $event->getHeureDebut(), $event->getHeureFin()
                 );
 
+                // Insère le cours.
+                $cours = DAO_Factory::getDAO_Cours()->insert($cours);
+                if ($cours == false) {
+                    $insertions["nok"]++;
+                    continue;
+                }
+
                 // Ajoute les groupes.
                 foreach ($event->getGroupes() as $groupe) {
                     $g = DAO_Factory::getDAO_Groupe()->findNom($groupe);
@@ -291,9 +298,6 @@
                         $cours->ajouterGroupe($g);
                     }
                 }
-
-                // Insère le cours.
-                DAO_Factory::getDAO_Cours()->insert($cours);
                 $insertions["ok"]++;
             }
             return $insertions;

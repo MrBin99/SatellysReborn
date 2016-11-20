@@ -90,3 +90,8 @@ body {
 .logs span {
     font-weight: bold;
 }
+
+/* Emploi du temps */
+.fc-content {
+    text-align: center;
+}

@@ -7,7 +7,7 @@
      * Représente un étudiant.
      * @package SatellysReborn\Modeles\Population
      */
-    class Etudiant extends Personne {
+    class Etudiant extends Personne implements \JsonSerializable {
 
         /** @var string le numéro INE de cet étudiant. */
         private $ine;
@@ -34,5 +34,22 @@
          */
         public function getIne() {
             return $this->ine;
+        }
+
+        /**
+         * Specify data which should be serialized to JSON
+         * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+         * @return mixed data which can be serialized by <b>json_encode</b>,
+         * which is a value of any type other than a resource.
+         * @since 5.4.0
+         */
+        public function jsonSerialize() {
+            $var = get_object_vars($this);
+            foreach ($var as &$value) {
+                if (is_object($value) && method_exists($value,'jsonSerialize')) {
+                    $value = $value->jsonSerialize();
+                }
+            }
+            return $var;
         }
     }

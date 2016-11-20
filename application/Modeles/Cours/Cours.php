@@ -1,6 +1,7 @@
 <?php
     namespace SatellysReborn\Modeles\Cours;
 
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
     use SatellysReborn\Modeles\Modele;
     use SatellysReborn\Modeles\Population\Enseignant;
     use SatellysReborn\Modeles\Population\Groupe\Groupe;
@@ -9,7 +10,7 @@
      * Représente un cours.
      * @package SatellysReborn\Modeles\Cours
      */
-    class Cours extends Modele {
+    class Cours extends Modele implements \JsonSerializable {
 
         /** @var string l'identifiant du cours. */
         private $id;
@@ -64,6 +65,7 @@
          */
         public function ajouterGroupe(Groupe $groupe) {
             array_push($this->groupes, $groupe);
+            DAO_Factory::getDAO_Cours()->ajouterCours($this->id, $groupe->getId());
         }
 
         /**
@@ -113,5 +115,29 @@
          */
         public function getFin() {
             return $this->fin;
+        }
+
+        /**
+         * @return array les groupes présent à ce cours.
+         */
+        public function getGroupes() {
+            return $this->groupes;
+        }
+
+        /**
+         * Specify data which should be serialized to JSON
+         * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+         * @return mixed data which can be serialized by <b>json_encode</b>,
+         * which is a value of any type other than a resource.
+         * @since 5.4.0
+         */
+        public function jsonSerialize() {
+            $var = get_object_vars($this);
+            foreach ($var as &$value) {
+                if (is_object($value) && method_exists($value,'jsonSerialize')) {
+                    $value = $value->jsonSerialize();
+                }
+            }
+            return $var;
         }
     }

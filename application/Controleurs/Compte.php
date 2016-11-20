@@ -102,6 +102,10 @@
             $this->vue->render();
         }
 
+        public function utilisateurCourant() {
+            echo json_encode(Utilisateur::getUtilisateur());
+        }
+
         /**
          * Affiche la page d'erreur quand un utilisateur essaie d'accéder à
          * une page sans être connecté.
