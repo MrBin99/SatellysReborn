@@ -23,7 +23,7 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO absence
+            $sql = 'INSERT INTO absence (id_cours, id_etudiant, justifie, motif)
                     VALUES (:cours, :etudiant, :justifie, :motif)';
 
             $res = $this->connexion->insert($sql, array(
@@ -32,7 +32,6 @@
                 ':justifie' => $obj->estJustifie(),
                 ':motif' => $obj->getMotif()
             ));
-
             return !$res ? false : $obj;
         }
 
@@ -48,7 +47,7 @@
          */
         public function update($obj) {
             // Pré-condition.
-            if (is_null($obj->getCours()) || !is_null($obj->getEtudiant())
+            if (is_null($obj->getCours()) || is_null($obj->getEtudiant())
             ) {
                 return false;
             }
@@ -81,7 +80,7 @@
          */
         public function delete($obj) {
             // Pré-condition.
-            if (is_null($obj->getCours()) || !is_null($obj->getEtudiant())
+            if (is_null($obj->getCours()) || is_null($obj->getEtudiant())
             ) {
                 return false;
             }
