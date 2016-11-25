@@ -1,0 +1,50 @@
+<?php
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+?>
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Liste des étudiants
+        </div>
+        <div class="panel-body">
+            <h2><?= $obj[0]->getPrenom() . " " . $obj[0]->getNom(); ?></h2>
+            <strong>Identifiant UT1 : </strong><?= $obj[0]->getId(); ?><br>
+            <strong>Numéro INE : </strong><?= $obj[0]->getIne(); ?><br>
+            <strong>Téléphone : </strong><?= $obj[0]->getTel(); ?><br>
+            <!-- Adresse mail : getEmail à mettre -->
+            <!-- Adresse postale : $obj[1] à mettre -->
+            <h3>Liste d'absence de <?= $obj[0]->getPrenom() . " " . $obj[0]->getNom(); ?> : </h3>
+            <table data-toggle="table" data-height="800" data-search="true"
+                   data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-sortable="true" data-field="date">Date</th>
+                    <th data-sortable="true" data-field="heures">Heures</th>
+                    <th data-sortable="true" data-field="cours">Cours</th>
+                    <th data-sortable="true" data-field="justifie">Justification</th>
+                    <th data-sortable="true" data-field="motif">Motif</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($obj[1] as $abs): ?>
+                    <tr>
+                        <td> <?= $abs->getCours()->getJour(); ?>
+                        <td> <?= $abs->getCours()->getDebut() . ' - ' .
+                                 $abs->getCours()->getFin(); ?></td>
+                        <td><?= $abs->getCours()->getMatiere()->getNom() ?>
+
+                        <td><?php if ($abs->estJustifie()) {
+                                echo "Oui";
+                            } else {
+                                echo "Non";
+                            } ?></td>
+                        <td><?= $abs->getMotif(); ?></td>
+
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

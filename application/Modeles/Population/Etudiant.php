@@ -12,6 +12,9 @@
         /** @var string le numéro INE de cet étudiant. */
         private $ine;
 
+        /** @var string adresse mail de l'étudiant */
+        //private $email;
+
         /**
          * Créé une nouvelle personne.
          * @param string $id l'identifiant de la personne.

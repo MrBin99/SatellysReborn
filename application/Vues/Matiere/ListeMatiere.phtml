@@ -1,0 +1,28 @@
+<?php
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+?>
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Liste des étudiants
+        </div>
+        <div class="panel-body">
+            <table data-toggle="table" data-height="800" data-search="true"
+                   data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-sortable="true" data-field="nomMatiere">Nom des matières</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($obj as $matiere): ?>
+                    <tr>
+                        <td><a href="/SatellysReborn/matiere/listeCours/<?= $matiere->getId(); ?>"><?= $matiere->getNom(); ?></a></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
