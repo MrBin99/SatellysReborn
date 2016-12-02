@@ -27,7 +27,7 @@
                             :</label>
                         <input type="text" id="id" name="id"
                                class="form-control"
-                               placeholder="Identifiant" maxlength="13"
+                               placeholder="Identifiant" pattern="\w{13}"
                                value="<?= $obj[0]->getId() ?>"
                                readonly>
                     </div>
@@ -54,6 +54,7 @@
                     <div class="form-group">
                         <label for="tel">Téléphone :</label>
                         <input type="tel" id="tel" name="tel"
+                               pattern="\d{10}"
                                class="form-control" placeholder="Téléphone"
                                value="<?= $obj[0]->getTel() ?>"
                                readonly>
