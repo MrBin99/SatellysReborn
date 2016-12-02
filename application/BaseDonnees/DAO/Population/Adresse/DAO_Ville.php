@@ -22,6 +22,13 @@
          * </ul>
          */
         public function insert($obj) {
+            // Pré-condition
+            if (is_null($obj->getNumInsee()) ||
+                !is_null($this->find($obj->getNumInsee()))
+            ) {
+                return false;
+            }
+
             // SQL.
             $sql = 'INSERT INTO ville
                     VALUES (:numinsee, :cp, :nom, :pays)';
@@ -79,9 +86,11 @@
 
         /**
          * On ne supprime pas une ville.
+         * @param \SatellysReborn\Modeles\Modele $obj non utilisé.
+         * @return bool toujours False.
          */
         public function delete($obj) {
-            return true;
+            return false;
         }
 
         /**
@@ -138,7 +147,7 @@
             }
             // else
 
-            // Convertit en objet Promotion.
+            // Convertit en objet Ville.
             $res = array();
 
             // Pour toutes les lignes.
@@ -169,7 +178,8 @@
             // SQL.
             $sql = 'SELECT numinsee, code_postal, nom, id_pays
                     FROM ville
-                    WHERE lower(nom) LIKE lower(:nom)
+                    WHERE enleverAccents(lower(nom)) LIKE 
+                          enleverAccents(lower(:nom))
                     AND code_postal = :cp';
 
             $resBD = $this->connexion->select($sql, array(
@@ -189,5 +199,48 @@
             return new Ville($resBD[0]->numinsee, $resBD[0]->code_postal,
                              $resBD[0]->nom,
                              $pays);
+        }
+
+        /**
+         * Sélectionne les villes dont le nom est semblable à celui
+         * passé en argument.
+         * @param $nom string le nom de la ville.
+         * @return array
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNom($nom) {
+            // SQL.
+            $sql = 'SELECT numinsee, code_postal, nom, id_pays
+                    FROM ville
+                    WHERE lower(nom) LIKE 
+                          lower(:nom)';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':nom' => '%' . $nom . '%',
+            ));
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Ville.
+            $res = array();
+
+            // Pour toutes les lignes.
+            foreach ($resBD as $obj) {
+                $pays = DAO_Factory::getDAO_Pays()
+                                   ->find($resBD[0]->id_pays);
+
+                array_push($res, new Ville(
+                    $obj->numinsee, $obj->code_postal, $obj->nom, $pays
+                ));
+            }
+
+            return $res;
         }
     }

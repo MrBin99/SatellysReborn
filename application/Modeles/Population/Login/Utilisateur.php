@@ -17,7 +17,7 @@
         /** @var string le mot de passe de l'utilisateur. */
         private $mdp;
 
-        /** @var string l'email de l'utilisateur. */
+        /** @var string l'email de l'utilisateur si c'est un administrateur. */
         private $email;
 
         /** @var Enseignant l'enseignant représenté par cet utilisateur. */
@@ -30,7 +30,8 @@
          * Créé un nouvel utilisateur.
          * @param string $login le login de l'utilisateur.
          * @param string $mdp le mot de passe de l'utilisateur.
-         * @param string $email l'email de l'utilisateur.
+         * @param $email string l'email de l'utilisateur si c'est un
+         *     administrateur.
          * @param Enseignant $enseignant l'enseignant représenté par cet
          *     utilisateur.
          * @param Administratif $administratif l'administratif représenté par
@@ -40,7 +41,7 @@
                                     Enseignant $enseignant = null,
                                     Administratif $administratif = null) {
             $this->login = $login;
-            $this->mdp = self::crypterMdp($mdp);
+            $this->mdp = $mdp;
             $this->email = $email;
             $this->enseignant = $enseignant;
             $this->administratif = $administratif;
@@ -77,6 +78,44 @@
         }
 
         /**
+         * Détermine si l'utilisateur courant est un super administrateur.
+         * @return bool si l'utilisateur courant est un super admin.
+         */
+        public static function utilCourantEstSuperAdmin() {
+            return self::getUtilisateur() != null
+                   && self::getUtilisateur()->estAdmin();
+        }
+
+        /**
+         * Détermine si l'utilisateur courant est un administratif.
+         * @return bool si l'utilisateur courant est un administratif.
+         */
+        public static function utilCourantEstAdministratif() {
+            return self::getUtilisateur() != null
+                   && self::getUtilisateur()->estAdministratif();
+        }
+
+        /**
+         * Détermine si l'utilisateur courant est un super administrateur ou un
+         * administratif.
+         * @return bool si l'utilisateur courant est un super administrateur ou
+         *     un administratif.
+         */
+        public static function utilCourantEstAdmin() {
+            return self::utilCourantEstAdministratif() ||
+                   self::utilCourantEstSuperAdmin();
+        }
+
+        /**
+         * Détermine si l'utilisateur courant est un enseignant.
+         * @return bool si l'utilisateur courant est un enseignant.
+         */
+        public static function utilCourantEstEnseignant() {
+            return self::getUtilisateur() != null
+                   && self::getUtilisateur()->estEnseignant();
+        }
+
+        /**
          * Met à jour l'utilisateur courant de l'application.
          * @param Utilisateur $util l'utilisateur courant de l'application.
          */
@@ -99,7 +138,8 @@
         }
 
         /**
-         * @return string l'email de l'utilisateur.
+         * @return string l'email de l'utilisateur si c'est un
+         *     administrateur.
          */
         public function getEmail() {
             return $this->email;
@@ -152,7 +192,7 @@
          */
         public function estAdmin() {
             return $this->enseignant == null
-                && $this->administratif == null;
+                   && $this->administratif == null;
         }
 
         /**
@@ -165,10 +205,13 @@
         public function jsonSerialize() {
             $var = get_object_vars($this);
             foreach ($var as &$value) {
-                if (is_object($value) && method_exists($value,'jsonSerialize')) {
+                if (is_object($value) &&
+                    method_exists($value, 'jsonSerialize')
+                ) {
                     $value = $value->jsonSerialize();
                 }
             }
+
             return $var;
         }
     }

@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Choisissez les destinataires
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <form action="/SatellysReborn/mail/envoyer/" method="post">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="destinataires">Destinataires :</label>
+                            <select name="destinataires[]" id="destinataires"
+                                    class="form-control select-desti"
+                                    multiple="multiple"></select>
+                        </div>
+                        <input type="submit"
+                               class="btn btn-success center-block"
+                               value="Envoyer">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

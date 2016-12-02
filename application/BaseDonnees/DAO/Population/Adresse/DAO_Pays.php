@@ -68,9 +68,11 @@
 
         /**
          * On ne supprime pas un pays.
+         * @param \SatellysReborn\Modeles\Modele $obj non utilisé.
+         * @return bool toujours False.
          */
         public function delete($obj) {
-            return true;    // bouchon
+            return false;
         }
 
         /**
@@ -100,6 +102,36 @@
 
             // else
             return new Pays($cle, $resBD[0]->nom);
+        }
+
+        /**
+         * Sélectionne le pays dont le nom est passée en argument
+         * s'il existe.
+         * @param $nom string le nom du pays.
+         * @return Pays
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNom($nom) {
+            // SQL.
+            $sql = 'SELECT id, nom
+                    FROM pays
+                    WHERE enleverAccents(lower(nom)) LIKE 
+                          enleverAccents(lower(:nom))';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':nom' => '%' . $nom . '%'
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+            return new Pays($resBD[0]->id, $resBD[0]->nom);
         }
 
         /**
@@ -134,34 +166,5 @@
             }
 
             return $res;
-        }
-
-        /**
-         * Sélectionne le pays dont le nom est passée en argument
-         * s'il existe.
-         * @param $nom string le nom du pays.
-         * @return Pays
-         * <ul>
-         *     <li>L'objet retounée par la selection.</li>
-         *     <li>null si auncun objet n'a été trouvé.</li>
-         * </ul>
-         */
-        public function findName($nom) {
-            // SQL.
-            $sql = 'SELECT id, nom
-                    FROM pays
-                    WHERE lower(nom) LIKE lower(:nom)';
-
-            $resBD = $this->connexion->select($sql, array(
-                ':nom' => '%' . $nom . '%'
-            ));
-
-            // Pas de résultats ?
-            if (empty($resBD)) {
-                return null;
-            }
-
-            // else
-            return new Pays($resBD[0]->id, $resBD[0]->nom);
         }
     }

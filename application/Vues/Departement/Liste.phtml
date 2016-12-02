@@ -1,0 +1,50 @@
+<?php
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+
+    include_once COMMON . 'Header.phtml';
+    include_once COMMON . 'Menu.phtml';
+?>
+
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Liste des départements
+        </div>
+        <div class="panel-body">
+            <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+                <div class="row">
+                    <div class="col-md-12 toolbar">
+                        <div class="btn-group">
+                            <a href="/SatellysReborn/departement/creation/"
+                               class="btn btn-success btn-lg"><i
+                                    class="fa fa-plus"></i> Nouveau</a>
+                            <a href="#" id="mail"
+                               class="btn btn-primary btn-lg"><i
+                                    class="fa fa-envelope-o"></i> Envoyer</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <table data-toggle="table" data-search="true" data-height="800"
+                   data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-field="nom" data-sortable="true">Nom</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                    if ($obj != null):
+                        foreach ($obj as $dep): ?>
+                            <tr>
+                                <td>
+                                    <a href="/SatellysReborn/departement/details/<?= $dep->getId() ?>"><?= $dep->getNom() ?></a>
+                                </td>
+                            </tr>
+                        <?php endforeach;
+                    endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

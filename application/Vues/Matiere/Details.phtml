@@ -1,0 +1,95 @@
+<?php
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+
+?>
+
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            <?= $obj[0]->getNom() ?>
+        </div>
+        <div class="panel-body">
+            <form
+                action="/SatellysReborn/matiere/modifier/<?= $obj[0]->getId() ?>/"
+                method="post">
+                <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+                    <div class="row">
+                        <div class="col-md-12 toolbar">
+                            <div class="btn-group panel-body">
+                                <button type="submit"
+                                        class="btn btn-info btn-lg"><i
+                                        class="fa fa-edit"></i> Modifier
+                                </button>
+                                <?php if (empty($obj[1])): ?>
+                                    <a href="/SatellysReborn/matiere/supprimer/<?= $obj[0]->getId() ?>/"
+                                       class="btn btn-danger btn-lg"><i
+                                            class="fa fa-remove"></i> Supprimer</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="id">Identifiant
+                                :</label>
+                            <input type="text" id="id" name="id"
+                                   class="form-control"
+                                   placeholder="Identifiant"
+                                   value="<?= $obj[0]->getId() ?>"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="ine">Nom
+                                :</label>
+                            <input type="text" id="nom" name="nom"
+                                   class="form-control"
+                                   placeholder="Numéro INE"
+                                   value="<?= $obj[0]->getNom() ?>"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <table data-toggle="table" data-search="true" data-height="800"
+                   data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-field="id" data-sortable="true">Identifiant</th>
+                    <th data-field="jour" data-sortable="true">Jour</th>
+                    <th data-field="debut" data-sortable="true">Début</th>
+                    <th data-field="fin" data-sortable="true">Fin</th>
+                    <th data-field="salle" data-sortable="true">Salle</th>
+                    <th data-field="enseignant" data-sortable="true">
+                        Enseignant
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                    if ($obj[1] != null):
+                        foreach ($obj[1] as $cours): ?>
+                            <tr>
+                                <td>
+                                    <a href="/SatellysReborn/cours/details/<?= $cours->getId() ?>"><?= $cours->getId() ?></a>
+                                </td>
+                                <td><?= $cours->getJour() ?></td>
+                                <td><?= $cours->getDebut() ?></td>
+                                <td><?= $cours->getFin() ?></td>
+                                <td><?= $cours->getSalle() ?></td>
+                                <td>
+                                    <a href="/SatellysReborn/enseignant/details/<?= $cours->getEnseignant()
+                                                                                          ->getId() ?>"><?= $cours->getEnseignant()
+                                                                                                                  ->getNomComplet() ?></a>
+                                </td>
+                            </tr>
+                        <?php endforeach;
+                    endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

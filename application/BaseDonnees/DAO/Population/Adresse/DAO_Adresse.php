@@ -23,7 +23,8 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO adresse (adresse1, adresse2, adresse3, numinsee_ville)
+            $sql = 'INSERT INTO adresse (adresse1, adresse2, adresse3, 
+                                         numinsee_ville)
                     VALUES (:adresse1, :adresse2, :adresse3, :ville)';
 
             $res = $this->connexion->insert($sql, array(
@@ -138,7 +139,9 @@
 
         /**
          * On ne va jamais chercher toutes les adresses.
+         * @return bool toujours False.
          */
         public function findAll() {
+            return false;
         }
     }

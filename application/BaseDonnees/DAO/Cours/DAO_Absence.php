@@ -23,7 +23,8 @@
          */
         public function insert($obj) {
             // SQL.
-            $sql = 'INSERT INTO absence (id_cours, id_etudiant, justifie, motif)
+            $sql = 'INSERT INTO absence (id_cours, id_etudiant, justifie, 
+                                         motif)
                     VALUES (:cours, :etudiant, :justifie, :motif)';
 
             $res = $this->connexion->insert($sql, array(
@@ -32,7 +33,8 @@
                 ':justifie' => $obj->estJustifie(),
                 ':motif' => $obj->getMotif()
             ));
-            return !$res ? false : $obj;
+
+            return $res === false ? false : $obj;
         }
 
         /**
@@ -61,7 +63,7 @@
                     AND id_etudiant = :etudiant';
 
             return $this->connexion->update($sql, array(
-                ':justifie' => $obj->estJustifie(),
+                ':justifie' => $obj->estJustifie() ? 1 : 0,
                 ':motif' => $obj->getMotif(),
                 ':cours' => $obj->getCours()->getId(),
                 ':etudiant' => $obj->getEtudiant()->getId()
@@ -98,6 +100,8 @@
 
         /**
          * Non utilisé.
+         * @param string $cle non utilisé.
+         * @return null|\SatellysReborn\Modeles\Modele toujours null.
          * @see getAbsence()
          */
         public function find($cle) {
@@ -142,8 +146,10 @@
 
         /**
          * On ne cherche jamais toutes les absences.
+         * @return bool toujours false.
          */
         public function findAll() {
+            return false;
         }
 
         /**

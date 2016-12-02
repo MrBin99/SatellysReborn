@@ -57,16 +57,15 @@
         public abstract function delete($obj);
 
         /**
-         * Sélectionne l'élèment dont la clé primaire est passée en argument
-         * s'il existe.
-         * @param $cle string la clé primaire de l'objet à sélectionner.
+         * Sélectionne l'élèment dont un critère est passé en argument.
+         * @param $critere string le critère de l'élément à sélectionner.
          * @return Modele
          * <ul>
          *     <li>L'objet retounée par la selection.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
          * </ul>
          */
-        public abstract function find($cle);
+        public abstract function find($critere);
 
         /**
          * Sélectionne tous les éléments de ce type.

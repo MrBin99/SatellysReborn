@@ -22,6 +22,13 @@
          * </ul>
          */
         public function insert($obj) {
+            // Pré-condition
+            if (is_null($obj->getLogin()) ||
+                !is_null($this->find($obj->getLogin()))
+            ) {
+                return false;
+            }
+
             // SQL.
             $sql = 'INSERT INTO utilisateur
                     VALUES (:login, :mdp, :email, :enseignant, :admin)';
@@ -36,7 +43,7 @@
                     $obj->getAdministratif()->getId() : null
             ));
 
-            return !$res ? false: $obj;
+            return $res === false ? false : $obj;
         }
 
         /**
@@ -52,7 +59,7 @@
         public function update($obj) {
             // Pré-condition.
             if (is_null($obj->getLogin()) ||
-                !is_null($this->find($obj->getLogin()))
+                is_null($this->find($obj->getLogin()))
             ) {
                 return false;
             }
@@ -66,8 +73,8 @@
 
             return $this->connexion->update($sql, array(
                 ':mdp' => $obj->getMdp(),
-                ':email' => $obj->getEmail(),
-                ':login' => $obj->getLogin()
+                ':login' => $obj->getLogin(),
+                ':email' => $obj->getEmail()
             ));
         }
 
@@ -99,11 +106,134 @@
         }
 
         /**
-         * Non utilisé.
-         * @see findLoginMdp
+         * Sélectionne l'élèment dont la clé primaire est passée en argument
+         * s'il existe.
+         * @param $cle string la clé primaire de l'objet à sélectionner.
+         * @return Utilisateur
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
          */
         public function find($cle) {
-            return null;
+            // SQL.
+            $sql = 'SELECT login, mdp, email, id_enseignant, id_administratif
+                    FROM utilisateur
+                    WHERE login = :login';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':login' => $cle
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+
+            $admin = null;
+            $ensei = null;
+
+            // Remplissage du champs de la personne correspondante.
+            if ($resBD[0]->id_administratif != null) {
+                $admin = DAO_Factory::getDAO_Administratif()
+                                    ->find($resBD[0]->id_administratif);
+            } elseif ($resBD[0]->id_enseignant != null) {
+                $ensei = DAO_Factory::getDAO_Enseignant()
+                                    ->find($resBD[0]->id_enseignant);
+            }
+
+            return new Utilisateur($resBD[0]->login, $resBD[0]->mdp,
+                                   $resBD[0]->email,
+                                   $ensei, $admin);
+        }
+
+        /**
+         * Sélectionne l'utilisateur dont l'enseignant est passé en paramètre.
+         * @param $idEnseignant string l'identifiant de l'enseignant.
+         * @return Utilisateur
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findUtilisateurEnseignant($idEnseignant) {
+            // SQL.
+            $sql = 'SELECT login, mdp, email, id_enseignant, id_administratif
+                    FROM utilisateur
+                    WHERE id_enseignant = :id';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':id' => $idEnseignant
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+
+            $admin = null;
+            $ensei = null;
+
+            // Remplissage du champs de la personne correspondante.
+            if ($resBD[0]->id_administratif != null) {
+                $admin = DAO_Factory::getDAO_Administratif()
+                                    ->find($resBD[0]->id_administratif);
+            } elseif ($resBD[0]->id_enseignant != null) {
+                $ensei = DAO_Factory::getDAO_Enseignant()
+                                    ->find($resBD[0]->id_enseignant);
+            }
+
+            return new Utilisateur($resBD[0]->login, $resBD[0]->mdp,
+                                   $resBD[0]->email,
+                                   $ensei, $admin);
+        }
+
+        /**
+         * Sélectionne l'utilisateur dont l'administratif est passé en
+         * paramètre.
+         * @param $idAdmin string l'identifiant de l'administratif.
+         * @return Utilisateur
+         * <ul>
+         *     <li>L'objet retounée par la selection.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findUtilisateurAdministratif($idAdmin) {
+            // SQL.
+            $sql = 'SELECT login, mdp, email, id_enseignant, id_administratif
+                    FROM utilisateur
+                    WHERE id_administratif = :id';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':id' => $idAdmin
+            ));
+
+            // Pas de résultats ?
+            if (empty($resBD)) {
+                return null;
+            }
+
+            // else
+
+            $admin = null;
+            $ensei = null;
+
+            // Remplissage du champs de la personne correspondante.
+            if ($resBD[0]->id_administratif != null) {
+                $admin = DAO_Factory::getDAO_Administratif()
+                                    ->find($resBD[0]->id_administratif);
+            } elseif ($resBD[0]->id_enseignant != null) {
+                $ensei = DAO_Factory::getDAO_Enseignant()
+                                    ->find($resBD[0]->id_enseignant);
+            }
+
+            return new Utilisateur($resBD[0]->login, $resBD[0]->mdp,
+                                   $resBD[0]->email,
+                                   $ensei, $admin);
         }
 
         /**
@@ -149,7 +279,8 @@
             }
 
             return new Utilisateur($resBD[0]->login, $resBD[0]->mdp,
-                                   $resBD[0]->email, $ensei, $admin);
+                                   $resBD[0]->email,
+                                   $ensei, $admin);
         }
 
         /**
@@ -162,7 +293,7 @@
          */
         public function findAll() {
             // SQL.
-            $sql = 'SELECT login, mdp, id_administratif, id_enseignant
+            $sql = 'SELECT login, mdp, email, id_administratif, id_enseignant
                     FROM utilisateur';
 
             $resBD = $this->connexion->select($sql, array());
@@ -173,7 +304,7 @@
             }
             // else
 
-            // Convertit en objet Etudiant.
+            // Convertit en objet Utilisateur.
             $res = array();
 
             foreach ($resBD as $obj) {
@@ -199,21 +330,25 @@
         }
 
         /**
-         * Récupère la liste de tous les administrateurs.
+         * Récupère les utilisateurs dont le nom correspond à celui passé en
+         * argument.
+         * @param $nom string l'argument de recherche.
          * @return array
          * <ul>
          *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
          * </ul>
          */
-        public function findAllAdministrateurs() {
+        public function findNom($nom) {
             // SQL.
-            $sql = 'SELECT login, mdp, email
+            $sql = 'SELECT login, mdp, email, id_administratif, id_enseignant
                     FROM utilisateur
-                    WHERE id_administratif IS NULL
-                    AND id_enseignant IS NULL';
+                    WHERE enleverAccents(lower(login)) LIKE
+                          enleverAccents(lower(login))';
 
-            $resBD = $this->connexion->select($sql, array());
+            $resBD = $this->connexion->select($sql, array(
+                ":nom" => '%' . $nom . '%'
+            ));
 
             // Vide ?
             if (empty($resBD)) {
@@ -225,45 +360,21 @@
             $res = array();
 
             foreach ($resBD as $obj) {
+                $admin = null;
+                $ensei = null;
+
+                // Remplissage du champs de la personne correspondante.
+                if ($obj->id_administratif != null) {
+                    $admin = DAO_Factory::getDAO_Administratif()
+                                        ->find($obj->id_administratif);
+                } elseif ($obj->id_enseignant != null) {
+                    $ensei = DAO_Factory::getDAO_Enseignant()
+                                        ->find($obj->id_enseignant);
+                }
+
                 array_push($res,
                            new Utilisateur($obj->login, $obj->mdp,
-                                           $obj->email, null, null)
-                );
-            }
-
-            return $res;
-        }
-
-        /**
-         * Récupère la liste de tous les administratifs.
-         * @return array
-         * <ul>
-         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
-         *     <li>null si auncun objet n'a été trouvé.</li>
-         * </ul>
-         */
-        public function findAllAdministratifs() {
-            // SQL.
-            $sql = 'SELECT login, mdp, email
-                    FROM utilisateur
-                    WHERE id_administratif IS NOT NULL
-                    AND id_enseignant IS NULL';
-
-            $resBD = $this->connexion->select($sql, array());
-
-            // Vide ?
-            if (empty($resBD)) {
-                return null;
-            }
-            // else
-
-            // Convertit en objet Utilisateur.
-            $res = array();
-
-            foreach ($resBD as $obj) {
-                array_push($res,
-                           new Utilisateur($obj->login, $obj->mdp,
-                                           $obj->email, null, null)
+                                           $obj->email, $ensei, $admin)
                 );
             }
 

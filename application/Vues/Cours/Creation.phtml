@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Créer un cours
+        </div>
+        <div class="panel-body">
+            <form
+                action="/SatellysReborn/cours/creer/"
+                method="post">
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="id">Date
+                                :</label>
+                            <input type="date" id="dat" name="date"
+                                   class="form-control"
+                                   placeholder="Date"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="debut">Debut :</label>
+                            <input type="time" id="debut" name="debut"
+                                   class="form-control" placeholder="Début"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="fin">Fin :</label>
+                            <input type="time" id="fin" name="fin"
+                                   class="form-control" placeholder="Fin"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="salle">Salle :</label>
+                            <input type="text" id="salle" name="salle"
+                                   class="form-control" placeholder="Salle"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="prof">Enseignant :</label>
+                            <select name="prof" id="prof" class="form-control select-ens" required></select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="matiere">Matière :</label>
+                            <select name="matiere" id="matiere" class="form-control select-matiere" required></select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="groupes">Groupes :</label>
+                            <select name="groupes[]" id="groupes" class="form-control select-groupe" multiple="multiple" required></select>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-success center-block"
+                       value="Créer">
+            </form>
+        </div>
+    </div>
+</div>

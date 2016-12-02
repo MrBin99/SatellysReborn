@@ -30,7 +30,7 @@
             }
 
             // SQL.
-            $sql = 'INSERT INTO etudiant
+            $sql = 'INSERT INTO etudiant (id, ine, nom, prenom, tel, email, id_adresse)
                     VALUES (:id, :ine, :nom, :prenom, :tel, :email, :adresse)';
 
             $res = $this->connexion->insert($sql, array(
@@ -43,7 +43,7 @@
                 ':adresse' => $obj->getAdresse()->getId()
             ));
 
-            return !$res ? false : $obj;
+            return $res === false ? false : $obj;
         }
 
         /**
@@ -134,6 +134,7 @@
 
             // else
 
+            // Objets liés.
             $adresse =
                 DAO_Factory::getDAO_Adresse()->find($resBD[0]->id_adresse);
 
@@ -167,6 +168,8 @@
             $res = array();
 
             foreach ($resBD as $obj) {
+
+                // Objets liés.
                 $adresse =
                     DAO_Factory::getDAO_Adresse()->find($obj->id_adresse);
 
@@ -181,26 +184,26 @@
         }
 
         /**
-         * Retourne un tableau de tous les étudiants d'un groupe.
-         * @param $groupeID string l'identifiant du groupe dont on veut avoir
-         *     tous les étudiants.
-         * @return array
+         * Sélectionne tous les étudiants dont le nom, l'INE ou l'identifiant
+         * est celui passé en argument.
+         * @param $arg string l'argument de recherche.
+         * @return array <ul>
          * <ul>
          *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
          * </ul>
          */
-        public function findEtudiantsGroupe($groupeID) {
+        public function findNomIdIne($arg) {
             // SQL.
-            $sql = 'SELECT e.id AS id, ine, e.nom AS nom, prenom, tel, 
-                           email, id_adresse
-                    FROM etudiant e
-                    JOIN faitpartie f ON e.id = f.id_etudiant
-                    JOIN groupe g ON f.id_groupe = g.id
-                    WHERE g.id = :id';
+            $sql = 'SELECT id, ine, nom, prenom, tel, email, id_adresse
+                    FROM etudiant e 
+                    WHERE enleverAccents(lower(nom)) LIKE 
+                          enleverAccents(lower(:arg))
+                    OR ine LIKE :arg
+                    OR id LIKE :arg';
 
             $resBD = $this->connexion->select($sql, array(
-                ':id' => $groupeID
+                ':arg' => '%' . $arg . '%'
             ));
 
             // Vide ?
@@ -209,11 +212,12 @@
             }
             // else
 
-            // Convertit en objet Promotion.
+            // Convertit en objet Etudiant.
             $res = array();
 
-            // Pour toutes les lignes.
             foreach ($resBD as $obj) {
+
+                // Objets liés.
                 $adresse =
                     DAO_Factory::getDAO_Adresse()->find($obj->id_adresse);
 
@@ -228,26 +232,38 @@
         }
 
         /**
-         * Retourne un tableau de tous les étudiants d'une promotion.
-         * @param $promotionID string l'identifiant de la promotion dont on
-         *     veut avoir tous les étudiants.
-         * @return array
+         * Récupère l'étudiant qui n'est pas absents à un cours et dont le nom,
+         * prenom, INE ou identifiant est celui passé en argument.
+         * @param $idCours string l'identifiant du cours.
+         * @param $arg string l'argument de recherche.
+         * @return array <ul>
          * <ul>
          *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
          * </ul>
          */
-        public function findEtudiantsPromotion($promotionID) {
+        public function findNonAbsentCours($idCours, $arg) {
             // SQL.
-            $sql = 'SELECT e.id AS id, ine, e.nom AS nom, prenom, tel, 
-                           email, id_adresse
-                    FROM etudiant e
-                    JOIN faitpartie f ON e.id = f.id_etudiant
-                    JOIN groupe g ON f.id_groupe = g.id
-                    WHERE g.id_promotion = :id';
+            $sql = 'SELECT DISTINCT e.id AS id, e.ine AS ine, e.nom AS nom, 
+                                    e.prenom AS prenom, email, tel, id_adresse
+                    FROM cours c
+                    JOIN assiste a ON c.id = a.id_cours
+                    JOIN groupe g ON a.id_groupe = g.id
+                    JOIN faitpartie f ON g.id = f.id_groupe
+                    JOIN etudiant e ON f.id_etudiant = e.id
+                    WHERE c.id = :id
+                    AND id_etudiant NOT IN (
+                        SELECT id_etudiant 
+                        FROM absence a
+                        WHERE a.id_cours = :id)
+                    AND (enleverAccents(lower(e.nom)) LIKE 
+                         enleverAccents(lower(:arg))
+                    OR ine LIKE :arg
+                    OR e.id LIKE :arg)';
 
             $resBD = $this->connexion->select($sql, array(
-                ':id' => $promotionID
+                ':id' => $idCours,
+                ':arg' => '%' . $arg . '%',
             ));
 
             // Vide ?
@@ -256,60 +272,13 @@
             }
             // else
 
-            // Convertit en objet Promotion.
+            // Convertit en objet Etudiant.
             $res = array();
 
             // Pour toutes les lignes.
             foreach ($resBD as $obj) {
-                $adresse =
-                    DAO_Factory::getDAO_Adresse()->find($obj->id_adresse);
 
-                array_push($res, new Etudiant($obj->id, $obj->ine, $obj->nom,
-                                              $obj->prenom,
-                                              $obj->tel,
-                                              $obj->email, $adresse)
-                );
-            }
-
-            return $res;
-        }
-
-        /**
-         * Retourne un tableau de tous les étudiants d'un département.
-         * @param $departementID string l'identifiant du département dont on
-         *     veut avoir tous les étudiants.
-         * @return array
-         * <ul>
-         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
-         *     <li>null si auncun objet n'a été trouvé.</li>
-         * </ul>
-         */
-        public function findEtudiantsDepartement($departementID) {
-            // SQL.
-            $sql = 'SELECT e.id AS id, ine, e.nom AS nom, prenom, tel, 
-                           email, id_adresse
-                    FROM etudiant e
-                    JOIN faitpartie f ON e.id = f.id_etudiant
-                    JOIN groupe g ON f.id_groupe = g.id
-                    JOIN promotion p ON g.id_promotion = p.id
-                    JOIN departement d ON p.id_departement = d.id
-                    WHERE d.id = :id';
-
-            $resBD = $this->connexion->select($sql, array(
-                ':id' => $departementID
-            ));
-
-            // Vide ?
-            if (empty($resBD)) {
-                return null;
-            }
-            // else
-
-            // Convertit en objet Promotion.
-            $res = array();
-
-            // Pour toutes les lignes.
-            foreach ($resBD as $obj) {
+                // Objets liés.
                 $adresse =
                     DAO_Factory::getDAO_Adresse()->find($obj->id_adresse);
 

@@ -1,10 +1,39 @@
 <?php
-    include_once COMMON . 'Header.phtml';
-    include_once COMMON . 'Menu.phtml';
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
 ?>
-
 <div class="container">
-    <div class="jumbotron">
-        <h1>SatellysReborn</h1>
-    </div>
+    <?php if (Utilisateur::estConnecte()): ?>
+        <div class="jumbotron">
+            <h2>Bonjour, <?= Utilisateur::getUtilisateur()->getLogin() ?></h2>
+            <p>Sélectionnez une action dans le menu !</p>
+        </div>
+    <?php else: ?>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="jumbotron">
+                    <h2 class="text-center">Se Connecter</h2><br />
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <form action="/SatellysReborn/compte/connexion/" method="post" id="form-connexion">
+                                <div class="form-group">
+                                    <label for="login">Login :</label>
+                                    <input type="text" class="form-control" id="login" name="login" placeholder="Votre nom d'utilisateur" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mdp">Mot de passe :</label>
+                                    <input type="password" class="form-control" id="mdp" name="mdp" placeholder="Votre mot de passe" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-success" value="Se Connecter">
+                                </div>
+                                <div class="form-group">
+                                    <a href="/SatellysReborn/compte/mdpOublie/" class="btn btn-primary">Mot de passe oublié ?</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>

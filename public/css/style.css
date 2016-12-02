@@ -2,15 +2,38 @@
 
 body {
     padding-top: 70px;
+    background: url("../img/bg.jpg");
+    background-size: cover;
+}
+
+.jumbotron {
+    background-color: rgba(255, 255, 255, 0.9);
+    -moz-box-shadow: 5px 5px 40px 0px #656565;
+    -webkit-box-shadow: 5px 5px 40px 0px #656565;
+    -o-box-shadow: 5px 5px 40px 0px #656565;
+    box-shadow: 5px 5px 40px 0px #656565;
 }
 
 /* Menu */
 .my-navbar {
     background-color: #23527C;
+    -moz-box-shadow: 0px 2px 40px 0px #656565;
+    -webkit-box-shadow: 0px 2px 40px 0px #656565;
+    -o-box-shadow: 0px 2px 40px 0px #656565;
+    box-shadow: 0px 2px 40px 0px #656565;
 }
 
 .my-navbar a {
     color: #FFF;
+}
+
+.my-navbar .navbar-brand {
+    padding: 10px;
+}
+
+.my-navbar .navbar-brand img {
+    display: inline;
+    width: 30px;
 }
 
 .icon-bar {
@@ -53,6 +76,10 @@ body {
 /* Panels */
 .my-panel {
     border: 1px solid #23527C;
+    -moz-box-shadow: 5px 5px 40px 0px #656565;
+    -webkit-box-shadow: 5px 5px 40px 0px #656565;
+    -o-box-shadow: 5px 5px 40px 0px #656565;
+    box-shadow: 5px 5px 40px 0px #656565;
 }
 
 .panel .panel-heading {
@@ -63,6 +90,10 @@ body {
 
 .my-panel .panel-heading {
     background-color: #23527C;
+}
+
+.panel-footer {
+    text-align: center;
 }
 
 .panel-danger .panel-heading {
@@ -81,9 +112,18 @@ body {
     border: 1px solid #3C763D;
 }
 
+.panel-success .panel-body, .panel-danger .panel-body {
+    text-align: center;
+}
+
 /* Boutons */
 .btn-primary {
     background-color: #23527C;
+}
+
+/* Tableaux */
+th, td {
+    text-align: center;
 }
 
 /* Logs */
@@ -94,4 +134,80 @@ body {
 /* Emploi du temps */
 .fc-content {
     text-align: center;
+}
+
+.toolbar {
+    text-align: center;
+}
+
+.btn-group {
+    margin: 20px 0 40px 0;
+}
+
+/* Forms */
+.switch {
+    position: relative;
+    display: block;
+    width: 60px;
+    height: 34px;
+    border-radius: 34px;
+}
+
+
+.switch input {
+    display:none;
+}
+
+/* Le slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #23527C;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #23527C;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+textarea {
+    width: auto !important;
+}
+
+a.form-control {
+    color: #337ab7;
+    background-color: #eee;
+}
+
+#form-connexion .btn {
+    width: 100%;
 }

@@ -1,8 +1,6 @@
 <?php
     namespace SatellysReborn\Modeles\Population\Groupe;
 
-    use SatellysReborn\BaseDonnees\BD_Exception;
-    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
     use SatellysReborn\Modeles\Modele;
     use SatellysReborn\Modeles\Population\Etudiant;
 
@@ -38,17 +36,11 @@
         }
 
         /**
-         * Ajoute un nouvel étudiant à ce groupe.
-         * @param Etudiant $etudiant l'étudiant à ajouter à ce groupe.
-         * @throws BD_Exception si on ne peut pas affecter cet étudiant à ce
-         *     groupe.
+         * Ajoute l'étudiant au groupe.
+         * @param $etudiant Etudiant l'étudiant à ajouter.
          */
-        public function ajouterEtudiant(Etudiant $etudiant) {
+        public function ajouterEtudiant($etudiant) {
             array_push($this->etudiants, $etudiant);
-
-            // Sauvegarde.
-            DAO_Factory::getDAO_Groupe()->ajouterEtudiant($this->getId(),
-                                                          $etudiant->getId());
         }
 
         /**
@@ -89,10 +81,13 @@
         public function jsonSerialize() {
             $var = get_object_vars($this);
             foreach ($var as &$value) {
-                if (is_object($value) && method_exists($value,'jsonSerialize')) {
+                if (is_object($value) &&
+                    method_exists($value, 'jsonSerialize')
+                ) {
                     $value = $value->jsonSerialize();
                 }
             }
+
             return $var;
         }
     }

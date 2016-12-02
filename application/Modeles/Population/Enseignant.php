@@ -15,7 +15,6 @@
          * @param string $nom le nom de la personne
          * @param string $prenom le prénom de la personne.
          * @param string $tel le téléphone de la personne.
-         * @param string $email l'email de l personne.
          * @param Adresse $adresse l'adresse de l'neseignant.
          */
         public function __construct($id, $nom, $prenom, $tel,
@@ -33,10 +32,13 @@
         public function jsonSerialize() {
             $var = get_object_vars($this);
             foreach ($var as &$value) {
-                if (is_object($value) && method_exists($value,'jsonSerialize')) {
+                if (is_object($value) &&
+                    method_exists($value, 'jsonSerialize')
+                ) {
                     $value = $value->jsonSerialize();
                 }
             }
+
             return $var;
         }
     }

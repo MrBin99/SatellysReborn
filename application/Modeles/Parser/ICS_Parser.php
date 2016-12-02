@@ -178,7 +178,8 @@
 
             // Retourne l'objet ICS.
             return new ICS_Event($heureDebut, $heureFin, $date,
-                                 $cmd['SUMMARY'], $desc, $salle, $prof);
+                                 str_replace('\\', '', $cmd['SUMMARY']),
+                                 $desc, $salle, $prof);
         }
 
         /**
@@ -192,7 +193,7 @@
             preg_match(self::$REGEX_TIMESTAMP, $date, $time);
 
             // On le met à notre fuseau horaire.
-            $time[4] = intval($time[4]) + 2;
+            $time[4] = intval($time[4]) + 1;
 
             // On créé l'objet DateTime.
             $dateTime = new \DateTime();
@@ -221,7 +222,8 @@
                            ->findNomPrenom($prof[0], $prof[1]) == null) {
                 $this->erreur = true;
                 array_push($logs, "<span>Ligne " . $this->ligneCourante .
-                                  " : </span>L'enseignant '" . $eventObj->getProf()
+                                  " : </span>L'enseignant '"
+                                  . $eventObj->getProf()
                                   . "' n'existe pas veuillez le créer.");
             }
 
@@ -242,7 +244,8 @@
                            ->findNameDateHeure($eventObj->getNom(),
                                                $eventObj->getDate(),
                                                $eventObj->getHeureDebut(),
-                                               $eventObj->getHeureFin()) != null) {
+                                               $eventObj->getHeureFin())
+                                                   != null) {
                 $this->erreur = true;
                 array_push($logs, "<span>Ligne " . $this->ligneCourante
                                   . " : </span>Ce cours existe déjà.");
@@ -253,6 +256,7 @@
 
         /**
          * Insère les évènnements chargés dans la base de données.
+         * @return array le nombre d'insertions valides et invalides effectués.
          */
         public function insererBD() {
             $insertions = array(
@@ -271,9 +275,12 @@
                     continue;
                 }
 
-                $matiere = DAO_Factory::getDAO_Matiere()->findNom($event->getNom());
+                $matiere = DAO_Factory::getDAO_Matiere()->findNom(
+                    $event->getNom());
+
                 if ($matiere == null) {
-                    $matiere = DAO_Factory::getDAO_Matiere()->insert(new Matiere(null, $event->getNom()));
+                    $matiere = DAO_Factory::getDAO_Matiere()->insert(
+                        new Matiere(null, $event->getNom()));
                 }
 
                 // Créé le cours.
@@ -282,6 +289,15 @@
                     $event->getSalle(), $event->getDate(),
                     $event->getHeureDebut(), $event->getHeureFin()
                 );
+
+                // Ajoute les groupes.
+                foreach ($event->getGroupes() as $groupe) {
+                    $g = DAO_Factory::getDAO_Groupe()->findNom($groupe);
+
+                    if ($g == null) {
+                        continue 2;
+                    }
+                }
 
                 // Insère le cours.
                 $cours = DAO_Factory::getDAO_Cours()->insert($cours);

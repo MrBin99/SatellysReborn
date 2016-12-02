@@ -42,7 +42,7 @@
                 ':adresse' => $obj->getAdresse()->getId()
             ));
 
-            return !$res ? false : $obj;
+            return $res === false ? false : $obj;
         }
 
         /**
@@ -164,7 +164,7 @@
             }
             // else
 
-            // Convertit en objet Etudiant.
+            // Convertit en objet Administratif.
             $res = array();
 
             foreach ($resBD as $obj) {

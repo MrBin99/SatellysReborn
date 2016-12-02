@@ -5,7 +5,7 @@
 
     /**
      * Représente une vue de l'application.
-     * @package WS_SatellysReborn\Vues
+     * @package SatellysReborn\Vues
      */
     class Vue {
 
@@ -40,10 +40,17 @@
             // Récupère le nom du contrôleur.
             $path = explode('\\', get_class($this->controleur));
             $path = array_slice($path, count($path) - 1);
+            $path[0] = str_replace('Controleur', '', $path[0]);
 
-            // Vue existe ?
+            // Vues existe ?
             if (file_exists(VUES . $path[0] . '/' . $this->vue .
                             '.phtml')) {
+
+                // Ajoute l'en-tête et le menu.
+                require_once COMMON . "Header.phtml";
+                require_once COMMON . "Menu.phtml";
+
+                // Ajoute la page.
                 require_once VUES . $path[0] . '/' . $this->vue .
                              '.phtml';
             } else {

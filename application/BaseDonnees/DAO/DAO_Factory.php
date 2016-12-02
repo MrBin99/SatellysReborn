@@ -4,7 +4,6 @@
     use SatellysReborn\BaseDonnees\DAO\Cours\DAO_Absence;
     use SatellysReborn\BaseDonnees\DAO\Cours\DAO_Cours;
     use SatellysReborn\BaseDonnees\DAO\Cours\DAO_Matiere;
-    use SatellysReborn\BaseDonnees\DAO\Cours\DAO_Salle;
     use SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Adresse;
     use SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Pays;
     use SatellysReborn\BaseDonnees\DAO\Population\Adresse\DAO_Ville;

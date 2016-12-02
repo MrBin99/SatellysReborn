@@ -1,0 +1,99 @@
+<?php
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+?>
+
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Groupe <?= $obj[0]->getNom() ?>
+        </div>
+        <div class="panel-body">
+            <form
+                action="/SatellysReborn/groupe/modifier/<?= $obj[0]->getId() ?>/"
+                method="post">
+                <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+                    <div class="row">
+                        <div class="col-md-12 toolbar">
+                            <div class="btn-group panel-body">
+                                <a href="/SatellysReborn/groupe/ajouterEtudiant/<?= $obj[0]->getId() ?>/"
+                                   class="btn btn-success btn-lg"><i
+                                        class="fa fa-plus"></i> Ajouter un
+                                    étudiant</a>
+                                <a href="/SatellysReborn/groupe/csv/<?= $obj[0]->getId() ?>/"
+                                   class="btn btn-success btn-lg"><i
+                                        class="fa fa-file-excel-o"></i> Import
+                                    un CSV</a>
+                                <button type="submit" class="btn btn-info btn-lg"><i
+                                        class="fa fa-edit"></i> Modifier
+                                </button>
+                                <a href="#" id="mail"
+                                   class="btn btn-primary btn-lg"><i
+                                        class="fa fa-envelope-o"></i> Envoyer</a>
+                                <?php if (empty($obj[1])): ?>
+                                    <a href="/SatellysReborn/groupe/supprimer/<?= $obj[0]->getId() ?>/"
+                                       class="btn btn-danger btn-lg"><i
+                                            class="fa fa-remove"></i> Supprimer</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="id">Identifiant :</label>
+                            <input type="text" id="id" class="form-control"
+                                   value="<?= $obj[0]->getId() ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="nom">Nom :</label>
+                            <input type="text" id="nom" name="nom"
+                                   class="form-control" placeholder="Nom"
+                                   value="<?= $obj[0]->getNom() ?>" required>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <table data-toggle="table" data-search="true" data-height="800"
+                   data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-field="id" data-sortable="true">Identifiant UT1
+                    </th>
+                    <th data-field="ine" data-sortable="true">Numéro INE</th>
+                    <th data-field="nom" data-sortable="true">Nom</th>
+                    <?php if (Utilisateur::utilCourantEstAdmin() ||
+                              Utilisateur::utilCourantEstSuperAdmin()
+                    ): ?>
+                        <th></th>
+                    <?php endif; ?>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                    if ($obj[1] != null):
+                        foreach ($obj[1] as $etud): ?>
+                            <tr>
+                                <td>
+                                    <a href="/SatellysReborn/etudiant/details/<?= $etud->getId() ?>"><?= $etud->getId() ?></a>
+                                </td>
+                                <td><?= $etud->getIne() ?></td>
+                                <td><?= $etud->getNomComplet() ?></td>
+                                <?php if (Utilisateur::utilCourantEstAdmin() ||
+                                          Utilisateur::utilCourantEstSuperAdmin()
+                                ): ?>
+                                    <td>
+                                        <a href="/SatellysReborn/groupe/supprimerEtudiant/<?= $obj[0]->getId() ?>/<?= $etud->getId() ?>/"
+                                           class="btn btn-danger"><i class="fa fa-remove"></i> Supprimer du
+                                            groupe</a></td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach;
+                    endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+<?php
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+?>
+
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Résultat de l'import du fichier CSV
+        </div>
+        <div class="panel-body">
+            <?php if (Utilisateur::utilCourantEstAdmin() ||
+                      Utilisateur::utilCourantEstSuperAdmin()
+            ): ?>
+                <div class="row">
+                    <div class="col-md-12 toolbar">
+                        <div class="btn-group">
+                            <a href="/SatellysReborn/groupe/importCSV/<?= $obj->getGroupe()
+                                                                              ->getId() ?>/"
+                               class="btn btn-success btn-lg">Importer</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <table class="logs" data-toggle="table" data-search="true"
+                   data-height="800" data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-field="erreur" data-sortable="true">Erreur</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                    if ($obj != null):
+                        foreach ($obj->getLogs() as $log): ?>
+                            <tr>
+                                <td><?= $log ?></td>
+                            </tr>
+                        <?php endforeach;
+                    endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

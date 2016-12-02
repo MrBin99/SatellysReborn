@@ -39,7 +39,7 @@
             $controleur = isset($url) ? ucfirst($url[0]) : 'Accueil';
 
             // Vérifie si le contrôleur existe
-            if (file_exists(CONTROLEURS . $controleur . '.php')) {
+            if (file_exists(CONTROLEURS . $controleur . 'Controleur.php')) {
 
                 // Affectation du nom du contrôleur
                 $this->controleur = $controleur;
@@ -48,10 +48,11 @@
                 unset($url[0]);
 
                 // Importe le contrôleur
-                require_once CONTROLEURS . $controleur . '.php';
+                require_once CONTROLEURS . $controleur . 'Controleur.php';
 
                 // Ajout du namespace
-                $controleur = NAMESPACE_ROOT . '\Controleurs\\' . $controleur;
+                $controleur = NAMESPACE_ROOT . '\Controleurs\\' . $controleur
+                              . 'Controleur';
 
                 // Créé le contrôleur
                 $this->controleur = new $controleur();

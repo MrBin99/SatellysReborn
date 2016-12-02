@@ -167,4 +167,87 @@
 
             return $res;
         }
+        /**
+         * Sélectionne la promotion dont le nom est passée en argument
+         * s'il existe.
+         * @param $nom string le nom de l'objet à sélectionner.
+         * @return array
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNom($nom) {
+            // SQL.
+            $sql = 'SELECT id, nom, annee, id_departement
+                    FROM promotion
+                    WHERE enleverAccents(lower(nom)) LIKE 
+                          enleverAccents(lower(:nom))';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':nom' => '%' . $nom . '%'
+            ));
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            /// Convertit en objet Promotion.
+            $res = array();
+
+            // Pour toutes les lignes.
+            foreach ($resBD as $obj) {
+                $dep = DAO_Factory::getDAO_Departement()
+                                  ->find($obj->id_departement);
+
+                array_push($res, new Promotion(
+                    $obj->id, $obj->nom, $obj->annee, $dep
+                ));
+            }
+
+            return $res;
+        }
+
+        /**
+         * Sélectionne toutes les promotions d'un département.
+         * @param $departement string l'identifiant du département.
+         * @return array
+         * <ul>
+         *    <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *    <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findDepartement($departement) {
+            // SQL.
+            $sql = 'SELECT id, nom, annee, id_departement
+                    FROM promotion
+                    WHERE id_departement = :id';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':id' => $departement
+            ));
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Promotion.
+            $res = array();
+
+            // Pour toutes les lignes.
+            foreach ($resBD as $obj) {
+                $dep = DAO_Factory::getDAO_Departement()
+                                  ->find($obj->id_departement);
+
+                array_push($res, new Promotion(
+                    $obj->id, $obj->nom, $obj->annee, $dep
+                ));
+            }
+
+            return $res;
+        }
     }

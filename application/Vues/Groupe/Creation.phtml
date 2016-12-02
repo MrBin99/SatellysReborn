@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Créer un groupe
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <form action="/SatellysReborn/groupe/creer/" method="post">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="nom">Nom :</label>
+                            <input type="text" id="nom" name="nom"
+                                   class="form-control" placeholder="Nom du groupe"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="promo">Promotion :</label>
+                            <select name="promo" id="promo"
+                                    class="form-control select-promo" <?= isset($obj[1]) ?
+                                'readonly' : '' ?>>
+                                <?php if (isset($obj[1])): ?>
+                                    <option
+                                        value="<?= $obj[1]->getId() ?>"><?= $obj[1]->getNom() ?></option>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+                        <input type="submit"
+                               class="btn btn-success center-block"
+                               value="Créer">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

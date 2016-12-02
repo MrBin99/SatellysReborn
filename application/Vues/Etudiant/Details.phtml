@@ -1,48 +1,173 @@
 <?php
-    include_once COMMON . 'Header.phtml';
-    include_once COMMON . 'Menu.phtml';
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+    use SatellysReborn\Modeles\Utils\Utils;
+
 ?>
+
 <div class="container">
     <div class="panel my-panel">
         <div class="panel-heading">
-            Liste des étudiants
+            <?= $obj[0]->getNomComplet() ?>
         </div>
         <div class="panel-body">
-            <h2><?= $obj[0]->getPrenom() . " " . $obj[0]->getNom(); ?></h2>
-            <strong>Identifiant UT1 : </strong><?= $obj[0]->getId(); ?><br>
-            <strong>Numéro INE : </strong><?= $obj[0]->getIne(); ?><br>
-            <strong>Téléphone : </strong><?= $obj[0]->getTel(); ?><br>
-            <!-- Adresse mail : getEmail à mettre -->
-            <!-- Adresse postale : $obj[1] à mettre -->
-            <h3>Liste d'absence de <?= $obj[0]->getPrenom() . " " . $obj[0]->getNom(); ?> : </h3>
-            <table data-toggle="table" data-height="800" data-search="true"
+            <form
+                action="/SatellysReborn/etudiant/modifier/<?= $obj[0]->getId() ?>/"
+                method="post">
+                <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+                    <div class="row">
+                        <div class="col-md-12 toolbar">
+                            <div class="btn-group panel-body">
+                                <button type="submit"
+                                        class="btn btn-info btn-lg"><i
+                                        class="fa fa-edit"></i> Modifier
+                                </button>
+                                <a href="#" id="mail"
+                                   class="btn btn-primary btn-lg"><i
+                                        class="fa fa-envelope-o"></i> Envoyer</a>
+                                <?php if (empty($obj[1])): ?>
+                                    <a href="/SatellysReborn/etudiant/supprimer/<?= $obj[0]->getId() ?>/"
+                                       class="btn btn-danger btn-lg"><i
+                                            class="fa fa-remove"></i> Supprimer</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="id">Identifiant UT1 (13 caractères)
+                                :</label>
+                            <input type="text" id="id" name="id"
+                                   class="form-control"
+                                   placeholder="Identifiant" maxlength="13"
+                                   value="<?= $obj[0]->getId() ?>"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="ine">Numéro INE (12 caractères)
+                                :</label>
+                            <input type="text" id="ine" name="ine"
+                                   class="form-control"
+                                   placeholder="Numéro INE" maxlength="12"
+                                   value="<?= $obj[0]->getIne() ?>"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="nom">Nom :</label>
+                            <input type="text" id="nom" name="nom"
+                                   class="form-control" placeholder="Nom"
+                                   value="<?= $obj[0]->getNom() ?>"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="prenom">Nom :</label>
+                            <input type="text" id="prenom" name="prenom"
+                                   class="form-control" placeholder="Prénom"
+                                   value="<?= $obj[0]->getPrenom() ?>"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="tel">Téléphone :</label>
+                            <input type="tel" id="tel" name="tel"
+                                   class="form-control" placeholder="Téléphone"
+                                   value="<?= $obj[0]->getTel() ?>"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="email">Email :</label>
+                            <input type="email" id="email" name="email"
+                                   class="form-control" placeholder="Email"
+                                   value="<?= $obj[0]->getEmail() ?>"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="adresse1">Adresse :</label>
+                            <input type="text" id="adresse1" name="adresse1"
+                                   class="form-control" placeholder="Adresse"
+                                   value="<?= $obj[0]->getAdresse()
+                                                     ->getAdresse1() ?>"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="adresse2" name="adresse2"
+                                   class="form-control" placeholder="Adresse"
+                                   value="<?= $obj[0]->getAdresse()
+                                                     ->getAdresse2() ?>">
+
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="adresse3" name="adresse3"
+                                   class="form-control" placeholder="Adresse"
+                                   value="<?= $obj[0]->getAdresse()
+                                                     ->getAdresse3() ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="ville">Ville :</label>
+                            <select name="ville"
+                                    class="form-control select-ville"
+                                    id="ville" required>
+                                <option
+                                    value="<?= $obj[0]->getAdresse()->getVille()
+                                                      ->getNumInsee() ?>"><?= $obj[0]->getAdresse()
+                                                                                       ->getVille()
+                                                                                       ->getCodePostal() .
+                                                                                ' - ' .
+                                                                                $obj[0]->getAdresse()
+                                                                                       ->getVille()
+                                                                                       ->getNom() ?></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <table data-toggle="table" data-search="true" data-height="800"
                    data-pagination="true">
                 <thead>
                 <tr>
-                    <th data-sortable="true" data-field="date">Date</th>
-                    <th data-sortable="true" data-field="heures">Heures</th>
-                    <th data-sortable="true" data-field="cours">Cours</th>
-                    <th data-sortable="true" data-field="justifie">Justification</th>
-                    <th data-sortable="true" data-field="motif">Motif</th>
+                    <th data-field="cours" data-sortable="true">Cours</th>
+                    <th data-field="date" data-sortable="true">Date</th>
+                    <th data-field="debut" data-sortable="true">Début</th>
+                    <th data-field="fin" data-sortable="true">Fin</th>
+                    <th data-field="justifie" data-sortable="true">Justifié</th>
+                    <th data-field="motif" data-sortable="true">Motif</th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($obj[1] as $abs): ?>
-                    <tr>
-                        <td> <?= $abs->getCours()->getJour(); ?>
-                        <td> <?= $abs->getCours()->getDebut() . ' - ' .
-                                 $abs->getCours()->getFin(); ?></td>
-                        <td><?= $abs->getCours()->getMatiere()->getNom() ?>
-
-                        <td><?php if ($abs->estJustifie()) {
-                                echo "Oui";
-                            } else {
-                                echo "Non";
-                            } ?></td>
-                        <td><?= $abs->getMotif(); ?></td>
-
-                    </tr>
-                <?php endforeach; ?>
+                <?php
+                    if ($obj[1] != null):
+                        foreach ($obj[1] as $abs): ?>
+                            <tr>
+                                <td>
+                                    <a href="/SatellysReborn/cours/details/<?= $abs->getCours()
+                                                                                   ->getId() ?>"><?= $abs->getCours()
+                                                                                                         ->getMatiere()
+                                                                                                         ->getNom() ?></a>
+                                </td>
+                                <td><?= Utils::reformatDate($abs->getCours()
+                                                                ->getJour()) ?></td>
+                                <td><?= $abs->getCours()->getDebut() ?></td>
+                                <td><?= $abs->getCours()->getFin() ?></td>
+                                <td><?= $abs->estJustifie() ? "Oui" :
+                                        "Non" ?></td>
+                                <td><?= $abs->getMotif() ?></td>
+                            </tr>
+                        <?php endforeach;
+                    endif; ?>
                 </tbody>
             </table>
         </div>

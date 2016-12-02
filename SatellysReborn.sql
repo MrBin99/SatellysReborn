@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost
--- Généré le :  Mer 16 Novembre 2016 à 12:56
+-- Généré le :  Lun 28 Novembre 2016 à 21:02
 -- Version du serveur :  10.1.19-MariaDB
 -- Version de PHP :  7.0.13
 
@@ -19,6 +19,21 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `satellysreborn`
 --
+
+DELIMITER $$
+--
+-- Fonctions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `enleverAccents` (`chaine` VARCHAR(256) CHARSET utf8) RETURNS VARCHAR(256) CHARSET utf8 NO SQL
+RETURN REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE(  
+REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE(  
+REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE(  
+chaine,
+'ù','u'),'ú','u'),'û','u'),'ü','u'),'ý','y'),'ë','e'),'à','a'),'á','a'),'â','a'),'ã','a'), 
+'ä','a'),'å','a'),'æ','a'),'ç','c'),'è','e'),'é','e'),'ê','e'),'ë','e'),'ì','i'),'í','i'), 
+'î','i'),'ï','i'),'ð','o'),'ñ','n'),'ò','o'),'ó','o'),'ô','o'),'õ','o'),'ö','o'),'ø','o')$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -61,6 +76,13 @@ CREATE TABLE `adresse` (
   `adresse3` varchar(128) COLLATE utf8_bin DEFAULT NULL,
   `numinsee_ville` char(5) COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `adresse`
+--
+
+INSERT INTO `adresse` (`id`, `adresse1`, `adresse2`, `adresse3`, `numinsee_ville`) VALUES
+(1, '50, avenue de Bordeaux', NULL, NULL, '12202');
 
 -- --------------------------------------------------------
 
@@ -114,6 +136,13 @@ CREATE TABLE `enseignant` (
   `tel` char(10) COLLATE utf8_bin NOT NULL,
   `id_adresse` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `enseignant`
+--
+
+INSERT INTO `enseignant` (`id`, `nom`, `prenom`, `tel`, `id_adresse`) VALUES
+('0000000000000', 'non', 'renseigné', '0565771080', 1);
 
 -- --------------------------------------------------------
 
@@ -446,9 +475,16 @@ CREATE TABLE `utilisateur` (
   `login` varchar(128) COLLATE utf8_bin NOT NULL,
   `mdp` char(32) COLLATE utf8_bin NOT NULL,
   `email` varchar(128) COLLATE utf8_bin NOT NULL,
-  `id_enseignant` char(13) COLLATE utf8_bin NOT NULL,
-  `id_administratif` char(13) COLLATE utf8_bin NOT NULL
+  `id_enseignant` char(13) COLLATE utf8_bin DEFAULT NULL,
+  `id_administratif` char(13) COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `utilisateur`
+--
+
+INSERT INTO `utilisateur` (`login`, `mdp`, `email`, `id_enseignant`, `id_administratif`) VALUES
+('admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@monEmail.com', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -37313,7 +37349,7 @@ ALTER TABLE `ville`
 -- AUTO_INCREMENT pour la table `adresse`
 --
 ALTER TABLE `adresse`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT pour la table `cours`
 --

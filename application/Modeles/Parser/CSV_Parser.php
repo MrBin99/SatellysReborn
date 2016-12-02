@@ -22,8 +22,11 @@
          */
         private $contenu;
 
-        /** @var array les étudiants à importer. */
-        private $etudiants;
+        /** @var bool si une erreur est présente dans le fichier CSV. */
+        private $erreur;
+
+        /** @var array les logs après l'analyse du fichier CSV. */
+        private $logs;
 
         /**
          * Créé un nouvel analyseur de fichier CSV.
@@ -34,17 +37,50 @@
         public function __construct(Groupe $groupe, $contenu) {
             $this->groupe = $groupe;
             $this->contenu = $contenu;
-            $this->etudiants = array();
+            $this->logs = array();
+            $this->erreur = false;
         }
 
         /**
-         * Lance l'analyse du fichier CSV et enregistre ses données dans la
-         * base de données..
+         * Analyse le fichier ICS :
+         * <ul>
+         *     <li>Regarde si les lignes CSV sont complètes.</li>
+         *     <li>Enregistre les logs de l'analyse.</li>
+         * </ul>
          */
         public function parse() {
             // Parcours du fichier.
+            for ($i = 0; $i < count($this->contenu); $i++) {
+                $csv = str_getcsv($this->contenu[$i], ';');
+
+                // Ligne incomplète
+                if (count($csv) != 12) {
+                    array_push($this->logs, '<span>Ligne ' . ($i + 1) .
+                                            ':</span> La ligne de données CSV est incomplète');
+                    $this->erreur = true;
+                    continue;
+                }
+            }
+        }
+
+        /**
+         * Insère les lignes CSV chargés dans la base de données.
+         * @return array le nombre d'insertions valides et invalides effectués.
+         */
+        public function insererBD() {
+            $insertions = array(
+                "ok" => 0,
+                "nok" => 0
+            );
+
             foreach ($this->contenu as $ligne) {
                 $csv = str_getcsv($ligne, ';');
+
+                // Ligne incomplète
+                if (count($csv) != 12) {
+                    $insertions['nok']++;
+                    continue;
+                }
 
                 // Extrait l'adresse.
                 $ville =
@@ -63,14 +99,52 @@
                     $adresse = DAO_Factory::getDAO_Adresse()->insert($adresse);
 
                     // Créé l'étudiant.
-                    $etudiant = new Etudiant($csv[0], $csv[1], $csv[2], $csv[3],
-                                             $csv[4],
+                    $etudiant = new Etudiant($csv[0], $csv[1], $csv[2],
+                                             $csv[3], $csv[4],
                                              $csv[5], $adresse);
-                    DAO_Factory::getDAO_Etudiant()->insert($etudiant);
+
+                    if (DAO_Factory::getDAO_Etudiant()->insert($etudiant)
+                        == false
+                    ) {
+                        $insertions['nok']++;
+                        continue;
+                    }
                 }
 
-                // L'ajoute au groupe.
-                $this->groupe->ajouterEtudiant($etudiant);
+                // Ajoute au groupe.
+                $ok = DAO_Factory::getDAO_Groupe()
+                                 ->ajouterEtudiant($this->groupe->getId(),
+                                                   $etudiant->getId());
+
+                // Résultat de l'insertion.
+                if ($ok) {
+                    $insertions['ok']++;
+                } else {
+                    $insertions['nok']++;
+                }
             }
+
+            return $insertions;
+        }
+
+        /**
+         * @return array les logs après lecture du fichier CSV.
+         */
+        public function getLogs() {
+            return $this->logs;
+        }
+
+        /**
+         * @return bool si le fichier CSV après lecture possède des erreurs.
+         */
+        public function hasErreur() {
+            return $this->erreur;
+        }
+
+        /**
+         * @return Groupe le groupe les étudiants seront affectés.
+         */
+        public function getGroupe() {
+            return $this->groupe;
         }
     }

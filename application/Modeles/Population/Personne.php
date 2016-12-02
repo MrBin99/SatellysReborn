@@ -11,9 +11,6 @@
      */
     abstract class Personne extends Modele {
 
-        /** @var string le regex représentant un email. */
-        public static $REGEX_EMAIL = '/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/';
-
         /** @var string l'identifiant UT1 de la personne. */
         protected $id;
 
@@ -79,6 +76,14 @@
          */
         public function getPrenom() {
             return $this->prenom;
+        }
+
+        /**
+         * @return string retourne le nom complet de la personne c'est-à-dire
+         * une chaine composée de son nom et prénom.
+         */
+        public function getNomComplet() {
+            return $this->getNom() . ' ' . $this->getPrenom();
         }
 
         /**

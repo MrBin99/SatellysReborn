@@ -1,0 +1,86 @@
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Créer un étudiant
+        </div>
+        <div class="panel-body">
+            <form
+                action="/SatellysReborn/enseignant/creer/"
+                method="post">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="id">Identifiant UT1 (13 caractères)
+                                :</label>
+                            <input type="text" id="id" name="id"
+                                   class="form-control"
+                                   placeholder="Identifiant" maxlength="13"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="nom">Nom :</label>
+                            <input type="text" id="nom" name="nom"
+                                   class="form-control" placeholder="Nom"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="prenom">Nom :</label>
+                            <input type="text" id="prenom" name="prenom"
+                                   class="form-control" placeholder="Prénom"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="tel">Téléphone :</label>
+                            <input type="tel" id="tel" name="tel"
+                                   class="form-control" placeholder="Téléphone"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="email">Email :</label>
+                            <input type="email" id="email" name="email"
+                                   class="form-control" placeholder="Email"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="adresse1">Adresse :</label>
+                            <input type="text" id="adresse1" name="adresse1"
+                                   class="form-control" placeholder="Adresse"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="adresse2" name="adresse2"
+                                   class="form-control" placeholder="Adresse">
+
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="adresse3" name="adresse3"
+                                   class="form-control" placeholder="Adresse">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="ville">Ville :</label>
+                            <select name="ville"
+                                    class="form-control select-ville"
+                                    id="ville" required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-3">
+                        <input type="submit" class="btn btn-success center-block" value="Créer">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

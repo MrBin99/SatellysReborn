@@ -43,8 +43,7 @@
                                             $configs['login'], $configs['mdp'],
                                             self::$OPTIONS_DB);
             } catch (\PDOException $e) {
-                throw new BD_Exception("Impossible de se connecter " .
-                                       "à la base de données");
+                header('Location: /SatellysReborn/erreur/erreurBD/');
             }
         }
 

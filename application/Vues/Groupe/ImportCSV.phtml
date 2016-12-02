@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            Importation du fichier CSV réussie !
+        </div>
+        <div class="panel-body">
+            <table class="logs" data-toggle="table" data-search="true"
+                   data-height="800" data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-field="lignes" data-sortable="true">Nombre de
+                        lignes à importer
+                    </th>
+                    <th data-field="succes" data-sortable="true">Nombre de
+                        lignes importé avec succès
+                    </th>
+                    <th data-field="erreur" data-sortable="true">Nombre de lignes non importée</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?= $obj['ok'] + $obj['nok'] ?></td>
+                        <td><?= $obj['ok'] ?></td>
+                        <td><?= $obj['nok'] ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

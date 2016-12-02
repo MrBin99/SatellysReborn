@@ -1,0 +1,105 @@
+<?php
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+?>
+
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Absence
+        </div>
+        <div class="panel-body">
+            <form action="/SatellysReborn/absence/modifier/<?= $obj->getCours()
+                                                                   ->getId() ?>/<?= $obj->getEtudiant()->getId() ?>"
+                  method="post">
+                <div class="row">
+                    <div class="col-md-12 toolbar">
+                        <div class="btn-group panel-body">
+                            <?php if (Utilisateur::utilCourantEstAdmin() || (Utilisateur::utilCourantEstEnseignant() && Utilisateur::getUtilisateur()->getEnseignant()->getId() == $obj->getCours()->getEnseignant()->getId())): ?>
+                                <button type="submit"
+                                        class="btn btn-info btn-lg"><i
+                                        class="fa fa-edit"></i> Modifier
+                                </button>
+                                <a href="/SatellysReborn/absence/supprimer/<?= $obj->getCours()
+                                                                                   ->getId() ?>/<?= $obj->getEtudiant()
+                                                                                                        ->getId() ?>"
+                                   class="btn btn-danger btn-lg"><i
+                                        class="fa fa-remove"></i> Supprimer</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="matiere">Matière :</label>
+                            <a href="/SatellysReborn/matiere/details/<?= $obj->getCours()
+                                                                             ->getMatiere()->getId() ?>"
+                               class="form-control"><?= $obj->getCours()
+                                                            ->getMatiere()
+                                                            ->getNom() ?></a>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="salle">Salle :</label>
+                            <input type="text" id="salle" class="form-control"
+                                   value="<?= $obj->getCours()->getSalle() ?>"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="date">Date :</label>
+                            <input type="date" id="date" class="form-control"
+                                   value="<?= $obj->getCours()->getJour() ?>"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="debut">Début :</label>
+                            <input type="time" id="debut" class="form-control"
+                                   value="<?= $obj->getCours()->getDebut() ?>"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="fin">Fin :</label>
+                            <input type="time" id="fin" class="form-control"
+                                   value="<?= $obj->getCours()->getFin() ?>"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="etudiant">Etudiant :</label>
+                            <a href="/SatellysReborn/etudiant/details/<?= $obj->getEtudiant()->getId() ?>"
+                               class="form-control"><?= $obj->getEtudiant()
+                                                            ->getNomComplet() ?></a>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="">Justifié :</label>
+                            <label for="justifie" class="switch">
+                                <input type="checkbox" name="justifie"
+                                       id="justifie" <?= $obj->estJustifie() ?
+                                    "checked" : "" ?>>
+                                <div class="slider"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-md-offset-3">
+                        <div class="form-group">
+                            <label for="motif">Motif :</label>
+                            <textarea name="motif" id="motif"
+                                      class="form-control" cols="80"
+                                      maxlength="128"><?= $obj->getMotif() ?></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

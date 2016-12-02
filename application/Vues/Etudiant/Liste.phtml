@@ -1,0 +1,49 @@
+<?php
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+
+?>
+
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Liste des étudiants
+        </div>
+        <div class="panel-body">
+            <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+                <div class="row">
+                    <div class="col-md-12 toolbar">
+                        <div class="btn-group">
+                            <a href="/SatellysReborn/etudiant/creation/" class="btn btn-success btn-lg"><i class="fa fa-plus"></i> Nouveau</a>
+                            <a href="#" id="mail"
+                               class="btn btn-primary btn-lg"><i
+                                    class="fa fa-envelope-o"></i> Envoyer</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <table data-toggle="table" data-search="true" data-height="800" data-pagination="true">
+                <thead>
+                    <tr>
+                        <th data-field="id" data-sortable="true">Identifiant UT1</th>
+                        <th data-field="ine" data-sortable="true">Numéro INE</th>
+                        <th data-field="nom" data-sortable="true">Nom</th>
+                        <th data-field="prenom" data-sortable="true">Prénom</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        if ($obj != null):
+                            foreach ($obj as $etud): ?>
+                                <tr>
+                                    <td><a href="/SatellysReborn/etudiant/details/<?= $etud->getId() ?>"><?= $etud->getId() ?></a></td>
+                                    <td><?= $etud->getIne() ?></td>
+                                    <td><?= $etud->getNom() ?></td>
+                                    <td><?= $etud->getPrenom() ?></td>
+                                </tr>
+                    <?php   endforeach;
+                        endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

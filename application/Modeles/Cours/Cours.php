@@ -1,7 +1,6 @@
 <?php
     namespace SatellysReborn\Modeles\Cours;
 
-    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
     use SatellysReborn\Modeles\Modele;
     use SatellysReborn\Modeles\Population\Enseignant;
     use SatellysReborn\Modeles\Population\Groupe\Groupe;
@@ -65,7 +64,6 @@
          */
         public function ajouterGroupe(Groupe $groupe) {
             array_push($this->groupes, $groupe);
-            DAO_Factory::getDAO_Cours()->ajouterCours($this->id, $groupe->getId());
         }
 
         /**
@@ -134,10 +132,13 @@
         public function jsonSerialize() {
             $var = get_object_vars($this);
             foreach ($var as &$value) {
-                if (is_object($value) && method_exists($value,'jsonSerialize')) {
+                if (is_object($value) &&
+                    method_exists($value, 'jsonSerialize')
+                ) {
                     $value = $value->jsonSerialize();
                 }
             }
+
             return $var;
         }
     }

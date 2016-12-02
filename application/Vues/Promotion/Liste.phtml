@@ -1,0 +1,57 @@
+<?php
+    use SatellysReborn\Modeles\Population\Login\Utilisateur;
+
+?>
+
+<div class="container">
+    <div class="panel my-panel">
+        <div class="panel-heading">
+            Liste des promotions
+        </div>
+        <div class="panel-body">
+            <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+                <div class="row">
+                    <div class="col-md-12 toolbar">
+                        <div class="btn-group">
+                            <a href="/SatellysReborn/promotion/creation/"
+                               class="btn btn-success btn-lg"><i
+                                    class="fa fa-plus"></i> Nouveau</a>
+                            <a href="#" id="mail"
+                               class="btn btn-primary btn-lg"><i
+                                    class="fa fa-envelope-o"></i> Envoyer</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <table data-toggle="table" data-search="true" data-height="800"
+                   data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-field="nom" data-sortable="true">Nom</th>
+                    <th data-field="annee" data-sortable="true">Année Scolaire
+                    </th>
+                    <th data-field="dep" data-sortable="true">Département</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                    if ($obj != null):
+                        foreach ($obj as $promo): ?>
+                            <tr>
+                                <td>
+                                    <a href="/SatellysReborn/promotion/details/<?= $promo->getId() ?>"><?= $promo->getNom() ?></a>
+                                </td>
+                                <td><?= $promo->getAnnee() ?></td>
+                                <td>
+                                    <a href="/SatellysReborn/departement/details/<?= $promo->getDepartement()
+                                                                                           ->getId() ?>"><?= $promo->getDepartement()
+                                                                                                                   ->getNom() ?></a>
+                                </td>
+                            </tr>
+                        <?php endforeach;
+                    endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

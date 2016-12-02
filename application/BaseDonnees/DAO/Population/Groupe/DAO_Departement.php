@@ -2,7 +2,6 @@
     namespace SatellysReborn\BaseDonnees\DAO\Population\Groupe;
 
     use SatellysReborn\BaseDonnees\DAO\DAO;
-    use SatellysReborn\Controleurs\Promotion;
     use SatellysReborn\Modeles\Population\Groupe\Departement;
 
     /**
@@ -31,9 +30,10 @@
             ));
 
             // Insertion ok ?
-            if ($res) {
+            if ($res != false) {
                 return new Departement($res, $obj->getNom());
             }
+
             // else
 
             return false;
@@ -159,28 +159,39 @@
          * Sélectionne le pays dont le nom est passée en argument
          * s'il existe.
          * @param $nom string le nom du pays.
-         * @return Departement
+         * @return array
          * <ul>
-         *     <li>L'objet retounée par la selection.</li>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
          * </ul>
          */
-        public function findName($nom) {
+        public function findNom($nom) {
             // SQL.
             $sql = 'SELECT id, nom
                     FROM departement
-                    WHERE lower(nom) LIKE lower(:nom)';
+                    WHERE enleverAccents(lower(nom)) LIKE 
+                          enleverAccents(lower(:nom))';
 
             $resBD = $this->connexion->select($sql, array(
                 ':nom' => '%' . $nom . '%'
             ));
 
-            // Pas de résultats ?
+            // Vide ?
             if (empty($resBD)) {
                 return null;
             }
-
             // else
-            return new Departement($resBD[0]->id, $resBD[0]->nom);
+
+            // Convertit en objet Departement.
+            $res = array();
+
+            // Pour toutes les lignes.
+            foreach ($resBD as $obj) {
+                array_push($res, new Departement(
+                    $obj->id, $obj->nom
+                ));
+            }
+
+            return $res;
         }
     }

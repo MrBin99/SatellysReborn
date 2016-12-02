@@ -26,6 +26,7 @@
             $sql = 'INSERT INTO cours (id_matiere, id_enseignant, salle, 
                                        jour, debut, fin)
                     VALUES (:matiere, :enseignant, :salle, :jour, :debut, :fin)';
+
             $res = $this->connexion->insert($sql, array(
                 ':matiere' => $obj->getMatiere()->getId(),
                 ':enseignant' => $obj->getEnseignant()->getId(),
@@ -180,6 +181,46 @@
         }
 
         /**
+         * Sélectionne tous les éléments de ce type.
+         * @return array
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findAll() {
+            // SQL.
+            $sql = 'SELECT id, id_matiere, id_enseignant, salle,
+                           jour, debut, fin
+                    FROM cours';
+
+            $resBD = $this->connexion->select($sql, array());
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Pays.
+            $res = array();
+
+            foreach ($resBD as $obj) {
+                $matiere =
+                    DAO_Factory::getDAO_Matiere()->find($resBD[0]->id_matiere);
+                $enseignant = DAO_Factory::getDAO_Enseignant()
+                                         ->find($resBD[0]->id_enseignant);
+
+                array_push($res,
+                           new Cours($obj->id, $matiere, $enseignant,
+                                     $obj->salle, $obj->jour, $obj->debut,
+                                     $obj->fin));
+            }
+
+            return $res;
+        }
+
+        /**
          * Retourne le cours dont le nom, la date et les heures de début
          * et de fin sont passées en argument.
          * @param $nom string le nom de la matière du cours.
@@ -241,46 +282,6 @@
         }
 
         /**
-         * Sélectionne tous les éléments de ce type.
-         * @return array
-         * <ul>
-         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
-         *     <li>null si auncun objet n'a été trouvé.</li>
-         * </ul>
-         */
-        public function findAll() {
-            // SQL.
-            $sql = 'SELECT id, id_matiere, id_enseignant, salle,
-                           jour, debut, fin
-                    FROM cours';
-
-            $resBD = $this->connexion->select($sql, array());
-
-            // Vide ?
-            if (empty($resBD)) {
-                return null;
-            }
-            // else
-
-            // Convertit en objet Pays.
-            $res = array();
-
-            foreach ($resBD as $obj) {
-                $matiere =
-                    DAO_Factory::getDAO_Matiere()->find($resBD[0]->id_matiere);
-                $enseignant = DAO_Factory::getDAO_Enseignant()
-                                         ->find($resBD[0]->id_enseignant);
-
-                array_push($res,
-                           new Cours($obj->id, $matiere, $enseignant,
-                                     $obj->salle, $obj->jour, $obj->debut,
-                                     $obj->fin));
-            }
-
-            return $res;
-        }
-
-        /**
          * Retourne les groupes qui assistent au cours dont l'identifiant est
          * passé en argument.
          * @param $coursID string l'identifiant du cours.
@@ -329,7 +330,8 @@
          */
         public function findCoursEnseignant($enseignant) {
             // SQL.
-            $sql = 'SELECT c.id AS id, debut, fin, jour, salle, id_matiere, id_enseignant
+            $sql = 'SELECT c.id AS id, debut, fin, jour, salle, 
+                           id_matiere, id_enseignant
                     FROM cours c
                     JOIN enseignant e ON c.id_enseignant = e.id
                     WHERE e.id = :id';
@@ -349,6 +351,8 @@
 
             // Pour toutes les lignes.
             foreach ($resBD as $obj) {
+
+                // Objets liés.
                 $matiere =
                     DAO_Factory::getDAO_Matiere()->find($obj->id_matiere);
                 $enseignant = DAO_Factory::getDAO_Enseignant()
@@ -358,6 +362,7 @@
                                    $obj->salle, $obj->jour, $obj->debut,
                                    $obj->fin);
 
+                // Ajoute les groupes.
                 if (isset($groupes)) {
                     foreach ($groupes as $groupe) {
                         $cours->ajouterGroupe($groupe);

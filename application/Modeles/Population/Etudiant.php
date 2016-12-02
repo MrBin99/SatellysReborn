@@ -1,6 +1,7 @@
 <?php
     namespace SatellysReborn\Modeles\Population;
 
+    use SatellysReborn\Modeles\Exceptions\DonneesIncorrecteException;
     use SatellysReborn\Modeles\Population\Adresse\Adresse;
 
     /**
@@ -12,8 +13,8 @@
         /** @var string le numéro INE de cet étudiant. */
         private $ine;
 
-        /** @var string adresse mail de l'étudiant */
-        //private $email;
+        /** @var string l'email de l'étudiant. */
+        private $email;
 
         /**
          * Créé une nouvelle personne.
@@ -24,12 +25,26 @@
          * @param string $tel le téléphone de la personne.
          * @param string $email l'email de l personne.
          * @param Adresse $adresse l'adresse de l'étudiant.
+         * @throws DonneesIncorrecteException si une erreur dans les arguments
+         *     est détectée (ex: email invalide, INE invalide ...).
          */
         public function __construct($id, $ine, $nom, $prenom, $tel,
                                     $email, $adresse) {
-            parent::__construct($id, $nom, $prenom, $tel, $email, $adresse);
+            parent::__construct($id, $nom, $prenom, $tel, $adresse);
+
+            if (strlen($ine) != 12) {
+                throw new DonneesIncorrecteException(
+                    "Le numéro INE doit être une série de 12 chiffres ou lettres.");
+            }
+
+            // Vérifie l'email.
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                throw new DonneesIncorrecteException(
+                    "L'email '$email' n'est pas un email valide.");
+            }
 
             $this->ine = $ine;
+            $this->email = $email;
         }
 
         /**
@@ -37,6 +52,13 @@
          */
         public function getIne() {
             return $this->ine;
+        }
+
+        /**
+         * @return string l'email de l'étudiant.
+         */
+        public function getEmail() {
+            return $this->email;
         }
 
         /**
@@ -49,10 +71,13 @@
         public function jsonSerialize() {
             $var = get_object_vars($this);
             foreach ($var as &$value) {
-                if (is_object($value) && method_exists($value,'jsonSerialize')) {
+                if (is_object($value) &&
+                    method_exists($value, 'jsonSerialize')
+                ) {
                     $value = $value->jsonSerialize();
                 }
             }
+
             return $var;
         }
     }

@@ -4,7 +4,6 @@
     use SatellysReborn\BaseDonnees\DAO\DAO;
     use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
     use SatellysReborn\Modeles\Population\Enseignant;
-    use SatellysReborn\Modeles\Utils\Utils;
 
     /**
      * DAO permettant de gérer les enseignants en base de données.
@@ -42,7 +41,7 @@
                 ':adresse' => $obj->getAdresse()->getId()
             ));
 
-            return !$res ? false : $obj;
+            return $res === false ? false : $obj;
         }
 
         /**
@@ -135,7 +134,8 @@
                 DAO_Factory::getDAO_Adresse()->find($resBD[0]->id_adresse);
 
             return new Enseignant($resBD[0]->id, $resBD[0]->nom,
-                                  $resBD[0]->prenom, $resBD[0]->tel, $adresse);
+                                  $resBD[0]->prenom, $resBD[0]->tel,
+                                  $adresse);
         }
 
         /**
@@ -154,11 +154,12 @@
             $sql = 'SELECT id, nom, prenom, tel, id_adresse
                     FROM enseignant
                     WHERE lower(nom) LIKE lower(:nom)
-                    AND escapeAccents(lower(prenom)) LIKE lower(:prenom)';
+                    AND enleverAccents(lower(prenom)) LIKE 
+                        enleverAccents(lower(:prenom))';
 
             $resBD = $this->connexion->select($sql, array(
-                ':nom' => '%' . Utils::enleverAccents($nom) . '%',
-                ':prenom' => '%' . Utils::enleverAccents($prenom) . '%'
+                ':nom' => '%' . $nom . '%',
+                ':prenom' => '%' . $prenom . '%'
             ));
 
             // Pas de résultats ?
@@ -168,11 +169,13 @@
 
             // else
 
+            // Objets liés.
             $adresse =
                 DAO_Factory::getDAO_Adresse()->find($resBD[0]->id_adresse);
 
             return new Enseignant($resBD[0]->id, $resBD[0]->nom,
-                                  $resBD[0]->prenom, $resBD[0]->tel, $adresse);
+                                  $resBD[0]->prenom, $resBD[0]->tel,
+                                  $adresse);
         }
 
         /**
@@ -200,6 +203,8 @@
             $res = array();
 
             foreach ($resBD as $obj) {
+
+                // Objets liés.
                 $adresse =
                     DAO_Factory::getDAO_Adresse()->find($obj->id_adresse);
 
@@ -207,6 +212,52 @@
                                                 $obj->prenom,
                                                 $obj->tel,
                                                 $adresse)
+                );
+            }
+
+            return $res;
+        }
+
+        /**
+         * Sélectionne tous les enseignants dont le nom ou l'identifiant
+         * est celui passé en argument.
+         * @param $arg string l'argument de recherche.
+         * @return array <ul>
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNomId($arg) {
+            // SQL.
+            $sql = 'SELECT id, nom, prenom, tel, id_adresse
+                    FROM enseignant e 
+                    WHERE enleverAccents(lower(nom)) LIKE 
+                          enleverAccents(lower(:arg))
+                    OR id LIKE :arg';
+
+            $resBD = $this->connexion->select($sql, array(
+                ':arg' => '%' . $arg . '%'
+            ));
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Enseignant.
+            $res = array();
+
+            foreach ($resBD as $obj) {
+
+                // Objets liés.
+                $adresse =
+                    DAO_Factory::getDAO_Adresse()->find($obj->id_adresse);
+
+                array_push($res, new Enseignant($obj->id, $obj->nom,
+                                                $obj->prenom,
+                                                $obj->tel, $adresse)
                 );
             }
 

@@ -2,6 +2,8 @@
     namespace SatellysReborn\BaseDonnees\DAO\Cours;
 
     use SatellysReborn\BaseDonnees\DAO\DAO;
+    use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Cours\Cours;
     use SatellysReborn\Modeles\Cours\Matiere;
 
     /**
@@ -133,10 +135,10 @@
             // SQL.
             $sql = 'SELECT id, nom
                     FROM matiere
-                    WHERE lower(nom) = lower(:nom)';
+                    WHERE lower(nom) LIKE lower(:nom)';
 
             $resBD = $this->connexion->select($sql, array(
-                ':nom' => $nom
+                ':nom' => '%' . $nom . '%'
             ));
 
             // Pas de résultats ?
@@ -183,27 +185,66 @@
         }
 
         /**
-         * Liste les matières d'un département.
-         * @param $depID string l'identifiant du département.
+         * Liste les matières avec leur département et leur promotion dans
+         * lesquelles elles sont enseignées.
          * @return array
          * <ul>
          *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
          * </ul>
          */
-        public function findDepartement($depID) {
-            /// SQL.
-            $sql = 'SELECT m.id AS id, m.nom AS nom
+        public function findPromoDep() {
+            // SQL.
+            $sql = 'SELECT DISTINCT m.id AS id, m.nom AS nom, p.id AS promo
                     FROM matiere m
-                    JOIN cours c ON m.id = c.id_matiere
-                    JOIN assiste a ON c.id = a.id_cours
-                    JOIN groupe g ON a.id_groupe = g.id
-                    JOIN promotion p ON g.id_promotion = p.id
-                    JOIN departement d ON p.id_departement = d.id
-                    WHERE d.id = :dep';
+                    LEFT JOIN cours c ON m.id = c.id_matiere
+                    LEFT JOIN assiste a ON c.id = a.id_cours
+                    LEFT JOIN groupe g ON a.id_groupe = g.id
+                    LEFT JOIN promotion p ON g.id_promotion = p.id
+                    LEFT JOIN departement d ON p.id_departement = d.id';
+
+            $resBD = $this->connexion->select($sql, array());
+
+            // Vide ?
+            if (empty($resBD)) {
+                return null;
+            }
+            // else
+
+            // Convertit en objet Matière.
+            $res = array();
+
+            // Pour toutes les lignes.
+            foreach ($resBD as $obj) {
+                array_push($res, array(
+                    new Matiere($obj->id, $obj->nom),
+                    DAO_Factory::getDAO_Promotion()->find($obj->promo)
+                ));
+            }
+
+            return $res;
+        }
+
+        /**
+         * Sélectionne les matières dont le nom ou l'identifiant est passée en
+         * argument.
+         * @param $arg string l'argument de recherche.
+         * @return array
+         * <ul>
+         *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
+         *     <li>null si auncun objet n'a été trouvé.</li>
+         * </ul>
+         */
+        public function findNomId($arg) {
+            // SQL.
+            $sql = 'SELECT id, nom
+                    FROM matiere
+                    WHERE enleverAccents(lower(nom)) LIKE 
+                          enleverAccents(lower(:arg))
+                    OR id LIKE :arg';
 
             $resBD = $this->connexion->select($sql, array(
-                ':dep' => $depID
+                ":arg" => '%' . $arg . '%'
             ));
 
             // Vide ?
@@ -212,7 +253,7 @@
             }
             // else
 
-            // Convertit en objet Matiere.
+            // Convertit en objet Pays.
             $res = array();
 
             // Pour toutes les lignes.
@@ -226,26 +267,23 @@
         }
 
         /**
-         * Liste les matières d'une promotion.
-         * @param $promoID string l'identifiant de la promotion.
+         * Récupère tous les cours d'une matière.
+         * @param $id string l'identifiant de la matière.
          * @return array
          * <ul>
          *     <li>Un tableau d'objets contenant les objets sélectionnés.</li>
          *     <li>null si auncun objet n'a été trouvé.</li>
          * </ul>
          */
-        public function findPromotion($promoID) {
-            /// SQL.
-            $sql = 'SELECT m.id AS id, m.nom AS nom
+        public function findCours($id) {
+            // SQL.
+            $sql = 'SELECT c.id AS id, jour, debut, fin, salle, id_enseignant, id_matiere
                     FROM matiere m
                     JOIN cours c ON m.id = c.id_matiere
-                    JOIN assiste a ON c.id = a.id_cours
-                    JOIN groupe g ON a.id_groupe = g.id
-                    JOIN promotion p ON g.id_promotion = p.id
-                    WHERE p.id = :promo';
+                    WHERE m.id = :id';
 
             $resBD = $this->connexion->select($sql, array(
-                ':promo' => $promoID
+                ":id" => $id
             ));
 
             // Vide ?
@@ -254,14 +292,19 @@
             }
             // else
 
-            // Convertit en objet Matiere.
+            // Convertit en objet Cours.
             $res = array();
 
             // Pour toutes les lignes.
             foreach ($resBD as $obj) {
-                array_push($res, new Matiere(
-                    $obj->id, $obj->nom
-                ));
+                $matiere =
+                    DAO_Factory::getDAO_Matiere()->find($resBD[0]->id_matiere);
+                $enseignant = DAO_Factory::getDAO_Enseignant()
+                                         ->find($resBD[0]->id_enseignant);
+                array_push($res,
+                           new Cours($obj->id, $matiere, $enseignant,
+                                     $obj->salle, $obj->jour, $obj->debut,
+                                     $obj->fin));
             }
 
             return $res;
