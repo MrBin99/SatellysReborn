@@ -73,8 +73,8 @@
 
             return $this->connexion->update($sql, array(
                 ':mdp' => $obj->getMdp(),
-                ':login' => $obj->getLogin(),
-                ':email' => $obj->getEmail()
+                ':email' => $obj->getEmail(),
+                ':login' => $obj->getLogin()
             ));
         }
 

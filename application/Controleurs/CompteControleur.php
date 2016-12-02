@@ -89,6 +89,7 @@
                                                null,
                                                null);
 
+
                     // Résultat.
                     if (DAO_Factory::getDAO_Utilisateur()->update($newUtil)) {
                         // Met à jour la session.
@@ -97,6 +98,7 @@
                         $this->vue =
                             new Vue($this, "ModifOK", "Profil modifié");
                         $this->vue->render();
+                        var_dump($newUtil);
                     } else {
                         self::redirect('/SatellysReborn/compte/errModification/');
                     }
@@ -136,8 +138,8 @@
             $newUtil = new Utilisateur($utilCourant->getLogin(),
                                        isset($_POST['mdp']) ?
                                            Utilisateur::crypterMdp($_POST['mdp']) :
-                                           $utilCourant->getMdp(), null, null,
-                                       $newAdmin);
+                                           $utilCourant->getMdp(), $_POST['email'],
+                                       null, $newAdmin);
 
             // Met à jour.
             $res = DAO_Factory::getDAO_Adresse()->update($newAdresse)
@@ -165,7 +167,7 @@
             $utilCourant = Utilisateur::getUtilisateur();
 
             // Le nouvel enseignant.
-            $newAdresse = new Adresse($utilCourant->getAdministratif()
+            $newAdresse = new Adresse($utilCourant->getEnseignant()
                                                   ->getAdresse()
                                                   ->getId(),
                                       $_POST['adresse1'],
@@ -174,16 +176,15 @@
                                       DAO_Factory::getDAO_Ville()
                                                  ->find($_POST['ville']));
             $newEns =
-                new Enseignant($utilCourant->getAdministratif()->getId(),
+                new Enseignant($utilCourant->getEnseignant()->getId(),
                                $_POST['nom'], $_POST['prenom'],
-                               $_POST['tel'],
-                               $_POST['email'], $newAdresse);
+                               $_POST['tel'], $newAdresse);
+
             $newUtil = new Utilisateur($utilCourant->getLogin(),
                                        isset($_POST['mdp']) ?
                                            Utilisateur::crypterMdp($_POST['mdp']) :
-                                           $utilCourant->getMdp(), null,
-                                       $newEns,
-                                       null);
+                                           $utilCourant->getMdp(), $_POST['email'],
+                                       $newEns, null);
 
             // Met à jour.
             $res = DAO_Factory::getDAO_Adresse()->update($newAdresse)
