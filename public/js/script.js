@@ -359,15 +359,17 @@ function emploiTemps() {
     });
 }
 
-// Point d'entrée.
+// DOM chargé.
 $(document).ready(function () {
-    // LURL courante de la page.
+    // L'URL courante de la page.
     var url = window.location.href;
 
+    // Si c'est la page de l'emploi du temps, alors on active FullCalendar.
     if (url.indexOf("emploiTemps") != -1) {
         emploiTemps();
     }
 
+    // Fonction appelés pour toutes les listes de recherche.
     getDepartements();
     getPromotions();
     getGroupes();
@@ -378,25 +380,38 @@ $(document).ready(function () {
     getUtilisateurs();
     getVilles();
 
+    // Confirmation d'importation de l'ICS.
     $('#btnImportICS').click(function(e) {
         e.preventDefault();
         $('#modalConfirmICS').modal();
     });
 
+    // Confirmation d'importation du CSV.
+    $('#btnImportCSV').click(function(e) {
+        e.preventDefault();
+        $('#modalConfirmCSV').modal();
+    });
+
+    // Permet de récupérer le tableau de la liste pour l'envoie par mail.
     $("#mail").click(function (e) {
         e.preventDefault();
 
+        // Récupère le tableau.
         var contenu = $(".fixed-table-container").html();
+
+        /// Récupère les CSS.
         var css = "";
         $('link').each(function(elem) {
             css += $('link')[elem].outerHTML;
         });
 
+        // Construit la page pour le mail.
         var mail = "<!DOCTYPE html><html><head>";
         mail += css;
         mail += "</head><body>";
         mail += contenu + "</body>";
 
+        // On l'envoie au PHP.
         $.ajax({
             url: '/SatellysReborn/mail/setListe/',
             type: 'post',

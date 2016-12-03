@@ -2,6 +2,7 @@
     namespace SatellysReborn\Modeles\Parser;
 
     use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
+    use SatellysReborn\Modeles\Exceptions\DonneesIncorrecteException;
     use SatellysReborn\Modeles\Population\Adresse\Adresse;
     use SatellysReborn\Modeles\Population\Etudiant;
     use SatellysReborn\Modeles\Population\Groupe\Groupe;
@@ -60,6 +61,21 @@
                     $this->erreur = true;
                     continue;
                 }
+
+                // INE et numéro UT1
+                if (strlen($csv[1]) != 12) {
+                    array_push($this->logs, '<span>Ligne ' . ($i + 1) .
+                                            ':</span> Le numéro INE de l\'étudiant est incorrect, ' .
+                                            'il doit faire 12 caractères.');
+                    $this->erreur = true;
+                    continue;
+                } else if (strlen($csv[0]) != 13) {
+                    array_push($this->logs, '<span>Ligne ' . ($i + 1) .
+                                            ':</span> Le numéro UT1 de l\'étudiant est incorrect, ' .
+                                            'il doit faire 13 caractères.');
+                    $this->erreur = true;
+                    continue;
+                }
             }
         }
 
@@ -87,10 +103,16 @@
                     DAO_Factory::getDAO_Ville()->findCpNom($csv[9], $csv[10]);
                 $adresse = new Adresse(null, $csv[6], $csv[7], $csv[8], $ville);
 
-                // L'étudiant.
-                $etudiant =
-                    new Etudiant($csv[0], $csv[1], $csv[2], $csv[3], $csv[4],
-                                 $csv[5], $adresse);
+                try {
+                    // L'étudiant.
+                    $etudiant =
+                        new Etudiant($csv[0], $csv[1], $csv[2], $csv[3],
+                                     $csv[4],
+                                     $csv[5], $adresse);
+                } catch (DonneesIncorrecteException $e) {
+                    $insertions['nok']++;
+                    continue;
+                }
 
                 // Si l'étudiant n'existe pas déjà.
                 if (DAO_Factory::getDAO_Etudiant()->find($csv[0]) == null) {

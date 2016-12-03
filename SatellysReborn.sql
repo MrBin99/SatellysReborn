@@ -2,10 +2,10 @@
 -- version 4.6.4
 -- https://www.phpmyadmin.net/
 --
--- Client :  localhost
--- Généré le :  Lun 28 Novembre 2016 à 21:02
--- Version du serveur :  10.1.19-MariaDB
--- Version de PHP :  7.0.13
+-- Client :  127.0.0.1
+-- Généré le :  Sam 03 Décembre 2016 à 17:26
+-- Version du serveur :  5.7.14
+-- Version de PHP :  5.6.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -484,7 +484,8 @@ CREATE TABLE `utilisateur` (
 --
 
 INSERT INTO `utilisateur` (`login`, `mdp`, `email`, `id_enseignant`, `id_administratif`) VALUES
-('admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@monEmail.com', NULL, NULL);
+('admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@monEmail.com', NULL, NULL),
+('non.renseigne', '4aad0d9ff11812ebdd5e376fdbef6222', 'non.renseigne@monMail.com', '0000000000000', NULL);
 
 -- --------------------------------------------------------
 
