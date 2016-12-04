@@ -47,6 +47,7 @@ body {
 .my-navbar .open > a:focus,
 .my-navbar .open > a:hover {
     background-color: #122B40!important;
+    color: #FFF !important;
 }
 
 /* Nav */

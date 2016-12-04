@@ -22,6 +22,8 @@
          * </ul>
          */
         public function insert($obj) {
+
+            var_dump($obj);
             // Pré-condition
             if (is_null($obj->getId()) ||
                 !is_null($this->find($obj->getId()))

@@ -82,7 +82,7 @@
                     // Récupère l'utilisateur courant.
                     $utilCourant = Utilisateur::getUtilisateur();
                     $newUtil = new Utilisateur($utilCourant->getLogin(),
-                                               isset($_POST['mdp']) ?
+                                               isset($_POST['mdp']) && $_POST['mdp'] != "" ?
                                                    Utilisateur::crypterMdp($_POST['mdp']) :
                                                    $utilCourant->getMdp(),
                                                $_POST['email'],
@@ -135,7 +135,7 @@
                                   $_POST['email'],
                                   $_POST['poste'], $newAdresse);
             $newUtil = new Utilisateur($utilCourant->getLogin(),
-                                       isset($_POST['mdp']) ?
+                                       isset($_POST['mdp']) && $_POST['mdp'] != "" ?
                                            Utilisateur::crypterMdp($_POST['mdp']) :
                                            $utilCourant->getMdp(), $_POST['email'],
                                        null, $newAdmin);
@@ -180,7 +180,7 @@
                                $_POST['tel'], $newAdresse);
 
             $newUtil = new Utilisateur($utilCourant->getLogin(),
-                                       isset($_POST['mdp']) ?
+                                       isset($_POST['mdp']) && $_POST['mdp'] != "" ?
                                            Utilisateur::crypterMdp($_POST['mdp']) :
                                            $utilCourant->getMdp(), $_POST['email'],
                                        $newEns, null);
