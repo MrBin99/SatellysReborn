@@ -402,14 +402,26 @@ $(document).ready(function () {
         /// Récupère les CSS.
         var css = "";
         $('link').each(function(elem) {
-            css += $('link')[elem].outerHTML;
+            if ($('link')[elem].outerHTML.indexOf("style.css") == -1) {
+                css += $('link')[elem].outerHTML;
+            }
         });
+
+        // Ajoute le "replaceAll" à la classe String.
+        String.prototype.replaceAll = function(target, replacement) {
+            return this.split(target).join(replacement);
+        };
+
+        // Enlève les liens.
+        contenu = contenu.replaceAll('<a', "<p");
+        contenu = contenu.replaceAll('</a>', "</p>");
 
         // Construit la page pour le mail.
         var mail = "<!DOCTYPE html><html><head>";
         mail += css;
-        mail += "</head><body>";
-        mail += contenu + "</body>";
+        mail += "</head><body><div style='width: 75%; margin: auto'><h1>"
+                + $(".panel-heading").html() + "</h1><br/>";
+        mail += contenu + "</div></body>";
 
         // On l'envoie au PHP.
         $.ajax({

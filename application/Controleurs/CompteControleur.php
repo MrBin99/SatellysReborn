@@ -98,7 +98,6 @@
                         $this->vue =
                             new Vue($this, "ModifOK", "Profil modifié");
                         $this->vue->render();
-                        var_dump($newUtil);
                     } else {
                         self::redirect('/SatellysReborn/compte/errModification/');
                     }
@@ -234,10 +233,11 @@
                                                         $util->getEnseignant(),
                                                         $util->getAdministratif()))
                 ) {
-                    $mail = "<!DOCTYPE html><body>";
-                    $mail .= "<h1>Bonjour, " . $util->getLogin() . '</h1>';
-                    $mail .= "<p>Votre nouveau mot de passe est : <span>$newMdp</span></p>";
-                    $mail .= "<br /><br /><br /><br />SatellysReborn.fr</body>";
+                    $mail = "<!DOCTYPE html><html><head><link rel='stylesheet' href='"
+                            . CSS . "bootstrap.min.css'></head><body>";
+                    $mail .= "<h1>Bonjour, " . $util->getLogin() . '</h1><br/>';
+                    $mail .= "<p>Votre nouveau mot de passe est : <b>$newMdp</b></p>";
+                    $mail .= "<br /><br />SatellysReborn.fr</body></html>";
 
                     if (Utils::envoyerMail($util->getEmail(),
                                            "Nouveau mot de passe.", $mail)

@@ -44,9 +44,9 @@
          * @return bool si le mail a bien été envoyé ou non.
          */
         public static function envoyerMail($destinataire, $sujet, $contenu) {
-            $headers = "From: SatellysReborn.fr\r\n";
+            $headers = "From: no-reply@satellysreborn.fr\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
-            $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
             return mail($destinataire, SITE_NAME . " - " . $sujet, $contenu,
                         $headers);
