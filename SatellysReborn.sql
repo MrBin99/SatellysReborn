@@ -107,7 +107,6 @@ CREATE TABLE `cours` (
   `debut` time NOT NULL,
   `fin` time NOT NULL,
   `salle` varchar(128) COLLATE utf8_bin NOT NULL,
-  `matiere` varchar(128) COLLATE utf8_bin NOT NULL,
   `id_enseignant` char(13) COLLATE utf8_bin NOT NULL,
   `id_matiere` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

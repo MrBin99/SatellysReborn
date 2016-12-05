@@ -1,4 +1,4 @@
-/* Script Javascript gérant l a dynamicité de toutes les pages. */
+/* Script Javascript gérant la dynamicité de toutes les pages. */
 
 /**
  * Génère une couleur au format hexadécimale aléatoire.
@@ -143,7 +143,7 @@ function getEtudiants() {
 }
 
 /**
- * Créé une boîte à liste avec recherche pour les étudiants.
+ * Créé une boîte à liste avec recherche pour les enseignants.
  */
 function getEnseignants() {
     $('.select-ens').select2({
@@ -207,7 +207,7 @@ function getMatieres() {
 }
 
 /**
- * Créé une boîte à liste avec recherche pour les non absent à un cours..
+ * Créé une boîte à liste avec recherche pour les non absent à un cours.
  */
 function getEtudiantsNonAbsent() {
     var url = window.location.href;
@@ -322,7 +322,8 @@ function emploiTemps() {
         if (cours != null) {
             cours.forEach(function(event) {
                 events.push({
-                    title: event.matiere.nom + '\n' + event.groupes[0].nom + " - " + event.groupes[0].promo.nom + '\n' + event.salle,
+                    title: event.matiere.nom + '\n' + event.groupes[0].nom + " - "
+                           + event.groupes[0].promo.nom + '\n' + event.salle,
                     start: event.jour + "T" + event.debut,
                     end: event.jour + "T" + event.fin,
                     color: getRandomColor(),
