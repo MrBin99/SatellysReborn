@@ -82,7 +82,7 @@
                     // Récupère l'utilisateur courant.
                     $utilCourant = Utilisateur::getUtilisateur();
                     $newUtil = new Utilisateur($utilCourant->getLogin(),
-                                               isset($_POST['mdp']) && $_POST['mdp'] != "" ?
+                                               isset($_POST['mdp']) ?
                                                    Utilisateur::crypterMdp($_POST['mdp']) :
                                                    $utilCourant->getMdp(),
                                                $_POST['email'],
@@ -98,6 +98,7 @@
                         $this->vue =
                             new Vue($this, "ModifOK", "Profil modifié");
                         $this->vue->render();
+                        var_dump($newUtil);
                     } else {
                         self::redirect('/SatellysReborn/compte/errModification/');
                     }
@@ -135,7 +136,7 @@
                                   $_POST['email'],
                                   $_POST['poste'], $newAdresse);
             $newUtil = new Utilisateur($utilCourant->getLogin(),
-                                       isset($_POST['mdp']) && $_POST['mdp'] != "" ?
+                                       isset($_POST['mdp']) ?
                                            Utilisateur::crypterMdp($_POST['mdp']) :
                                            $utilCourant->getMdp(), $_POST['email'],
                                        null, $newAdmin);
@@ -180,7 +181,7 @@
                                $_POST['tel'], $newAdresse);
 
             $newUtil = new Utilisateur($utilCourant->getLogin(),
-                                       isset($_POST['mdp']) && $_POST['mdp'] != "" ?
+                                       isset($_POST['mdp']) ?
                                            Utilisateur::crypterMdp($_POST['mdp']) :
                                            $utilCourant->getMdp(), $_POST['email'],
                                        $newEns, null);
@@ -233,17 +234,17 @@
                                                         $util->getEnseignant(),
                                                         $util->getAdministratif()))
                 ) {
-                    $mail = "<!DOCTYPE html><html><head><link rel='stylesheet' href='"
-                            . CSS . "bootstrap.min.css'></head><body>";
-                    $mail .= "<h1>Bonjour, " . $util->getLogin() . '</h1><br/>';
-                    $mail .= "<p>Votre nouveau mot de passe est : <b>$newMdp</b></p>";
-                    $mail .= "<br /><br />SatellysReborn.fr</body></html>";
+                    $mail = "<!DOCTYPE html><body>";
+                    $mail .= "<h1>Bonjour, " . $util->getLogin() . '</h1>';
+                    $mail .= "<p>Votre nouveau mot de passe est : <span>$newMdp</span></p>";
+                    $mail .= "<br /><br /><br /><br />SatellysReborn.fr</body>";
 
                     if (Utils::envoyerMail($util->getEmail(),
                                            "Nouveau mot de passe.", $mail)
                     ) {
-                        $this->vue = new Vue($this, 'MdpReset', "Mot de passe réinitialisé");
-                        $this->vue->render();
+                        //$this->vue = new Vue($this, 'MdpReset', "Mot de passe réinitialisé");
+                        //$this->vue->render();
+                        var_dump(error_get_last());
                     } else {
                         self::redirect('/SatellysReborn/mail/errEnvoie/');
                     }

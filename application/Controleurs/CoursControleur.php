@@ -63,14 +63,15 @@
                                                        $_POST['debut'],
                                                        $_POST['fin']));
 
-                if ($cours != false) {
-                    foreach ($_POST['groupes'] as $groupeID) {
-                        $cours->ajouterGroupe(DAO_Factory::getDAO_Groupe()
-                                                         ->find($groupeID));
-                        DAO_Factory::getDAO_Cours()->ajouterCours($cours->getId(),
-                                                                  $groupeID);
-                    }
 
+                foreach ($_POST['groupes'] as $groupeID) {
+                    $cours->ajouterGroupe(DAO_Factory::getDAO_Groupe()
+                                                     ->find($groupeID));
+                    DAO_Factory::getDAO_Cours()->ajouterCours($cours->getId(),
+                                                              $groupeID);
+                }
+
+                if ($cours != false) {
                     self::redirect('/SatellysReborn/cours/details/' .
                                    $cours->getId());
                 } else {

@@ -176,7 +176,9 @@
                     // Plus de promos pour ce département.
                     if ($groupes == []) {
                         if (DAO_Factory::getDAO_Promotion()->delete($promo)) {
-                            self::redirect('/SatellysReborn/promotion/');
+                            $this->vue = new Vue($this, "SupprimerOK",
+                                                 "Suppression de la promotion effectuée");
+                            $this->vue->render();
                         } else {
                             self::redirect('/SatellysReborn/promotion/errSupprimer/');
                         }

@@ -2,38 +2,21 @@
     use SatellysReborn\Modeles\Population\Login\Utilisateur;
 ?>
 
-<div class="modal fade" id="modalConfirmCSV" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Voulez-vous vraiment importer le CSV ?</h4>
-            </div>
-            <?php if ($obj->hasErreur()): ?>
-                <div class="modal-body">
-                    Le fichier CSV contient des erreurs, voulez-vous vraiment l'importer.<br/>
-                    <strong class="text-danger">Attention, il se pourrait que certains étudiants ne soient pas importés !</strong>
-                </div>
-            <?php endif; ?>
-            <div class="modal-footer">
-                <a href="/SatellysReborn/groupe/importCSV/" class="btn btn-success">Importer</a>
-                <a href="#" class="btn btn-danger" data-dismiss="modal">Fermer</a>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="container">
     <div class="panel my-panel">
         <div class="panel-heading">
             Résultat de l'import du fichier CSV
         </div>
         <div class="panel-body">
-            <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+            <?php if (Utilisateur::utilCourantEstAdmin() ||
+                      Utilisateur::utilCourantEstSuperAdmin()
+            ): ?>
                 <div class="row">
                     <div class="col-md-12 toolbar">
                         <div class="btn-group">
-                            <a href="#" id="btnImportCSV"
-                               class="btn btn-success btn-lg"><i class="fa fa-upload"></i> Importer</a>
+                            <a href="/SatellysReborn/groupe/importCSV/<?= $obj->getGroupe()
+                                                                              ->getId() ?>/"
+                               class="btn btn-success btn-lg">Importer</a>
                         </div>
                     </div>
                 </div>

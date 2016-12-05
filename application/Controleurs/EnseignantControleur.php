@@ -84,8 +84,7 @@
                         self::redirect('/SatellysReborn/enseignant/details/' .
                                        $_POST['id']);
                     } else {
-                        //self::redirect('/SatellysReborn/enseignant/errCreer/');
-                        var_dump($enseignant);
+                        self::redirect('/SatellysReborn/enseignant/errCreer/');
                     }
                 } else {
                     self::redirect('/SatellysReborn/enseignant/inconnu/');

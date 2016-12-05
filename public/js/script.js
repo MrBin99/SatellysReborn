@@ -1,4 +1,4 @@
-/* Script Javascript gérant la dynamicité de toutes les pages. */
+/* Script Javascript gérant l a dynamicité de toutes les pages. */
 
 /**
  * Génère une couleur au format hexadécimale aléatoire.
@@ -143,7 +143,7 @@ function getEtudiants() {
 }
 
 /**
- * Créé une boîte à liste avec recherche pour les enseignants.
+ * Créé une boîte à liste avec recherche pour les étudiants.
  */
 function getEnseignants() {
     $('.select-ens').select2({
@@ -207,7 +207,7 @@ function getMatieres() {
 }
 
 /**
- * Créé une boîte à liste avec recherche pour les non absent à un cours.
+ * Créé une boîte à liste avec recherche pour les non absent à un cours..
  */
 function getEtudiantsNonAbsent() {
     var url = window.location.href;
@@ -322,8 +322,7 @@ function emploiTemps() {
         if (cours != null) {
             cours.forEach(function(event) {
                 events.push({
-                    title: event.matiere.nom + '\n' + event.groupes[0].nom + " - "
-                           + event.groupes[0].promo.nom + '\n' + event.salle,
+                    title: event.matiere.nom + '\n' + event.groupes[0].nom + " - " + event.groupes[0].promo.nom + '\n' + event.salle,
                     start: event.jour + "T" + event.debut,
                     end: event.jour + "T" + event.fin,
                     color: getRandomColor(),
@@ -360,17 +359,15 @@ function emploiTemps() {
     });
 }
 
-// DOM chargé.
+// Point d'entrée.
 $(document).ready(function () {
-    // L'URL courante de la page.
+    // LURL courante de la page.
     var url = window.location.href;
 
-    // Si c'est la page de l'emploi du temps, alors on active FullCalendar.
     if (url.indexOf("emploiTemps") != -1) {
         emploiTemps();
     }
 
-    // Fonction appelés pour toutes les listes de recherche.
     getDepartements();
     getPromotions();
     getGroupes();
@@ -381,50 +378,25 @@ $(document).ready(function () {
     getUtilisateurs();
     getVilles();
 
-    // Confirmation d'importation de l'ICS.
     $('#btnImportICS').click(function(e) {
         e.preventDefault();
         $('#modalConfirmICS').modal();
     });
 
-    // Confirmation d'importation du CSV.
-    $('#btnImportCSV').click(function(e) {
-        e.preventDefault();
-        $('#modalConfirmCSV').modal();
-    });
-
-    // Permet de récupérer le tableau de la liste pour l'envoie par mail.
     $("#mail").click(function (e) {
         e.preventDefault();
 
-        // Récupère le tableau.
         var contenu = $(".fixed-table-container").html();
-
-        /// Récupère les CSS.
         var css = "";
         $('link').each(function(elem) {
-            if ($('link')[elem].outerHTML.indexOf("style.css") == -1) {
-                css += $('link')[elem].outerHTML;
-            }
+            css += $('link')[elem].outerHTML;
         });
 
-        // Ajoute le "replaceAll" à la classe String.
-        String.prototype.replaceAll = function(target, replacement) {
-            return this.split(target).join(replacement);
-        };
-
-        // Enlève les liens.
-        contenu = contenu.replaceAll('<a', "<p");
-        contenu = contenu.replaceAll('</a>', "</p>");
-
-        // Construit la page pour le mail.
         var mail = "<!DOCTYPE html><html><head>";
         mail += css;
-        mail += "</head><body><div style='width: 75%; margin: auto'><h1>"
-                + $(".panel-heading").html() + "</h1><br/>";
-        mail += contenu + "</div></body>";
+        mail += "</head><body>";
+        mail += contenu + "</body>";
 
-        // On l'envoie au PHP.
         $.ajax({
             url: '/SatellysReborn/mail/setListe/',
             type: 'post',
