@@ -45,7 +45,7 @@
 
         /** @var array les évènnements chargés du fichier. */
         private $events;
-        
+
         /** @var bool si une erreur est présente dans le fichier ICS. */
         private $erreur;
 
@@ -100,7 +100,7 @@
                     } while ($ligne != 'END:VEVENT');
 
                     // Analyse l'évennement.
-                    $eventObj= $this->analyserEvent($event);
+                    $eventObj = $this->analyserEvent($event);
 
                     // Enregistre l'évènnement.
                     array_push($this->events, $eventObj);
@@ -109,7 +109,7 @@
                     array_push($this->logs, $this->preLoad($eventObj));
                 }
             }
-            
+
             // Libère le contenu.
             unset($this->contenu);
         }
@@ -149,24 +149,32 @@
          */
         private function creerEvent($cmd) {
             // On récupère les heures de début et fin du cours.
-            $heureDebut = $this->toDateTime($cmd['DTSTART'])->format('H:i');
-            $heureFin = $this->toDateTime($cmd['DTEND'])->format('H:i');
+            $heureDebut = isset($cmd['DTSTART']) ?
+                $this->toDateTime($cmd['DTSTART'])->format('H:i') : null;
+            $heureFin = isset($cmd['DTEND']) ?
+                $this->toDateTime($cmd['DTEND'])->format('H:i') : null;
 
             // On récupère la date du cours.
-            $date = $this->toDateTime($cmd['DTEND'])->format('Y-m-d');
+            $date = isset($cmd['DTEND']) ?
+                $this->toDateTime($cmd['DTEND'])->format('Y-m-d') : null;
 
             // On récupère la description.
-            $desc = explode('\n', $cmd['DESCRIPTION']);
+            if (isset($cmd['DESCRIPTION'])) {
+                $desc = explode('\n', $cmd['DESCRIPTION']);
 
-            // Si enseignant indéterminé
-            if (count($desc) != 3) {
-                array_splice($desc, 0, 1);
-                array_splice($desc, count($desc) - 1, 1);
+                // Si enseignant indéterminé
+                if (count($desc) != 3) {
+                    array_splice($desc, 0, 1);
+                    array_splice($desc, count($desc) - 1, 1);
 
-                // Extrait l'enseignant.
-                $prof = array_splice($desc, count($desc) - 1, 1)[0];
+                    // Extrait l'enseignant.
+                    $prof = array_splice($desc, count($desc) - 1, 1)[0];
+                } else {
+                    $prof = "non déterminé";
+                }
             } else {
-                $prof = "non déterminé";
+                $prof = null;
+                $desc = null;
             }
 
             // Si salle indéterminé
@@ -176,10 +184,16 @@
                 $salle = "ND";
             }
 
+            // La matière.
+            if (isset($cmd['SUMMARY'])) {
+                $matiere = str_replace('\\', '', $cmd['SUMMARY']);
+            } else {
+                $matiere = null;
+            }
+
             // Retourne l'objet ICS.
             return new ICS_Event($heureDebut, $heureFin, $date,
-                                 str_replace('\\', '', $cmd['SUMMARY']),
-                                 $desc, $salle, $prof);
+                                 $matiere, $desc, $salle, $prof);
         }
 
         /**
@@ -214,41 +228,87 @@
             // Les logs.
             $logs = array();
 
-            // Sépare le nom et prénom du prof.
-            $prof = explode(' ', $eventObj->getProf());
-
             // L'enseignant.
-            if (DAO_Factory::getDAO_Enseignant()
-                           ->findNomPrenom($prof[0], $prof[1]) == null) {
+            if ($eventObj->getProf() != null) {
+
+                // Sépare le nom et prénom du prof.
+                $prof = explode(' ', $eventObj->getProf());
+
+                if (DAO_Factory::getDAO_Enseignant()
+                               ->findNomPrenom($prof[0], $prof[1]) == null
+                ) {
+                    $this->erreur = true;
+                    $eventObj->marquerErreur();
+                    array_push($logs, "<span>Ligne " . $this->ligneCourante .
+                                      " : </span>L'enseignant '"
+                                      . $eventObj->getProf()
+                                      . "' n'existe pas veuillez le créer.");
+                }
+            } else {
                 $this->erreur = true;
+                $eventObj->marquerErreur();
                 array_push($logs, "<span>Ligne " . $this->ligneCourante .
-                                  " : </span>L'enseignant '"
-                                  . $eventObj->getProf()
-                                  . "' n'existe pas veuillez le créer.");
+                                  " : </span>Pas d'enseignant affecté à ce cours.");
             }
 
             // Les groupes.
-            foreach ($eventObj->getGroupes() as $groupe) {
-                if (DAO_Factory::getDAO_Groupe()
-                               ->findNom($groupe) == null) {
-                    $this->erreur = true;
-                    array_push($logs, "<span>Ligne " . $this->ligneCourante
-                                      . " : </span>Le groupe '" . $groupe
-                                      . "' n'existe pas, "
-                                      . "veuillez le créer avant.");
+            if ($eventObj->getGroupes() != null) {
+                foreach ($eventObj->getGroupes() as $groupe) {
+                    if (DAO_Factory::getDAO_Groupe()
+                                   ->findNom($groupe) == null
+                    ) {
+                        $this->erreur = true;
+                        $eventObj->marquerErreur();
+                        array_push($logs, "<span>Ligne " . $this->ligneCourante
+                                          . " : </span>Le groupe '" . $groupe
+                                          . "' n'existe pas, "
+                                          . "veuillez le créer avant.");
+                    }
                 }
+            } else {
+                $this->erreur = true;
+                $eventObj->marquerErreur();
+                array_push($logs, "<span>Ligne " . $this->ligneCourante
+                                  . " : </span>Pas de groupes affecté à ce cours.");
+            }
+
+            // Les horaires.
+            if ($eventObj->getDate() == null) {
+                $this->erreur = true;
+                $eventObj->marquerErreur();
+                array_push($logs, "<span>Ligne " . $this->ligneCourante
+                                  . " : </span>Pas de date définis pour ce cours.");
+            } else if ($eventObj->getHeureDebut() == null) {
+                $this->erreur = true;
+                $eventObj->marquerErreur();
+                array_push($logs, "<span>Ligne " . $this->ligneCourante
+                                  . " : </span>Pas d'heure de début définis pour ce cours.");
+            } else if ($eventObj->getHeureFin() == null) {
+                $this->erreur = true;
+                $eventObj->marquerErreur();
+                array_push($logs, "<span>Ligne " . $this->ligneCourante
+                                  . " : </span>Pas d'heure de fin définis pour ce cours.");
             }
 
             // Le cours.
-            if (DAO_Factory::getDAO_Cours()
-                           ->findNameDateHeure($eventObj->getNom(),
-                                               $eventObj->getDate(),
-                                               $eventObj->getHeureDebut(),
-                                               $eventObj->getHeureFin())
-                                                   != null) {
+            if ($eventObj->getNom() != null) {
+                if (DAO_Factory::getDAO_Cours()
+                               ->findNameDateHeure($eventObj->getNom(),
+                                                   $eventObj->getDate(),
+                                                   $eventObj->getHeureDebut(),
+                                                   $eventObj->getHeureFin())
+                    != null
+                ) {
+                    $this->erreur = true;
+                    $eventObj->marquerErreur();
+                    array_push($logs, "<span>Ligne " . $this->ligneCourante
+                                      . " : </span>Ce cours existe déjà.");
+                }
+            } else {
                 $this->erreur = true;
+                $eventObj->marquerErreur();
                 array_push($logs, "<span>Ligne " . $this->ligneCourante
-                                  . " : </span>Ce cours existe déjà.");
+                                  . " : </span>Pas de matière définis pour ce cours.");
             }
 
             return $logs;
@@ -264,6 +324,11 @@
                 "nok" => 0
             );
             foreach ($this->events as $event) {
+                // Evennement erroné ?
+                if ($event->isErreur()) {
+                    continue;
+                }
+
                 // Sépare le nom et prénom du prof.
                 $prof = explode(' ', $event->getProf());
 
@@ -312,10 +377,13 @@
 
                     if (isset($g)) {
                         $cours->ajouterGroupe($g);
+                        DAO_Factory::getDAO_Cours()->ajouterCours($cours->getId(),
+                                                                  $g->getId());
                     }
                 }
                 $insertions["ok"]++;
             }
+
             return $insertions;
         }
 
