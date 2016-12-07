@@ -42,6 +42,9 @@
          */
         private $prof;
 
+        /** @var boolean si cet évènnement comporte une erreur. */
+        private $erreur;
+
         /**
          * Créé un nouvel évènnement ICS.
          * @param $heureDebut string l'heure de début du cours.
@@ -61,6 +64,15 @@
             $this->groupes = $groupes;
             $this->salle = $salle;
             $this->prof = $prof;
+            $this->erreur = false;
+        }
+
+        /**
+         * Marque cet évènnement comme erroné pour ne pas qu'il soit importé
+         * dans la base de données.
+         */
+        public function marquerErreur() {
+            $this->erreur = true;
         }
 
         /**
@@ -110,5 +122,12 @@
          */
         public function getProf() {
             return $this->prof;
+        }
+
+        /**
+         * @return boolean si cet évènnement est erroné.
+         */
+        public function isErreur() {
+            return $this->erreur;
         }
     }

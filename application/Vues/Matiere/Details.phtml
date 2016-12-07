@@ -20,6 +20,9 @@
                                         class="btn btn-info btn-lg"><i
                                         class="fa fa-edit"></i> Modifier
                                 </button>
+                                <a href="#" id="mail"
+                                   class="btn btn-primary btn-lg"><i
+                                        class="fa fa-envelope-o"></i> Envoyer</a>
                                 <?php if (empty($obj[1])): ?>
                                     <a href="/SatellysReborn/matiere/supprimer/<?= $obj[0]->getId() ?>/"
                                        class="btn btn-danger btn-lg"><i
@@ -55,7 +58,7 @@
                 </div>
             </form>
             <table data-toggle="table" data-search="true" data-height="800"
-                   data-pagination="true">
+                   data-pagination="true" data-page-list="[10, 25, 50, 100, All]">
                 <thead>
                 <tr>
                     <th data-field="id" data-sortable="true">Identifiant</th>
