@@ -9,18 +9,19 @@
             Liste des enseignants
         </div>
         <div class="panel-body">
-            <?php if (Utilisateur::utilCourantEstAdmin()): ?>
-                <div class="row">
-                    <div class="col-md-12 toolbar">
-                        <div class="btn-group">
+            <div class="row">
+                <div class="col-md-12 toolbar">
+                    <div class="btn-group">
+                        <?php if (Utilisateur::utilCourantEstAdmin()): ?>
                             <a href="/SatellysReborn/enseignant/creation/" class="btn btn-success btn-lg"><i class="fa fa-plus"></i> Nouveau</a>
-                            <a href="#" id="mail"
-                               class="btn btn-primary btn-lg"><i
-                                    class="fa fa-envelope-o"></i> Envoyer</a>
-                        </div>
+                        <?php endif; ?>
+                        <a href="#" id="mail"
+                           class="btn btn-primary btn-lg"><i
+                                class="fa fa-envelope-o"></i> Envoyer</a>
+
                     </div>
                 </div>
-            <?php endif; ?>
+            </div>
             <table data-toggle="table" data-search="true" data-height="800" data-pagination="true" data-page-list="[10, 25, 50, 100, All]">
                 <thead>
                     <tr>

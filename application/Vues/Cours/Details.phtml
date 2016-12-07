@@ -17,20 +17,19 @@
                                 class="btn btn-success btn-lg"><i
                                 class="fa fa-plus"></i>
                                 Ajouter un absent</a>
-                            <button type="submit" class="btn btn-info btn-lg"><i
-                                    class="fa fa-edit"></i> Modifier
-                            </button>
-                            <a href="#" id="mail"
-                               class="btn btn-primary btn-lg"><i
-                                    class="fa fa-envelope-o"></i> Envoyer</a>
-                            <a href="/SatellysReborn/cours/supprimer/<?= $obj[0]->getId() ?>"" class="btn btn-danger btn-lg"><i
-                                    class="fa fa-remove"></i> Supprimer</a>
+                            <?php if (empty($obj[1])): ?>
+                                <a href="/SatellysReborn/cours/supprimer/<?= $obj[0]->getId() ?>" class="btn btn-danger btn-lg"><i
+                                        class="fa fa-remove"></i> Supprimer</a>
+                            <?php endif; ?>
                         <?php elseif (Utilisateur::utilCourantEstEnseignant() && Utilisateur::getUtilisateur()->getEnseignant()->getId() == $obj[0]->getEnseignant()->getId()): ?>
                             <a href="/SatellysReborn/absence/creation/<?= $obj[0]->getId() ?>"
                                class="btn btn-success btn-lg"><i
                                     class="fa fa-plus"></i>
                                 Ajouter un absent</a>
                         <?php endif; ?>
+                        <a href="#" id="mail"
+                           class="btn btn-primary btn-lg"><i
+                                class="fa fa-envelope-o"></i> Envoyer</a>
                     </div>
                 </div>
             </div>
@@ -39,35 +38,35 @@
                     <div class="form-group">
                         <label for="matiere">Matière :</label>
                         <input type="text" id="matiere" class="form-control"
-                               value="<?= $obj[0]->getMatiere()->getNom() ?>">
+                               value="<?= $obj[0]->getMatiere()->getNom() ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="salle">Salle :</label>
                         <input type="text" id="salle" class="form-control"
-                               value="<?= $obj[0]->getSalle() ?>">
+                               value="<?= $obj[0]->getSalle() ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-2 col-md-offset-3">
                     <div class="form-group">
                         <label for="date">Date :</label>
                         <input type="date" id="date" class="form-control"
-                               value="<?= $obj[0]->getJour() ?>">
+                               value="<?= $obj[0]->getJour() ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="debut">Début :</label>
                         <input type="time" id="debut" class="form-control"
-                               value="<?= $obj[0]->getDebut() ?>">
+                               value="<?= $obj[0]->getDebut() ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="fin">Fin :</label>
                         <input type="time" id="fin" class="form-control"
-                               value="<?= $obj[0]->getFin() ?>">
+                               value="<?= $obj[0]->getFin() ?>" readonly>
                     </div>
                 </div>
             </div>

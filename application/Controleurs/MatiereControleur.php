@@ -184,7 +184,7 @@
          * Affiche l'erreur quand une matière n'existe pas.
          */
         public function inconnu() {
-            $this->vue = new Vue($this, 'Inconnu', 'Département Inconnu');
+            $this->vue = new Vue($this, 'Inconnu', 'Matière Inconnu');
             $this->vue->render();
         }
 

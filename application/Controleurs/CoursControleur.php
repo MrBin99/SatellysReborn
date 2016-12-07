@@ -3,7 +3,6 @@
 
     use SatellysReborn\BaseDonnees\DAO\DAO_Factory;
     use SatellysReborn\Modeles\Cours\Cours;
-    use SatellysReborn\Modeles\Population\Groupe\Departement;
     use SatellysReborn\Modeles\Population\Login\Utilisateur;
     use SatellysReborn\Vues\Vue;
 
@@ -109,44 +108,6 @@
         }
 
         /**
-         * Modifie le département.
-         * @param $id string l'identifiant du département.
-         */
-        public function modifier($id) {
-            // Droits.
-            if (Utilisateur::utilCourantEstAdmin()) {
-                if (isset($id)) {
-                    if (!isset($_POST['nom'])) {
-                        self::redirect('/SatellysReborn/departement/datails/' .
-                                       $id . '/');
-                    }
-
-                    // Recherche le département à modifier.
-                    $dep = DAO_Factory::getDAO_Departement()->find($id);
-
-                    // Département existe ?
-                    if ($dep == false) {
-                        self::redirect('/SatellysReborn/departement/inconnu/');
-                    }
-
-                    // Fait le modification.
-                    if (DAO_Factory::getDAO_Departement()
-                                   ->update(new Departement($id, $_POST['nom']))
-                    ) {
-                        self::redirect('/SatellysReborn/departement/datails/' .
-                                       $id . '/');
-                    } else {
-                        self::redirect('/SatellysReborn/departement/errModifier/');
-                    }
-                } else {
-                    self::redirect('/SatellysReborn/departement/inconnu/');
-                }
-            } else {
-                self::redirect('/SatellysReborn/compte/errNonAdministratif/');
-            }
-        }
-
-        /**
          * Supprime un cours de la base de données.
          * @param $id string l'identifiant du cours.
          */
@@ -213,16 +174,6 @@
         public function errSupprimer() {
             $this->vue =
                 new Vue($this, 'ErrSupprimer', 'Erreur dans la suppression');
-            $this->vue->render();
-        }
-
-        /**
-         * Affiche l'erreur quand une erreur est survenu lors de la modification
-         * d'un cours.
-         */
-        public function errModifier() {
-            $this->vue =
-                new Vue($this, 'ErrModifier', 'Erreur dans la modification');
             $this->vue->render();
         }
 

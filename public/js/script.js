@@ -321,8 +321,17 @@ function emploiTemps() {
         events = [];
         if (cours != null) {
             cours.forEach(function(event) {
+
+                var courant = event.matiere.nom + '\n';
+
+                event.groupes.forEach(function(groupe) {
+                    courant += groupe.nom + " - " + groupe.promo.nom + ", ";
+                });
+
+                courant += '\n' + event.salle;
+
                 events.push({
-                    title: event.matiere.nom + '\n' + event.groupes[0].nom + " - " + event.groupes[0].promo.nom + '\n' + event.salle,
+                    title: courant,
                     start: event.jour + "T" + event.debut,
                     end: event.jour + "T" + event.fin,
                     color: getRandomColor(),
@@ -381,6 +390,26 @@ $(document).ready(function () {
     $('#btnImportICS').click(function(e) {
         e.preventDefault();
         $('#modalConfirmICS').modal();
+    });
+
+    $('#form-cours').submit(function(e) {
+        var debut = $('#debut').val();
+        var fin = $('#fin').val();
+
+        debut = new Date('01/01/2000 ' + debut);
+        fin = new Date('01/01/2000 ' + fin);
+
+        // Date de fin après date de début.
+        if (fin - debut <= 0) {
+            e.preventDefault();
+            $("#fin").tooltip({
+                title: "L'heure de fin doit être après"
+                       + " l'heure de début du cours",
+                placement: 'bottom',
+                trigger: 'focys'
+            });
+            $('#fin').focus();
+        }
     });
 
     $("#mail").click(function (e) {

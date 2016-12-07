@@ -11,7 +11,7 @@
                             <label for="etudiant">Etudiant :</label>
                             <select name="etudiant" id="etudiant" class="form-control select-etud" <?= isset($obj[1]) ? 'readonly': '' ?>>
                                 <?php if (isset($obj[1])): ?>
-                                <option value="<?= $obj[1]->getId() ?>"><?= $obj[1]->getNomComplet() ?></option>
+                                    <option value="<?= $obj[1]->getId() ?>"><?= $obj[1]->getNomComplet() ?></option>
                                 <?php endif; ?>
                             </select>
                         </div>

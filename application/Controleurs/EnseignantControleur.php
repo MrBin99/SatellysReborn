@@ -157,7 +157,7 @@
                     }
 
                     if (DAO_Factory::getDAO_Cours()
-                                   ->findCoursEnseignant($enseignant->getId())
+                                   ->findCoursEnseignant($id)
                         != null
                     ) {
                         self::redirect('/SatellysReborn/enseignant/errCours/');
@@ -244,6 +244,16 @@
         public function errCreer() {
             $this->vue =
                 new Vue($this, 'ErrCreer', 'Erreur dans la création');
+            $this->vue->render();
+        }
+
+        /**
+         * Affiche l'erreur quand il est impossible de supprimer un
+         * enseignant qui a des cours.
+         */
+        public function errCours() {
+            $this->vue =
+                new Vue($this, 'ErrCours', 'Erreur suppression impossible');
             $this->vue->render();
         }
     }

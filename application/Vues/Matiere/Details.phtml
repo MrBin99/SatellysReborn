@@ -1,5 +1,6 @@
 <?php
     use SatellysReborn\Modeles\Population\Login\Utilisateur;
+    use SatellysReborn\Modeles\Utils\Utils;
 
 ?>
 
@@ -12,26 +13,26 @@
             <form
                 action="/SatellysReborn/matiere/modifier/<?= $obj[0]->getId() ?>/"
                 method="post">
-                <?php if (Utilisateur::utilCourantEstAdmin()): ?>
-                    <div class="row">
-                        <div class="col-md-12 toolbar">
-                            <div class="btn-group panel-body">
+                <div class="row">
+                    <div class="col-md-12 toolbar">
+                        <div class="btn-group panel-body">
+                            <?php if (Utilisateur::utilCourantEstAdmin()): ?>
                                 <button type="submit"
                                         class="btn btn-info btn-lg"><i
                                         class="fa fa-edit"></i> Modifier
                                 </button>
-                                <a href="#" id="mail"
-                                   class="btn btn-primary btn-lg"><i
-                                        class="fa fa-envelope-o"></i> Envoyer</a>
                                 <?php if (empty($obj[1])): ?>
                                     <a href="/SatellysReborn/matiere/supprimer/<?= $obj[0]->getId() ?>/"
                                        class="btn btn-danger btn-lg"><i
                                             class="fa fa-remove"></i> Supprimer</a>
                                 <?php endif; ?>
-                            </div>
+                            <?php endif; ?>
+                            <a href="#" id="mail"
+                               class="btn btn-primary btn-lg"><i
+                                    class="fa fa-envelope-o"></i> Envoyer</a>
                         </div>
                     </div>
-                <?php endif; ?>
+                </div>
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3">
                         <div class="form-group">
@@ -79,7 +80,7 @@
                                 <td>
                                     <a href="/SatellysReborn/cours/details/<?= $cours->getId() ?>"><?= $cours->getId() ?></a>
                                 </td>
-                                <td><?= $cours->getJour() ?></td>
+                                <td><?= Utils::reformatDate($cours->getJour()) ?></td>
                                 <td><?= $cours->getDebut() ?></td>
                                 <td><?= $cours->getFin() ?></td>
                                 <td><?= $cours->getSalle() ?></td>

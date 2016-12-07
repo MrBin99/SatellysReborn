@@ -11,33 +11,33 @@
             <form
                 action="/SatellysReborn/groupe/modifier/<?= $obj[0]->getId() ?>/"
                 method="post">
-                <?php if (Utilisateur::utilCourantEstAdmin()): ?>
                     <div class="row">
                         <div class="col-md-12 toolbar">
                             <div class="btn-group panel-body">
-                                <a href="/SatellysReborn/groupe/ajouterEtudiant/<?= $obj[0]->getId() ?>/"
-                                   class="btn btn-success btn-lg"><i
-                                        class="fa fa-plus"></i> Ajouter un
-                                    étudiant</a>
-                                <a href="/SatellysReborn/groupe/csv/<?= $obj[0]->getId() ?>/"
-                                   class="btn btn-success btn-lg"><i
-                                        class="fa fa-file-excel-o"></i> Import
-                                    un CSV</a>
-                                <button type="submit" class="btn btn-info btn-lg"><i
-                                        class="fa fa-edit"></i> Modifier
-                                </button>
+                                <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+                                    <a href="/SatellysReborn/groupe/ajouterEtudiant/<?= $obj[0]->getId() ?>/"
+                                       class="btn btn-success btn-lg"><i
+                                            class="fa fa-plus"></i> Ajouter un
+                                        étudiant</a>
+                                    <a href="/SatellysReborn/groupe/csv/<?= $obj[0]->getId() ?>/"
+                                       class="btn btn-success btn-lg"><i
+                                            class="fa fa-file-excel-o"></i> Import
+                                        un CSV</a>
+                                    <button type="submit" class="btn btn-info btn-lg"><i
+                                            class="fa fa-edit"></i> Modifier
+                                    </button>
+                                    <?php if (empty($obj[1])): ?>
+                                        <a href="/SatellysReborn/groupe/supprimer/<?= $obj[0]->getId() ?>/"
+                                           class="btn btn-danger btn-lg"><i
+                                                class="fa fa-remove"></i> Supprimer</a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                                 <a href="#" id="mail"
                                    class="btn btn-primary btn-lg"><i
                                         class="fa fa-envelope-o"></i> Envoyer</a>
-                                <?php if (empty($obj[1])): ?>
-                                    <a href="/SatellysReborn/groupe/supprimer/<?= $obj[0]->getId() ?>/"
-                                       class="btn btn-danger btn-lg"><i
-                                            class="fa fa-remove"></i> Supprimer</a>
-                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                <?php endif; ?>
                 <div class="row">
                     <div class="col-md-3 col-md-offset-3">
                         <div class="form-group">
