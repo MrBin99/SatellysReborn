@@ -146,6 +146,7 @@
                     <th data-field="fin" data-sortable="true">Fin</th>
                     <th data-field="justifie" data-sortable="true">Justifié</th>
                     <th data-field="motif" data-sortable="true">Motif</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -166,6 +167,9 @@
                                 <td><?= $abs->estJustifie() ? "Oui" :
                                         "Non" ?></td>
                                 <td><?= $abs->getMotif() ?></td>
+                                <td>
+                                  <a href="/SatellysReborn/absence/details/<?= $abs->getCours()->getId() ?>/<?= $abs->getEtudiant()->getId() ?>" class="btn btn-info"><i class="fa fa-edit"></i> Modifier</a>
+                                </td>
                             </tr>
                         <?php endforeach;
                     endif; ?>

@@ -134,6 +134,25 @@
         }
 
         /**
+         * Supprime tous les groupes présent à un cours.
+         * @param $coursID string l'identifiant du cours.
+         * @return bool
+         * <ul>
+         *     <li>True si la suppression a eu lieu.</li>
+         *     <li>False sinon.</li>
+         * </ul>
+         */
+        public function deleteAssiste($coursID) {
+            // SQL.
+            $sql = 'DELETE FROM assiste
+                    WHERE id_cours = :cours';
+
+            return $this->connexion->delete($sql, array(
+                ':cours' => $coursID
+            ));
+        }
+
+        /**
          * Sélectionne l'élèment dont la clé primaire est passée en argument
          * s'il existe.
          * @param $cle string la clé primaire de l'objet à sélectionner.

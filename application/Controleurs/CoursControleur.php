@@ -98,9 +98,11 @@
 
                 $absents = DAO_Factory::getDAO_Absence()
                                       ->getAbsencesCours($cours->getId());
+                $groupes = DAO_Factory::getDAO_Cours()
+                                      ->getGroupes($cours->getId());
 
                 $this->vue = new Vue($this, "Details", "Details du cours");
-                $this->vue->render(array($cours, $absents));
+                $this->vue->render(array($cours, $absents, $groupes));
 
             } else {
                 self::redirect('/SatellysReborn/compte/errNonAdministratif/');
@@ -133,14 +135,15 @@
                     }
 
                     // On supprime
-                    if (DAO_Factory::getDAO_Cours()->delete($cours)) {
+                    if (DAO_Factory::getDAO_Cours()->deleteAssiste($id) 
+                        && DAO_Factory::getDAO_Cours()->delete($cours)) {
                         self::redirect('/SatellysReborn/');
                     } else {
                         self::redirect('/SatellysReborn/cours/errSupprimer/');
                     }
 
                 } else {
-                    self::redirect('/SatellysReborn/departement/inconnu/');
+                    self::redirect('/SatellysReborn/cours/inconnu/');
                 }
             } else {
                 self::redirect('/SatellysReborn/compte/errNonAdministratif/');

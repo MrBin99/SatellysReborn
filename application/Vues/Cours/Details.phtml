@@ -70,6 +70,39 @@
                     </div>
                 </div>
             </div>
+            <table data-toggle="table" data-search="true" data-height="400">
+                <thead>
+                <tr>
+                    <th data-field="nom" data-sortable="true">Nom</th>
+                    <th data-field="promo" data-sortable="true">Promotion</th>
+                    <th data-field="dep" data-sortable="true">Département</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                    if ($obj != null):
+                        foreach ($obj[2] as $groupe): ?>
+                            <tr>
+                                <td>
+                                    <a href="/SatellysReborn/groupe/details/<?= $groupe->getId() ?>"><?= $groupe->getNom() ?></a>
+                                </td>
+                                <td>
+                                    <a href="/SatellysReborn/promotion/details/<?= $groupe->getPromo()
+                                                                                          ->getId() ?>"><?= $groupe->getPromo()
+                                                                                                                   ->getNom() ?></a>
+                                </td>
+                                <td>
+                                    <a href="/SatellysReborn/departement/details/<?= $groupe->getPromo()
+                                                                                            ->getDepartement()
+                                                                                            ->getId() ?>"><?= $groupe->getPromo()
+                                                                                                                     ->getDepartement()
+                                                                                                                     ->getNom() ?></a>
+                                </td>
+                            </tr>
+                        <?php endforeach;
+                    endif; ?>
+                </tbody>
+            </table><br /><br />
             <table data-toggle="table" data-height="800" data-search="true" data-page-list="[10, 25, 50, 100, All]">
                 <thead>
                 <tr>
@@ -99,9 +132,9 @@
                             <td>
                                 <a href="/SatellysReborn/absence/details/<?= $obj[0]->getId() ?>/<?= $abs->getEtudiant()
                                                                                                          ->getId() ?>"
-                                   class="btn btn-primary"><i
-                                        class="fa fa-sticky-note"></i>
-                                    Détails</a></td>
+                                   class="btn btn-info"><i
+                                        class="fa fa-edit"></i>
+                                    Modifier</a></td>
                             <td>
                                 <a href="/SatellysReborn/absence/supprimer/<?= $obj[0]->getId() ?>/<?= $abs->getEtudiant()
                                                                                                            ->getId() ?>"
