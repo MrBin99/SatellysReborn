@@ -139,7 +139,7 @@
                                    ->update(new Groupe($id, $_POST['nom'],
                                                        $groupe->getPromo()))
                     ) {
-                        self::redirect('/SatellysReborn/groupe/datails/' .
+                        self::redirect('/SatellysReborn/groupe/details/' .
                                        $id . '/');
                     } else {
                         self::redirect('/SatellysReborn/groupe/errModifier/');

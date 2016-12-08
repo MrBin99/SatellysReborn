@@ -140,7 +140,7 @@
                                                           $_POST['annee'],
                                                           $promo->getDepartement()))
                     ) {
-                        self::redirect('/SatellysReborn/promotion/datails/' .
+                        self::redirect('/SatellysReborn/promotion/details/' .
                                        $id . '/');
                     } else {
                         self::redirect('/SatellysReborn/promotion/errModifier/');

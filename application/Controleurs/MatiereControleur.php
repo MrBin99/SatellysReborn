@@ -120,7 +120,7 @@
                     if (DAO_Factory::getDAO_Matiere()
                                    ->update(new Matiere($id, $_POST['nom']))
                     ) {
-                        self::redirect('/SatellysReborn/matiere/datails/' .
+                        self::redirect('/SatellysReborn/matiere/details/' .
                                        $id . '/');
                     } else {
                         self::redirect('/SatellysReborn/matiere/errModifier/');
