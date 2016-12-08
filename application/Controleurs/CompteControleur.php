@@ -98,7 +98,6 @@
                         $this->vue =
                             new Vue($this, "ModifOK", "Profil modifié");
                         $this->vue->render();
-                        var_dump($newUtil);
                     } else {
                         self::redirect('/SatellysReborn/compte/errModification/');
                     }
@@ -242,9 +241,8 @@
                     if (Utils::envoyerMail($util->getEmail(),
                                            "Nouveau mot de passe.", $mail)
                     ) {
-                        //$this->vue = new Vue($this, 'MdpReset', "Mot de passe réinitialisé");
-                        //$this->vue->render();
-                        var_dump(error_get_last());
+                        $this->vue = new Vue($this, 'MdpReset', "Mot de passe réinitialisé");
+                        $this->vue->render();
                     } else {
                         self::redirect('/SatellysReborn/mail/errEnvoie/');
                     }

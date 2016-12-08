@@ -10,16 +10,17 @@
         <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 toolbar">
-                        <?php if (Utilisateur::utilCourantEstAdmin()): ?>
-                            <div class="btn-group">
-                                <a href="/SatellysReborn/groupe/creation/"
-                                   class="btn btn-success btn-lg"><i
-                                        class="fa fa-plus"></i> Nouveau</a>
-                            </div>
-                        <?php endif; ?>
-                        <a href="#" id="mail"
-                           class="btn btn-primary btn-lg"><i
-                                class="fa fa-envelope-o"></i> Envoyer</a>
+                        <div class="btn-group">
+                            <?php if (Utilisateur::utilCourantEstAdmin()): ?>
+
+                            <a href="/SatellysReborn/groupe/creation/"
+                               class="btn btn-success btn-lg"><i
+                                    class="fa fa-plus"></i> Nouveau</a>
+                            <?php endif; ?>
+                            <a href="#" id="mail"
+                               class="btn btn-primary btn-lg"><i
+                                    class="fa fa-envelope-o"></i> Envoyer</a>
+                        </div>
                     </div>
                 </div>
             <table data-toggle="table" data-search="true" data-height="800"
